@@ -69,7 +69,7 @@ const Index = () => {
             <Syringe className="h-5 w-5" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-foreground">Sistema de Vacinação</h1>
+            <h1 className="text-lg font-bold text-foreground">Prontuário do Paciente</h1>
             <p className="text-xs text-muted-foreground">Consulta de pacientes e histórico vacinal</p>
           </div>
         </div>
