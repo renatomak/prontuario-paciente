@@ -14,7 +14,386 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      calendario: {
+        Row: {
+          cd_calendario: number
+          ds_calendario: string
+        }
+        Insert: {
+          cd_calendario?: number
+          ds_calendario: string
+        }
+        Update: {
+          cd_calendario?: number
+          ds_calendario?: string
+        }
+        Relationships: []
+      }
+      cidade: {
+        Row: {
+          cod_cid: number
+          cod_est: number
+          descricao: string
+        }
+        Insert: {
+          cod_cid?: number
+          cod_est: number
+          descricao: string
+        }
+        Update: {
+          cod_cid?: number
+          cod_est?: number
+          descricao?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cidade_cod_est_fkey"
+            columns: ["cod_est"]
+            isOneToOne: false
+            referencedRelation: "estado"
+            referencedColumns: ["cod_est"]
+          },
+        ]
+      }
+      endereco_usuario_cadsus: {
+        Row: {
+          cd_endereco: number
+          cd_tipo_logradouro: number | null
+          cep: string | null
+          cod_cid: number | null
+          keyword: string | null
+          nm_bairro: string | null
+          nm_comp_logradouro: string | null
+          nm_logradouro: string | null
+          nr_logradouro: string | null
+        }
+        Insert: {
+          cd_endereco?: number
+          cd_tipo_logradouro?: number | null
+          cep?: string | null
+          cod_cid?: number | null
+          keyword?: string | null
+          nm_bairro?: string | null
+          nm_comp_logradouro?: string | null
+          nm_logradouro?: string | null
+          nr_logradouro?: string | null
+        }
+        Update: {
+          cd_endereco?: number
+          cd_tipo_logradouro?: number | null
+          cep?: string | null
+          cod_cid?: number | null
+          keyword?: string | null
+          nm_bairro?: string | null
+          nm_comp_logradouro?: string | null
+          nm_logradouro?: string | null
+          nr_logradouro?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "endereco_usuario_cadsus_cd_tipo_logradouro_fkey"
+            columns: ["cd_tipo_logradouro"]
+            isOneToOne: false
+            referencedRelation: "tipo_logradouro_cadsus"
+            referencedColumns: ["cd_tipo_logradouro"]
+          },
+          {
+            foreignKeyName: "endereco_usuario_cadsus_cod_cid_fkey"
+            columns: ["cod_cid"]
+            isOneToOne: false
+            referencedRelation: "cidade"
+            referencedColumns: ["cod_cid"]
+          },
+        ]
+      }
+      estado: {
+        Row: {
+          cod_est: number
+          nome: string
+          sigla: string
+        }
+        Insert: {
+          cod_est?: number
+          nome: string
+          sigla: string
+        }
+        Update: {
+          cod_est?: number
+          nome?: string
+          sigla?: string
+        }
+        Relationships: []
+      }
+      fabricante: {
+        Row: {
+          cd_fabricante: number
+          cnpj: string | null
+          ds_fabricante: string
+        }
+        Insert: {
+          cd_fabricante?: number
+          cnpj?: string | null
+          ds_fabricante: string
+        }
+        Update: {
+          cd_fabricante?: number
+          cnpj?: string | null
+          ds_fabricante?: string
+        }
+        Relationships: []
+      }
+      profissional: {
+        Row: {
+          cd_profissional: number
+          cns: string | null
+          conselho: string | null
+          nome: string
+          registro: string | null
+        }
+        Insert: {
+          cd_profissional?: number
+          cns?: string | null
+          conselho?: string | null
+          nome: string
+          registro?: string | null
+        }
+        Update: {
+          cd_profissional?: number
+          cns?: string | null
+          conselho?: string | null
+          nome?: string
+          registro?: string | null
+        }
+        Relationships: []
+      }
+      tipo_logradouro_cadsus: {
+        Row: {
+          cd_tipo_logradouro: number
+          ds_tipo_logradouro: string
+        }
+        Insert: {
+          cd_tipo_logradouro?: number
+          ds_tipo_logradouro: string
+        }
+        Update: {
+          cd_tipo_logradouro?: number
+          ds_tipo_logradouro?: string
+        }
+        Relationships: []
+      }
+      tipo_vacina: {
+        Row: {
+          cd_tipo_vacina: number
+          ds_vacina: string
+        }
+        Insert: {
+          cd_tipo_vacina?: number
+          ds_vacina: string
+        }
+        Update: {
+          cd_tipo_vacina?: number
+          ds_vacina?: string
+        }
+        Relationships: []
+      }
+      unidade: {
+        Row: {
+          cd_unidade: number
+          cnes: string | null
+          nome: string
+        }
+        Insert: {
+          cd_unidade?: number
+          cnes?: string | null
+          nome: string
+        }
+        Update: {
+          cd_unidade?: number
+          cnes?: string | null
+          nome?: string
+        }
+        Relationships: []
+      }
+      usuario_cadsus: {
+        Row: {
+          cd_endereco: number | null
+          cd_usu_cadsus: number
+          cpf: string | null
+          dt_nascimento: string | null
+          nm_mae: string | null
+          nm_pai: string | null
+          nm_usuario: string
+          nr_telefone: string | null
+          sg_sexo: string | null
+        }
+        Insert: {
+          cd_endereco?: number | null
+          cd_usu_cadsus?: number
+          cpf?: string | null
+          dt_nascimento?: string | null
+          nm_mae?: string | null
+          nm_pai?: string | null
+          nm_usuario: string
+          nr_telefone?: string | null
+          sg_sexo?: string | null
+        }
+        Update: {
+          cd_endereco?: number | null
+          cd_usu_cadsus?: number
+          cpf?: string | null
+          dt_nascimento?: string | null
+          nm_mae?: string | null
+          nm_pai?: string | null
+          nm_usuario?: string
+          nr_telefone?: string | null
+          sg_sexo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usuario_cadsus_cd_endereco_fkey"
+            columns: ["cd_endereco"]
+            isOneToOne: false
+            referencedRelation: "endereco_usuario_cadsus"
+            referencedColumns: ["cd_endereco"]
+          },
+        ]
+      }
+      vac_aplicacao: {
+        Row: {
+          cd_calendario: number | null
+          cd_doses: number | null
+          cd_fabricante: number | null
+          cd_profissional: number | null
+          cd_tipo_vacina: number | null
+          cd_unidade: number | null
+          cd_usu_cadsus: number
+          cd_vac_aplicacao: number
+          ds_vacina: string | null
+          dt_aplicacao: string
+          dt_validade: string | null
+          fora_esquema: boolean | null
+          gestante: boolean | null
+          grupo_atendimento: string | null
+          historico: boolean | null
+          local_aplicacao: string | null
+          local_atendimento: string | null
+          lote: string | null
+          novo_frasco: boolean | null
+          nr_atendimento: string | null
+          observacao: string | null
+          puerpera: boolean | null
+          rnds_situacao: string | null
+          rnds_uuid: string | null
+          status: number | null
+          turno: string | null
+          via_administracao: string | null
+          viajante: boolean | null
+        }
+        Insert: {
+          cd_calendario?: number | null
+          cd_doses?: number | null
+          cd_fabricante?: number | null
+          cd_profissional?: number | null
+          cd_tipo_vacina?: number | null
+          cd_unidade?: number | null
+          cd_usu_cadsus: number
+          cd_vac_aplicacao?: number
+          ds_vacina?: string | null
+          dt_aplicacao: string
+          dt_validade?: string | null
+          fora_esquema?: boolean | null
+          gestante?: boolean | null
+          grupo_atendimento?: string | null
+          historico?: boolean | null
+          local_aplicacao?: string | null
+          local_atendimento?: string | null
+          lote?: string | null
+          novo_frasco?: boolean | null
+          nr_atendimento?: string | null
+          observacao?: string | null
+          puerpera?: boolean | null
+          rnds_situacao?: string | null
+          rnds_uuid?: string | null
+          status?: number | null
+          turno?: string | null
+          via_administracao?: string | null
+          viajante?: boolean | null
+        }
+        Update: {
+          cd_calendario?: number | null
+          cd_doses?: number | null
+          cd_fabricante?: number | null
+          cd_profissional?: number | null
+          cd_tipo_vacina?: number | null
+          cd_unidade?: number | null
+          cd_usu_cadsus?: number
+          cd_vac_aplicacao?: number
+          ds_vacina?: string | null
+          dt_aplicacao?: string
+          dt_validade?: string | null
+          fora_esquema?: boolean | null
+          gestante?: boolean | null
+          grupo_atendimento?: string | null
+          historico?: boolean | null
+          local_aplicacao?: string | null
+          local_atendimento?: string | null
+          lote?: string | null
+          novo_frasco?: boolean | null
+          nr_atendimento?: string | null
+          observacao?: string | null
+          puerpera?: boolean | null
+          rnds_situacao?: string | null
+          rnds_uuid?: string | null
+          status?: number | null
+          turno?: string | null
+          via_administracao?: string | null
+          viajante?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vac_aplicacao_cd_calendario_fkey"
+            columns: ["cd_calendario"]
+            isOneToOne: false
+            referencedRelation: "calendario"
+            referencedColumns: ["cd_calendario"]
+          },
+          {
+            foreignKeyName: "vac_aplicacao_cd_fabricante_fkey"
+            columns: ["cd_fabricante"]
+            isOneToOne: false
+            referencedRelation: "fabricante"
+            referencedColumns: ["cd_fabricante"]
+          },
+          {
+            foreignKeyName: "vac_aplicacao_cd_profissional_fkey"
+            columns: ["cd_profissional"]
+            isOneToOne: false
+            referencedRelation: "profissional"
+            referencedColumns: ["cd_profissional"]
+          },
+          {
+            foreignKeyName: "vac_aplicacao_cd_tipo_vacina_fkey"
+            columns: ["cd_tipo_vacina"]
+            isOneToOne: false
+            referencedRelation: "tipo_vacina"
+            referencedColumns: ["cd_tipo_vacina"]
+          },
+          {
+            foreignKeyName: "vac_aplicacao_cd_unidade_fkey"
+            columns: ["cd_unidade"]
+            isOneToOne: false
+            referencedRelation: "unidade"
+            referencedColumns: ["cd_unidade"]
+          },
+          {
+            foreignKeyName: "vac_aplicacao_cd_usu_cadsus_fkey"
+            columns: ["cd_usu_cadsus"]
+            isOneToOne: false
+            referencedRelation: "usuario_cadsus"
+            referencedColumns: ["cd_usu_cadsus"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
