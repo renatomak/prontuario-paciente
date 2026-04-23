@@ -1,11 +1,21 @@
-import { VacinaResumo } from "@/lib/api";
+import { VacinaResumo, Paciente } from "@/lib/api";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface Props {
   vacinas: VacinaResumo[];
   onSelect: (idAplicacao: number) => void;
   selectedId?: number;
+  paciente?: Paciente | null;
+}
+
+function formatCpf(cpf: string | null | undefined) {
+  if (!cpf) return "";
+  const d = cpf.replace(/\D/g, "");
+  if (d.length !== 11) return cpf;
+  return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6, 9)}-${d.slice(9)}`;
 }
 
 function fmtDate(d: string) {
