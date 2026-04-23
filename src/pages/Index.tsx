@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PacienteDados } from "@/components/PacienteDados";
+import { PacienteHeaderCard } from "@/components/PacienteHeaderCard";
 import { VacinasTable } from "@/components/VacinasTable";
 import { VacinaDetalheSheet } from "@/components/VacinaDetalheSheet";
 import { PacientesPickerDialog } from "@/components/PacientesPickerDialog";
@@ -94,23 +95,25 @@ const Index = () => {
         )}
 
         {paciente.data && (
-          <Tabs defaultValue="dados" className="space-y-4">
-            <TabsList>
-              <TabsTrigger value="dados">Dados do Paciente</TabsTrigger>
-              <TabsTrigger value="vacinas">Vacinas ({vacinas.data?.length ?? 0})</TabsTrigger>
-            </TabsList>
-            <TabsContent value="dados">
-              <PacienteDados paciente={paciente.data} />
-            </TabsContent>
-            <TabsContent value="vacinas">
-              <VacinasTable
-                vacinas={vacinas.data || []}
-                selectedId={selectedVacina ?? undefined}
-                onSelect={(id) => { setSelectedVacina(id); setSheetOpen(true); }}
-                paciente={paciente.data}
-              />
-            </TabsContent>
-          </Tabs>
+          <div className="space-y-4">
+            <PacienteHeaderCard paciente={paciente.data} />
+            <Tabs defaultValue="dados" className="space-y-4">
+              <TabsList>
+                <TabsTrigger value="dados">Dados do Paciente</TabsTrigger>
+                <TabsTrigger value="vacinas">Vacinas ({vacinas.data?.length ?? 0})</TabsTrigger>
+              </TabsList>
+              <TabsContent value="dados">
+                <PacienteDados paciente={paciente.data} />
+              </TabsContent>
+              <TabsContent value="vacinas">
+                <VacinasTable
+                  vacinas={vacinas.data || []}
+                  selectedId={selectedVacina ?? undefined}
+                  onSelect={(id) => { setSelectedVacina(id); setSheetOpen(true); }}
+                />
+              </TabsContent>
+            </Tabs>
+          </div>
         )}
       </main>
 
