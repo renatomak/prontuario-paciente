@@ -97,7 +97,7 @@ const Index = () => {
           <Tabs defaultValue="dados" className="space-y-4">
             <TabsList>
               <TabsTrigger value="dados">Dados do Paciente</TabsTrigger>
-              <TabsTrigger value="vacinas">Vacinas ({vacinas.length})</TabsTrigger>
+              <TabsTrigger value="vacinas">Vacinas ({vacinas.data?.length ?? 0})</TabsTrigger>
             </TabsList>
             <TabsContent value="dados">
               <PacienteDados paciente={paciente.data} />
