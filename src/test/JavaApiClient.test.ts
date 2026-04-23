@@ -1,9 +1,8 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, type Mock } from "vitest";
 import { JavaApiClient } from "../adapters/java-api/JavaApiClient";
 import { ApiErrorImpl } from "../shared/http";
 
-import { beforeAll } from "vitest";
-global.fetch = vi.fn();
+global.fetch = vi.fn() as unknown as typeof fetch;
 
 describe("JavaApiClient", () => {
   it("parseia resposta JSON com sucesso", async () => {
