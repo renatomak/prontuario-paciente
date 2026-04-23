@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { api, Paciente, PacienteResumo, VacinaResumo } from "@/lib/api";
+import { Paciente, PacienteResumo } from "@/domain/models";
+import { usePacienteSearch } from "../ui/hooks/usePacienteSearch";
+import { usePaciente } from "../ui/hooks/usePaciente";
+import { useVacinas } from "../ui/hooks/useVacinas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,53 +15,40 @@ import { toast } from "sonner";
 
 const Index = () => {
   const [query, setQuery] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [paciente, setPaciente] = useState<Paciente | null>(null);
-  const [vacinas, setVacinas] = useState<VacinaResumo[]>([]);
+
+  const [pacienteId, setPacienteId] = useState<number | null>(null);
   const [picker, setPicker] = useState<PacienteResumo[] | null>(null);
   const [selectedVacina, setSelectedVacina] = useState<number | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  async function loadPaciente(id: number) {
-    setLoading(true);
-    try {
-      const [p, v] = await Promise.all([api.paciente(id), api.vacinas(id)]);
-      setPaciente(p);
-      setVacinas(v);
-      setPicker(null);
-    } catch (e) {
-      toast.error((e as Error).message);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const pacienteSearch = usePacienteSearch();
+  const paciente = usePaciente(pacienteId ?? 0, !!pacienteId && !picker);
+  const vacinas = useVacinas(pacienteId ?? 0, !!pacienteId && !picker);
 
-  async function handleSearch(e?: React.FormEvent) {
+
+  function handleSearch(e?: React.FormEvent) {
     e?.preventDefault();
     if (!query.trim()) return;
-    setLoading(true);
-    setPaciente(null);
-    setVacinas([]);
-    try {
-      const res = await api.search(query.trim());
-      if (res.tipo === "paciente") {
-        setPaciente(res.paciente);
-        const v = await api.vacinas(res.paciente.id);
-        setVacinas(v);
-      } else {
-        if (res.pacientes.length === 0) {
-          toast.info("Nenhum paciente encontrado.");
-        } else if (res.pacientes.length === 1) {
-          await loadPaciente(res.pacientes[0].id);
+    setPicker(null);
+    setPacienteId(null);
+    pacienteSearch.mutate(query.trim(), {
+      onSuccess: (res) => {
+        if (res.tipo === "paciente") {
+          setPacienteId(res.paciente.id);
         } else {
-          setPicker(res.pacientes);
+          if (res.pacientes.length === 0) {
+            toast.info("Nenhum paciente encontrado.");
+          } else if (res.pacientes.length === 1) {
+            setPacienteId(res.pacientes[0].id);
+          } else {
+            setPicker(res.pacientes);
+          }
         }
-      }
-    } catch (e) {
-      toast.error((e as Error).message);
-    } finally {
-      setLoading(false);
-    }
+      },
+      onError: (e: any) => {
+        toast.error(e?.message || "Erro na busca");
+      },
+    });
   }
 
   return (
@@ -86,12 +76,12 @@ const Index = () => {
               className="pl-10 h-11"
             />
           </div>
-          <Button type="submit" disabled={loading} className="h-11 px-6">
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Buscar"}
+          <Button type="submit" disabled={pacienteSearch.isPending} className="h-11 px-6">
+            {pacienteSearch.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Buscar"}
           </Button>
         </form>
 
-        {!paciente && !loading && (
+        {!pacienteId && !pacienteSearch.isPending && (
           <div className="text-center py-20 text-muted-foreground">
             <Syringe className="h-12 w-12 mx-auto mb-4 opacity-30" />
             <p>Digite um nome ou CPF para iniciar a consulta.</p>
@@ -99,18 +89,18 @@ const Index = () => {
           </div>
         )}
 
-        {paciente && (
+        {paciente.data && (
           <Tabs defaultValue="dados" className="space-y-4">
             <TabsList>
               <TabsTrigger value="dados">Dados do Paciente</TabsTrigger>
               <TabsTrigger value="vacinas">Vacinas ({vacinas.length})</TabsTrigger>
             </TabsList>
             <TabsContent value="dados">
-              <PacienteDados paciente={paciente} />
+              <PacienteDados paciente={paciente.data} />
             </TabsContent>
             <TabsContent value="vacinas">
               <VacinasTable
-                vacinas={vacinas}
+                vacinas={vacinas.data || []}
                 selectedId={selectedVacina ?? undefined}
                 onSelect={(id) => { setSelectedVacina(id); setSheetOpen(true); }}
               />
@@ -124,7 +114,10 @@ const Index = () => {
           pacientes={picker}
           open={!!picker}
           onOpenChange={(o) => !o && setPicker(null)}
-          onSelect={(id) => loadPaciente(id)}
+          onSelect={(id) => {
+            setPicker(null);
+            setPacienteId(id);
+          }}
         />
       )}
 
