@@ -6,7 +6,7 @@ global.fetch = vi.fn() as unknown as typeof fetch;
 
 describe("JavaApiClient", () => {
   it("parseia resposta JSON com sucesso", async () => {
-    (fetch as unknown as jest.Mock).mockResolvedValueOnce({
+    (fetch as unknown as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ ok: 1 }),
     });
@@ -16,7 +16,7 @@ describe("JavaApiClient", () => {
   });
 
   it("lança ApiErrorImpl com mensagem customizada do backend", async () => {
-    (fetch as unknown as jest.Mock).mockResolvedValue({
+    (fetch as unknown as Mock).mockResolvedValue({
       ok: false,
       status: 400,
       json: async () => ({ message: "Erro customizado" }),
@@ -24,7 +24,7 @@ describe("JavaApiClient", () => {
     });
     const client = new JavaApiClient();
     await expect(client.get<unknown>("/fail")).rejects.toThrow(ApiErrorImpl);
-    (fetch as unknown as jest.Mock).mockResolvedValue({
+    (fetch as unknown as Mock).mockResolvedValue({
       ok: false,
       status: 400,
       json: async () => ({ message: "Erro customizado" }),
@@ -34,7 +34,7 @@ describe("JavaApiClient", () => {
   });
 
   it("lança ApiErrorImpl com mensagem padrão se backend não retorna message", async () => {
-    (fetch as unknown as jest.Mock).mockResolvedValue({
+    (fetch as unknown as Mock).mockResolvedValue({
       ok: false,
       status: 500,
       json: async () => ({}),
@@ -42,7 +42,7 @@ describe("JavaApiClient", () => {
     });
     const client = new JavaApiClient();
     await expect(client.get<unknown>("/fail2")).rejects.toThrow(ApiErrorImpl);
-    (fetch as unknown as jest.Mock).mockResolvedValue({
+    (fetch as unknown as Mock).mockResolvedValue({
       ok: false,
       status: 500,
       json: async () => ({}),
