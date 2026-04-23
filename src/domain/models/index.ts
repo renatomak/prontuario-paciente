@@ -1,5 +1,3 @@
-// Modelos de domínio extraídos de src/lib/api.ts
-
 export interface PacienteResumo {
   id: number;
   nome: string;

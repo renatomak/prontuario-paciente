@@ -1,4 +1,3 @@
-// src/domain/utils/normalizeQuery.ts
 export function normalizeQuery(query: string): string {
   return query.replace(/[^\w\d]/g, "").toUpperCase();
 }
