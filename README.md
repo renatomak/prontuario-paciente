@@ -1,6 +1,25 @@
+
 # Patient Passport
 
 Sistema de Vacinação - Consulta de Pacientes
+
+## Arquitetura
+
+O frontend segue Clean Code e Arquitetura Hexagonal (Ports & Adapters), desacoplado do backend Java.
+
+**Principais camadas:**
+
+- `src/domain/` — Modelos de domínio e regras puras
+- `src/application/` — Use-cases (casos de uso/orquestração)
+- `src/ports/` — Contratos (interfaces) para adapters
+- `src/adapters/java-api/` — Implementações HTTP para API Java
+- `src/shared/` — HTTP client, validação de env, utilidades
+- `src/ui/` — Componentes, páginas, hooks de UI
+
+**Legado:**
+- Código Supabase e Node/Express foi movido para `legacy/`.
+
+## Pré-requisitos
 
 ## Pré-requisitos
 
@@ -20,11 +39,12 @@ Sistema de Vacinação - Consulta de Pacientes
 	npm install
 	```
 
+
 3. Configure as variáveis de ambiente:
-	- Copie o arquivo `.env` de exemplo (ou use o já existente) e ajuste as variáveis conforme necessário:
-	  - `VITE_SUPABASE_URL` (URL do projeto Supabase)
-	  - `VITE_SUPABASE_PUBLISHABLE_KEY` (chave pública do Supabase)
-	  - `VITE_SUPABASE_PROJECT_ID` (opcional, apenas para referência)
+	 - Copie o arquivo `.env.example` ou crie `.env` com:
+		 - `VITE_API_URL` (obrigatório, ex: http://localhost:8083)
+
+> **Atenção:** Não é mais necessário configurar variáveis do Supabase.
 
 ## Rodando o Projeto
 
@@ -47,12 +67,27 @@ npm run build
 npm run test
 ```
 
+
 ## Estrutura do Projeto
 
-- `src/` - Código-fonte principal (componentes, páginas, integrações)
-- `public/` - Arquivos públicos (favicon, etc)
-- `supabase/` - Funções e migrações do Supabase
-- `insert_pacientes.js` - Script para popular pacientes de teste
+- `src/domain/models/` — Modelos de domínio (Paciente, Vacina, etc)
+- `src/domain/utils/` — Funções utilitárias puras
+- `src/application/` — Use-cases (ex: searchPaciente, listVacinasPaciente)
+- `src/ports/` — Contratos (PacientePort, VacinaPort)
+- `src/adapters/java-api/` — Adapters HTTP para API Java
+- `src/shared/` — httpClient, ApiError, validação de env
+- `src/ui/hooks/` — Hooks React Query (usePaciente, useVacinas...)
+- `src/pages/` — Páginas (ex: Index.tsx)
+- `legacy/` — Código legado (Supabase, Node)
+
+
+## Testes
+
+Testes unitários com [Vitest](https://vitest.dev/):
+
+```sh
+npx vitest run
+```
 
 ## Dados de Teste
 

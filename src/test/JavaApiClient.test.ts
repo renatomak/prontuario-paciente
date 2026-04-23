@@ -1,0 +1,54 @@
+import { describe, it, expect, vi } from "vitest";
+import { JavaApiClient } from "../adapters/java-api/JavaApiClient";
+import { ApiErrorImpl } from "../shared/http";
+
+import { beforeAll } from "vitest";
+global.fetch = vi.fn();
+
+describe("JavaApiClient", () => {
+  it("parseia resposta JSON com sucesso", async () => {
+    (fetch as any).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ ok: 1 }),
+    });
+    const client = new JavaApiClient();
+    const data = await client.get<any>("/test");
+    expect(data).toEqual({ ok: 1 });
+  });
+
+  it("lança ApiErrorImpl com mensagem customizada do backend", async () => {
+    (fetch as any).mockResolvedValue({
+      ok: false,
+      status: 400,
+      json: async () => ({ message: "Erro customizado" }),
+      headers: { get: () => "application/json" }
+    });
+    const client = new JavaApiClient();
+    await expect(client.get<any>("/fail")).rejects.toThrow(ApiErrorImpl);
+    (fetch as any).mockResolvedValue({
+      ok: false,
+      status: 400,
+      json: async () => ({ message: "Erro customizado" }),
+      headers: { get: () => "application/json" }
+    });
+    await expect(client.get<any>("/fail")).rejects.toThrow("Erro customizado");
+  });
+
+  it("lança ApiErrorImpl com mensagem padrão se backend não retorna message", async () => {
+    (fetch as any).mockResolvedValue({
+      ok: false,
+      status: 500,
+      json: async () => ({}),
+      headers: { get: () => "application/json" }
+    });
+    const client = new JavaApiClient();
+    await expect(client.get<any>("/fail2")).rejects.toThrow(ApiErrorImpl);
+    (fetch as any).mockResolvedValue({
+      ok: false,
+      status: 500,
+      json: async () => ({}),
+      headers: { get: () => "application/json" }
+    });
+    await expect(client.get<any>("/fail2")).rejects.toThrow("Erro HTTP 500");
+  });
+});
