@@ -1,15 +1,12 @@
-// src/shared/http.ts
-// Cliente HTTP genérico para adapters
-
 export interface ApiError extends Error {
   status: number;
-  details?: any;
+  details?: unknown;
 }
 
 export class ApiErrorImpl extends Error implements ApiError {
   status: number;
-  details?: any;
-  constructor(status: number, message: string, details?: any) {
+  details?: unknown;
+  constructor(status: number, message: string, details?: unknown) {
     super(message);
     this.status = status;
     this.details = details;
@@ -37,10 +34,13 @@ export async function httpClient<T>(
       },
       signal: controller.signal,
     });
-    let body: any = null;
-    try { body = await res.json(); } catch {}
+    let body: unknown = null;
+    try { body = await res.json(); } catch { /* empty */ }
     if (!res.ok) {
-      const msg = body?.message || `Erro HTTP ${res.status}`;
+      let msg = `Erro HTTP ${res.status}`;
+      if (body && typeof body === 'object' && 'message' in body) {
+        msg = String((body as { message?: unknown }).message ?? msg);
+      }
       throw new ApiErrorImpl(res.status, msg, body);
     }
     return body as T;

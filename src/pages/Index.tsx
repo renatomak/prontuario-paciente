@@ -45,8 +45,12 @@ const Index = () => {
           }
         }
       },
-      onError: (e: any) => {
-        toast.error(e?.message || "Erro na busca");
+      onError: (e: unknown) => {
+        if (e && typeof e === 'object' && 'message' in e) {
+          toast.error((e as { message?: string }).message || "Erro na busca");
+        } else {
+          toast.error("Erro na busca");
+        }
       },
     });
   }
