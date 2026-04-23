@@ -80,5 +80,6 @@ export function VacinasTable({ vacinas, onSelect, selectedId, paciente }: Props)
         </table>
       </div>
     </Card>
+    </div>
   );
 }
