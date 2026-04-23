@@ -31,14 +31,18 @@ export function VacinasTable({ vacinas, onSelect, selectedId, paciente }: Props)
     <div className="space-y-4">
       {paciente && (
         <Card className="p-4 shadow-sm">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-1.5 md:col-span-1">
               <Label className="text-xs text-muted-foreground">Nome</Label>
               <Input value={paciente.nome} readOnly className="bg-muted/50" />
             </div>
             <div className="space-y-1.5">
               <Label className="text-xs text-muted-foreground">CPF</Label>
               <Input value={formatCpf(paciente.cpf)} readOnly className="bg-muted/50" />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Data de Nascimento</Label>
+              <Input value={fmtDate(paciente.dataNascimento ?? "")} readOnly className="bg-muted/50" />
             </div>
           </div>
         </Card>
