@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { api, VacinaDetalhe } from "@/lib/api";
+import { useVacinaDetalhe } from "@/ui/hooks/useVacinaDetalhe";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Loader2 } from "lucide-react";
+
 
 interface Props {
   idAplicacao: number | null;
@@ -26,22 +27,13 @@ function fmtDate(d: string | null) {
   return `${day}/${m}/${y}`;
 }
 
+
 function YesNo({ v }: { v: boolean }) {
   return <span>{v ? "Sim" : "Não"}</span>;
 }
 
 export function VacinaDetalheSheet({ idAplicacao, open, onOpenChange }: Props) {
-  const [detalhe, setDetalhe] = useState<VacinaDetalhe | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!open || !idAplicacao) return;
-    setLoading(true);
-    setDetalhe(null);
-    api.vacinaDetalhe(idAplicacao)
-      .then(setDetalhe)
-      .finally(() => setLoading(false));
-  }, [idAplicacao, open]);
+  const { data: detalhe, isLoading: loading } = useVacinaDetalhe(idAplicacao ?? 0, open && !!idAplicacao);
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>

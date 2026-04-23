@@ -16,9 +16,6 @@ O frontend segue Clean Code e Arquitetura Hexagonal (Ports & Adapters), desacopl
 - `src/shared/` — HTTP client, validação de env, utilidades
 - `src/ui/` — Componentes, páginas, hooks de UI
 
-**Legado:**
-- Código Supabase e Node/Express foi movido para `legacy/`.
-
 ## Pré-requisitos
 
 ## Pré-requisitos
@@ -43,8 +40,6 @@ O frontend segue Clean Code e Arquitetura Hexagonal (Ports & Adapters), desacopl
 3. Configure as variáveis de ambiente:
 	 - Copie o arquivo `.env.example` ou crie `.env` com:
 		 - `VITE_API_URL` (obrigatório, ex: http://localhost:8083)
-
-> **Atenção:** Não é mais necessário configurar variáveis do Supabase.
 
 ## Rodando o Projeto
 
@@ -78,7 +73,6 @@ npm run test
 - `src/shared/` — httpClient, ApiError, validação de env
 - `src/ui/hooks/` — Hooks React Query (usePaciente, useVacinas...)
 - `src/pages/` — Páginas (ex: Index.tsx)
-- `legacy/` — Código legado (Supabase, Node)
 
 
 ## Testes
@@ -89,21 +83,11 @@ Testes unitários com [Vitest](https://vitest.dev/):
 npx vitest run
 ```
 
-## Dados de Teste
-
-Para garantir que dois cidadãos de teste estejam disponíveis para o front-end, execute:
-
-```sh
-node insert_pacientes.js
-```
-
-Isso irá inserir/atualizar os pacientes de exemplo e suas vacinas no banco Supabase.
 
 ## Observações
 
-- O projeto utiliza Vite, React, TailwindCSS, Supabase e outras bibliotecas modernas.
+- O projeto utiliza Vite, React, TailwindCSS e outras bibliotecas modernas.
 - Para customizar o favicon, substitua o arquivo em `public/favicon.ico`.
-- As funções serverless do Supabase estão em `supabase/functions/`.
 
 ---
 Em caso de dúvidas, consulte o código ou abra uma issue.
