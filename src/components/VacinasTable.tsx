@@ -24,9 +24,24 @@ function fmtDate(d: string) {
   return `${day}/${m}/${y}`;
 }
 
-export function VacinasTable({ vacinas, onSelect, selectedId }: Props) {
+export function VacinasTable({ vacinas, onSelect, selectedId, paciente }: Props) {
   return (
-    <Card className="overflow-hidden shadow-sm">
+    <div className="space-y-4">
+      {paciente && (
+        <Card className="p-4 shadow-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Nome</Label>
+              <Input value={paciente.nome} readOnly className="bg-muted/50" />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">CPF</Label>
+              <Input value={formatCpf(paciente.cpf)} readOnly className="bg-muted/50" />
+            </div>
+          </div>
+        </Card>
+      )}
+      <Card className="overflow-hidden shadow-sm">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-secondary/70 text-secondary-foreground">
