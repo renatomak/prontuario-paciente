@@ -3,6 +3,13 @@ import { Card } from "@/components/ui/card";
 
 interface Props { paciente: Paciente }
 
+function fmtDateBR(d: string | null) {
+  if (!d) return "";
+  const [y, m, day] = d.split("-");
+  if (!y || !m || !day) return d;
+  return `${day}/${m}/${y}`;
+}
+
 function Field({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
@@ -25,7 +32,7 @@ export function PacienteDados({ paciente }: Props) {
           <Field label="Idade" value={paciente.idade} />
           <Field label="CPF" value={paciente.cpf} />
           <Field label="Sexo" value={paciente.sexo} />
-          <Field label="Data de Nascimento" value={paciente.dataNascimento} />
+          <Field label="Data de Nascimento" value={fmtDateBR(paciente.dataNascimento)} />
           <Field label="Nome da Mãe" value={paciente.nomeMae} />
           <Field label="Nome do Pai" value={paciente.nomePai} />
           <Field label="Telefone" value={paciente.telefone} />
@@ -45,7 +52,6 @@ export function PacienteDados({ paciente }: Props) {
             <Field label="CEP" value={e.cep} />
             <Field label="Cidade" value={e.cidade} />
             <Field label="UF" value={e.uf} />
-            <Field label="Keyword" value={e.keyword} />
           </div>
         </Card>
       )}
