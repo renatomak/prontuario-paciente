@@ -1,11 +1,21 @@
-import { VacinaResumo } from "@/lib/api";
+import { VacinaResumo, Paciente } from "@/lib/api";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface Props {
   vacinas: VacinaResumo[];
   onSelect: (idAplicacao: number) => void;
   selectedId?: number;
+  paciente?: Paciente | null;
+}
+
+function formatCpf(cpf: string | null | undefined) {
+  if (!cpf) return "";
+  const d = cpf.replace(/\D/g, "");
+  if (d.length !== 11) return cpf;
+  return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6, 9)}-${d.slice(9)}`;
 }
 
 function fmtDate(d: string) {
@@ -14,9 +24,24 @@ function fmtDate(d: string) {
   return `${day}/${m}/${y}`;
 }
 
-export function VacinasTable({ vacinas, onSelect, selectedId }: Props) {
+export function VacinasTable({ vacinas, onSelect, selectedId, paciente }: Props) {
   return (
-    <Card className="overflow-hidden shadow-sm">
+    <div className="space-y-4">
+      {paciente && (
+        <Card className="p-4 shadow-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Nome</Label>
+              <Input value={paciente.nome} readOnly className="bg-muted/50" />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">CPF</Label>
+              <Input value={formatCpf(paciente.cpf)} readOnly className="bg-muted/50" />
+            </div>
+          </div>
+        </Card>
+      )}
+      <Card className="overflow-hidden shadow-sm">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-secondary/70 text-secondary-foreground">
@@ -55,5 +80,6 @@ export function VacinasTable({ vacinas, onSelect, selectedId }: Props) {
         </table>
       </div>
     </Card>
+    </div>
   );
 }
