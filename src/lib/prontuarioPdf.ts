@@ -64,6 +64,19 @@ function newDoc(): jsPDF {
 
 function drawHeader(state: RenderState, paciente: Paciente, isContinuation: boolean) {
   const { doc, pageW } = state;
+
+  // Logo à esquerda
+  if (LOGO_DATA_URL && LOGO_DIMS) {
+    const targetH = 14; // mm
+    const ratio = LOGO_DIMS.w / LOGO_DIMS.h;
+    const targetW = targetH * ratio;
+    try {
+      doc.addImage(LOGO_DATA_URL, "PNG", MARGIN_X, MARGIN_TOP - 2, targetW, targetH);
+    } catch {
+      // ignore
+    }
+  }
+
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   doc.text("Prefeitura Municipal de Goiânia - GO", pageW / 2, MARGIN_TOP, { align: "center" });
