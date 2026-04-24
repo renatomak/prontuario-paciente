@@ -327,7 +327,8 @@ function drawRegistro(state: RenderState, paciente: Paciente, reg: ProntuarioReg
   state.y += 2;
 }
 
-export function gerarProntuarioPdf(paciente: Paciente, registros: ProntuarioRegistro[]) {
+export async function gerarProntuarioPdf(paciente: Paciente, registros: ProntuarioRegistro[]) {
+  await ensureLogoLoaded();
   const doc = newDoc();
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
