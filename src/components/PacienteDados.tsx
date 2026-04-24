@@ -42,16 +42,28 @@ export function PacienteDados({ paciente }: Props) {
       {e && (
         <Card className="p-6 shadow-sm">
           <h3 className="text-sm font-semibold text-primary mb-4 uppercase tracking-wider">Endereço</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="md:col-span-2">
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+            <div className="md:col-span-3">
               <Field label="Logradouro" value={`${e.tipoLogradouro ?? ""} ${e.logradouro ?? ""}`.trim()} />
             </div>
-            <Field label="Número" value={e.numero} />
-            <Field label="Complemento" value={e.complemento} />
-            <Field label="Bairro" value={e.bairro} />
-            <Field label="CEP" value={e.cep} />
-            <Field label="Cidade" value={e.cidade} />
-            <Field label="UF" value={e.uf} />
+            <div className="md:col-span-1">
+              <Field label="Número" value={e.numero} />
+            </div>
+            <div className="md:col-span-2">
+              <Field label="Bairro" value={e.bairro} />
+            </div>
+            <div className="md:col-span-2">
+              <Field label="Complemento" value={e.complemento} />
+            </div>
+            <div className="md:col-span-1">
+              <Field label="CEP" value={e.cep} />
+            </div>
+            <div className="md:col-span-2">
+              <Field label="Cidade" value={e.cidade} />
+            </div>
+            <div className="md:col-span-1">
+              <Field label="UF" value={e.uf} />
+            </div>
           </div>
         </Card>
       )}

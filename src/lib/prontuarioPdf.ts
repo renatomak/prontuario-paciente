@@ -84,14 +84,18 @@ function drawPacienteBox(state: RenderState, paciente: Paciente) {
   const w = pageW - MARGIN_X * 2;
   const startY = state.y;
 
+  // Ajuste de altura do box para padding extra
+  const boxHeight = 36 + 6; // 36 original + 6 de padding vertical
+  const boxPaddingX = 6;
+  const boxPaddingY = 3;
   doc.setFillColor(245, 247, 250);
   doc.setDrawColor(180);
-  doc.roundedRect(x, startY, w, 36, 1.5, 1.5, "FD");
+  doc.roundedRect(x, startY, w, boxHeight, 1.5, 1.5, "FD");
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(9);
   doc.setTextColor(40);
-  doc.text("Dados do Paciente", x + 3, startY + 4.5);
+  doc.text("Dados do Paciente", x + boxPaddingX, startY + boxPaddingY + 4.5);
 
   const e = paciente.endereco;
   const enderecoStr = e
@@ -126,23 +130,24 @@ function drawPacienteBox(state: RenderState, paciente: Paciente) {
 
   doc.setFontSize(8);
   doc.setTextColor(0);
-  let cy = startY + 9;
+  let cy = startY + boxPaddingY + 9;
   const colW = w / 2;
+  const labelValueSpacing = 4; // Espaço extra entre label e valor
   rows.forEach((row) => {
     row.forEach(([label, val], i) => {
-      const cx = x + 3 + i * colW;
+      const cx = x + boxPaddingX + i * colW;
       doc.setFont("helvetica", "bold");
-      doc.text(`${label}:`, cx, cy);
+      doc.text(`${label}:`, cx, cy, { baseline: "top" });
       doc.setFont("helvetica", "normal");
       const labelW = doc.getTextWidth(`${label}: `);
-      const maxW = colW - 6 - labelW;
+      const maxW = colW - 2 * boxPaddingX - labelW - labelValueSpacing;
       const truncated = doc.splitTextToSize(val || "—", maxW)[0] ?? "";
-      doc.text(String(truncated), cx + labelW, cy);
+      doc.text(String(truncated), cx + labelW + labelValueSpacing, cy, { baseline: "top" });
     });
-    cy += 5.5;
+    cy += 6; // Espaçamento vertical maior para melhor leitura
   });
 
-  state.y = startY + 36 + 4;
+  state.y = startY + boxHeight + 4;
 }
 
 function ensureSpace(state: RenderState, paciente: Paciente, needed: number) {
