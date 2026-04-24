@@ -93,8 +93,8 @@ const Index = () => {
       </header>
 
       <main className="container py-8 space-y-6">
-        <form onSubmit={handleSearch} className="flex gap-2 max-w-2xl">
-          <div className="relative flex-1">
+        <form onSubmit={handleSearch} className="flex gap-2 max-w-3xl flex-wrap">
+          <div className="relative flex-1 min-w-[240px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               value={query}
@@ -106,6 +106,24 @@ const Index = () => {
           <Button type="submit" disabled={pacienteSearch.isPending} className="h-11 px-6">
             {pacienteSearch.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Buscar"}
           </Button>
+          {paciente.data && (
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={handleGerarProntuario}
+              disabled={prontuario.isPending}
+              className="h-11 px-5"
+            >
+              {prontuario.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <>
+                  <FileDown className="h-4 w-4" />
+                  Gerar Prontuário
+                </>
+              )}
+            </Button>
+          )}
         </form>
 
         {!pacienteId && !pacienteSearch.isPending && (
