@@ -3,6 +3,8 @@ import { Paciente, PacienteResumo } from "@/domain/models";
 import { usePacienteSearch } from "../ui/hooks/usePacienteSearch";
 import { usePaciente } from "../ui/hooks/usePaciente";
 import { useVacinas } from "../ui/hooks/useVacinas";
+import { useProntuario } from "../ui/hooks/useProntuario";
+import { gerarProntuarioPdf } from "@/lib/prontuarioPdf";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,7 +13,7 @@ import { PacienteHeaderCard } from "@/components/PacienteHeaderCard";
 import { VacinasTable } from "@/components/VacinasTable";
 import { VacinaDetalheSheet } from "@/components/VacinaDetalheSheet";
 import { PacientesPickerDialog } from "@/components/PacientesPickerDialog";
-import { Search, Loader2, Syringe } from "lucide-react";
+import { Search, Loader2, Syringe, FileDown } from "lucide-react";
 import { toast } from "sonner";
 
 const Index = () => {
