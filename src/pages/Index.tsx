@@ -33,9 +33,9 @@ const Index = () => {
     if (!paciente.data) return;
     const p = paciente.data;
     prontuario.mutate(p.id, {
-      onSuccess: (registros) => {
+      onSuccess: async (registros) => {
         try {
-          gerarProntuarioPdf(p, registros);
+          await gerarProntuarioPdf(p, registros);
           toast.success("Prontuário gerado com sucesso.");
         } catch (err) {
           toast.error("Falha ao gerar PDF do prontuário.");

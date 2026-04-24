@@ -1,10 +1,32 @@
 import jsPDF from "jspdf";
 import type { Paciente, ProntuarioRegistro } from "@/domain/models";
+import logoGoianiaUrl from "@/assets/logo-goiania.png";
 
 const MARGIN_X = 14;
 const MARGIN_TOP = 14;
 const MARGIN_BOTTOM = 22;
 const LINE_H = 4.4;
+
+let LOGO_DATA_URL: string | null = null;
+let LOGO_DIMS: { w: number; h: number } | null = null;
+
+async function ensureLogoLoaded(): Promise<void> {
+  if (LOGO_DATA_URL && LOGO_DIMS) return;
+  const res = await fetch(logoGoianiaUrl);
+  const blob = await res.blob();
+  LOGO_DATA_URL = await new Promise<string>((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result as string);
+    r.onerror = reject;
+    r.readAsDataURL(blob);
+  });
+  LOGO_DIMS = await new Promise<{ w: number; h: number }>((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve({ w: img.naturalWidth, h: img.naturalHeight });
+    img.onerror = reject;
+    img.src = LOGO_DATA_URL!;
+  });
+}
 
 function fmtDateBR(d: string | null | undefined) {
   if (!d) return "";
@@ -42,6 +64,19 @@ function newDoc(): jsPDF {
 
 function drawHeader(state: RenderState, paciente: Paciente, isContinuation: boolean) {
   const { doc, pageW } = state;
+
+  // Logo à esquerda
+  if (LOGO_DATA_URL && LOGO_DIMS) {
+    const targetH = 14; // mm
+    const ratio = LOGO_DIMS.w / LOGO_DIMS.h;
+    const targetW = targetH * ratio;
+    try {
+      doc.addImage(LOGO_DATA_URL, "PNG", MARGIN_X, MARGIN_TOP - 2, targetW, targetH);
+    } catch {
+      // ignore
+    }
+  }
+
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   doc.text("Prefeitura Municipal de Goiânia - GO", pageW / 2, MARGIN_TOP, { align: "center" });
@@ -292,7 +327,8 @@ function drawRegistro(state: RenderState, paciente: Paciente, reg: ProntuarioReg
   state.y += 2;
 }
 
-export function gerarProntuarioPdf(paciente: Paciente, registros: ProntuarioRegistro[]) {
+export async function gerarProntuarioPdf(paciente: Paciente, registros: ProntuarioRegistro[]) {
+  await ensureLogoLoaded();
   const doc = newDoc();
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
