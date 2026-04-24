@@ -1,0 +1,299 @@
+import jsPDF from "jspdf";
+import type { Paciente, ProntuarioRegistro } from "@/domain/models";
+
+const MARGIN_X = 14;
+const MARGIN_TOP = 14;
+const MARGIN_BOTTOM = 22;
+const LINE_H = 4.4;
+
+function fmtDateBR(d: string | null | undefined) {
+  if (!d) return "";
+  if (d.includes("/")) return d;
+  const [y, m, day] = d.split("-");
+  if (!y || !m || !day) return d;
+  return `${day}/${m}/${y}`;
+}
+
+function formatCpf(cpf: string | null | undefined) {
+  if (!cpf) return "";
+  const d = cpf.replace(/\D/g, "");
+  if (d.length !== 11) return cpf;
+  return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6, 9)}-${d.slice(9)}`;
+}
+
+function nowStamp() {
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+interface RenderState {
+  doc: jsPDF;
+  y: number;
+  pageW: number;
+  pageH: number;
+  page: number;
+  totalPlaceholder: () => void;
+}
+
+function newDoc(): jsPDF {
+  return new jsPDF({ unit: "mm", format: "a4" });
+}
+
+function drawHeader(state: RenderState, paciente: Paciente, isContinuation: boolean) {
+  const { doc, pageW } = state;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.text("Prefeitura Municipal de Goiânia - GO", pageW / 2, MARGIN_TOP, { align: "center" });
+  doc.setFontSize(9);
+  doc.text("SUS - SISTEMA ÚNICO DE SAÚDE", pageW / 2, MARGIN_TOP + 4.5, { align: "center" });
+  doc.setFont("helvetica", "normal");
+  doc.text("Secretaria Municipal de Saúde de Goiânia - GO", pageW / 2, MARGIN_TOP + 8.5, { align: "center" });
+
+  doc.setFontSize(7);
+  doc.setTextColor(90);
+  doc.text(
+    `Emitido em ${nowStamp()} | Sistema de Prontuário Eletrônico`,
+    pageW / 2,
+    MARGIN_TOP + 12.5,
+    { align: "center" }
+  );
+  doc.setTextColor(0);
+
+  doc.setLineWidth(0.3);
+  doc.line(MARGIN_X, MARGIN_TOP + 14, pageW - MARGIN_X, MARGIN_TOP + 14);
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.text("PRONTUÁRIO DE ATENDIMENTOS", pageW / 2, MARGIN_TOP + 19, { align: "center" });
+
+  if (isContinuation) {
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(8);
+    doc.text(`Continuação da impressão do prontuário de ${paciente.nome}`, pageW / 2, MARGIN_TOP + 23, {
+      align: "center",
+    });
+  }
+
+  state.y = MARGIN_TOP + (isContinuation ? 27 : 23);
+}
+
+function drawPacienteBox(state: RenderState, paciente: Paciente) {
+  const { doc, pageW } = state;
+  const x = MARGIN_X;
+  const w = pageW - MARGIN_X * 2;
+  const startY = state.y;
+
+  doc.setFillColor(245, 247, 250);
+  doc.setDrawColor(180);
+  doc.roundedRect(x, startY, w, 36, 1.5, 1.5, "FD");
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.setTextColor(40);
+  doc.text("Dados do Paciente", x + 3, startY + 4.5);
+
+  const e = paciente.endereco;
+  const enderecoStr = e
+    ? [
+        [e.tipoLogradouro, e.logradouro].filter(Boolean).join(" "),
+        e.numero ? `Nº ${e.numero}` : null,
+        e.bairro,
+        [e.cidade, e.uf].filter(Boolean).join(" - "),
+      ]
+        .filter(Boolean)
+        .join(", ")
+    : "";
+
+  const rows: Array<Array<[string, string]>> = [
+    [
+      ["Nome", `( ${paciente.id} ) ${paciente.nome}`],
+      ["Sexo", paciente.sexo ?? ""],
+    ],
+    [
+      ["Nome da Mãe", paciente.nomeMae ?? ""],
+      ["Dt. Nascimento", fmtDateBR(paciente.dataNascimento)],
+    ],
+    [
+      ["Endereço", enderecoStr],
+      ["Idade", paciente.idade ?? ""],
+    ],
+    [
+      ["CPF", formatCpf(paciente.cpf)],
+      ["Telefone", paciente.telefone ?? ""],
+    ],
+  ];
+
+  doc.setFontSize(8);
+  doc.setTextColor(0);
+  let cy = startY + 9;
+  const colW = w / 2;
+  rows.forEach((row) => {
+    row.forEach(([label, val], i) => {
+      const cx = x + 3 + i * colW;
+      doc.setFont("helvetica", "bold");
+      doc.text(`${label}:`, cx, cy);
+      doc.setFont("helvetica", "normal");
+      const labelW = doc.getTextWidth(`${label}: `);
+      const maxW = colW - 6 - labelW;
+      const truncated = doc.splitTextToSize(val || "—", maxW)[0] ?? "";
+      doc.text(String(truncated), cx + labelW, cy);
+    });
+    cy += 5.5;
+  });
+
+  state.y = startY + 36 + 4;
+}
+
+function ensureSpace(state: RenderState, paciente: Paciente, needed: number) {
+  if (state.y + needed > state.pageH - MARGIN_BOTTOM) {
+    drawFooter(state);
+    state.doc.addPage();
+    state.page += 1;
+    drawHeader(state, paciente, true);
+    drawPacienteBox(state, paciente);
+  }
+}
+
+function drawFooter(state: RenderState) {
+  const { doc, pageW, pageH } = state;
+  doc.setDrawColor(180);
+  doc.setLineWidth(0.2);
+  doc.line(MARGIN_X, pageH - MARGIN_BOTTOM + 4, pageW - MARGIN_X, pageH - MARGIN_BOTTOM + 4);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7);
+  doc.setTextColor(90);
+  doc.text("Industrial - Setor Leste Vila Nova - CEP 74635-040", pageW / 2, pageH - MARGIN_BOTTOM + 8, {
+    align: "center",
+  });
+  doc.setFont("helvetica", "bold");
+  doc.text("GOIANIA - GO | (62) 3524-1824", pageW / 2, pageH - MARGIN_BOTTOM + 12, { align: "center" });
+  doc.setFont("helvetica", "normal");
+  doc.text(`Página ${state.page}`, pageW - MARGIN_X, pageH - MARGIN_BOTTOM + 12, { align: "right" });
+  doc.setTextColor(0);
+}
+
+function drawRegistro(state: RenderState, paciente: Paciente, reg: ProntuarioRegistro) {
+  const { doc, pageW } = state;
+  const x = MARGIN_X;
+  const w = pageW - MARGIN_X * 2;
+
+  // Estimate block height
+  doc.setFontSize(8);
+  const conteudoLines = doc.splitTextToSize(reg.conteudo || "", w - 4);
+  const estimated = 5 /*hdr line*/ + 5 /*meta1*/ + 5 /*meta2*/ + conteudoLines.length * LINE_H + 4;
+  ensureSpace(state, paciente, estimated);
+
+  // Separator
+  doc.setDrawColor(210);
+  doc.setLineWidth(0.2);
+  doc.line(x, state.y, x + w, state.y);
+  state.y += 3;
+
+  // Linha 1: Profissional
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.text("Profissional:", x, state.y);
+  doc.setFont("helvetica", "normal");
+  const profLines = doc.splitTextToSize(reg.profissional || "—", w - doc.getTextWidth("Profissional: "));
+  doc.text(profLines, x + doc.getTextWidth("Profissional: "), state.y);
+  state.y += profLines.length * LINE_H;
+
+  // Linha 2: Unidade
+  doc.setFont("helvetica", "bold");
+  doc.text("Unidade:", x, state.y);
+  doc.setFont("helvetica", "normal");
+  const uniLines = doc.splitTextToSize(reg.unidade || "—", w - doc.getTextWidth("Unidade: "));
+  doc.text(uniLines, x + doc.getTextWidth("Unidade: "), state.y);
+  state.y += uniLines.length * LINE_H;
+
+  // Linha 3: Dt Registro / Tipo / Classificação
+  doc.setFont("helvetica", "bold");
+  doc.text("Dt Registro:", x, state.y);
+  doc.setFont("helvetica", "normal");
+  doc.text(reg.dataRegistro || "—", x + doc.getTextWidth("Dt Registro: "), state.y);
+
+  const meta2X = x + 70;
+  doc.setFont("helvetica", "bold");
+  doc.text("Tipo:", meta2X, state.y);
+  doc.setFont("helvetica", "normal");
+  doc.text(reg.tipoRegistro || "—", meta2X + doc.getTextWidth("Tipo: "), state.y);
+
+  if (reg.classificacaoRisco) {
+    const meta3X = x + 120;
+    doc.setFont("helvetica", "bold");
+    doc.text("Risco:", meta3X, state.y);
+    doc.setFont("helvetica", "normal");
+    doc.text(reg.classificacaoRisco, meta3X + doc.getTextWidth("Risco: "), state.y);
+  }
+  state.y += LINE_H + 1;
+
+  // Conteúdo
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  // Re-fluxo com possível quebra de página
+  for (const line of conteudoLines) {
+    ensureSpace(state, paciente, LINE_H);
+    doc.text(line, x, state.y);
+    state.y += LINE_H;
+  }
+  state.y += 2;
+}
+
+export function gerarProntuarioPdf(paciente: Paciente, registros: ProntuarioRegistro[]) {
+  const doc = newDoc();
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+
+  const state: RenderState = {
+    doc,
+    y: 0,
+    pageW,
+    pageH,
+    page: 1,
+    totalPlaceholder: () => {},
+  };
+
+  drawHeader(state, paciente, false);
+  drawPacienteBox(state, paciente);
+
+  // Ordena por data desc (mantém ordem se já vier ordenado)
+  const ordered = [...registros].sort((a, b) => {
+    const pa = parseDate(a.dataRegistro);
+    const pb = parseDate(b.dataRegistro);
+    return pb - pa;
+  });
+
+  if (ordered.length === 0) {
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(9);
+    doc.text("Nenhum atendimento registrado.", MARGIN_X, state.y);
+  } else {
+    ordered.forEach((reg) => drawRegistro(state, paciente, reg));
+  }
+
+  drawFooter(state);
+
+  // Atualiza páginas com total
+  const total = doc.getNumberOfPages();
+  for (let p = 1; p <= total; p++) {
+    doc.setPage(p);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7);
+    doc.setTextColor(90);
+    doc.text(`Página ${p} de ${total}`, pageW - MARGIN_X, MARGIN_TOP + 19, { align: "right" });
+    doc.setTextColor(0);
+  }
+
+  const cpfDigits = (paciente.cpf || "").replace(/\D/g, "");
+  const fname = `prontuario_${cpfDigits || paciente.id}.pdf`;
+  doc.save(fname);
+}
+
+function parseDate(s: string): number {
+  // "20/04/2025 08:18:47"
+  const m = s?.match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2}):(\d{2}))?/);
+  if (!m) return 0;
+  const [, dd, mm, yyyy, hh = "0", mi = "0", ss = "0"] = m;
+  return new Date(+yyyy, +mm - 1, +dd, +hh, +mi, +ss).getTime();
+}
