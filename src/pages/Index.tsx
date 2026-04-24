@@ -27,7 +27,27 @@ const Index = () => {
   const pacienteSearch = usePacienteSearch();
   const paciente = usePaciente(pacienteId ?? 0, !!pacienteId && !picker);
   const vacinas = useVacinas(pacienteId ?? 0, !!pacienteId && !picker);
+  const prontuario = useProntuario();
 
+  function handleGerarProntuario() {
+    if (!paciente.data) return;
+    const p = paciente.data;
+    prontuario.mutate(p.id, {
+      onSuccess: (registros) => {
+        try {
+          gerarProntuarioPdf(p, registros);
+          toast.success("Prontuário gerado com sucesso.");
+        } catch (err) {
+          toast.error("Falha ao gerar PDF do prontuário.");
+          console.error(err);
+        }
+      },
+      onError: (e: unknown) => {
+        const msg = e && typeof e === "object" && "message" in e ? (e as { message?: string }).message : null;
+        toast.error(msg || "Erro ao buscar prontuário.");
+      },
+    });
+  }
 
   function handleSearch(e?: React.FormEvent) {
     e?.preventDefault();
