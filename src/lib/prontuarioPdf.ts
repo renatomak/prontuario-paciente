@@ -178,65 +178,112 @@ function drawFooter(state: RenderState) {
   doc.setTextColor(0);
 }
 
+//
+// ⭐⭐⭐ INSERÇÃO DO CARD DE ATENDIMENTO AQUI ⭐⭐⭐
+//
+
 function drawRegistro(state: RenderState, paciente: Paciente, reg: ProntuarioRegistro) {
   const { doc, pageW } = state;
   const x = MARGIN_X;
   const w = pageW - MARGIN_X * 2;
 
+  //
+  // --- CARD DE ATENDIMENTO ---
+  //
+
+  const cardH = 18;
+  ensureSpace(state, paciente, cardH + 4);
+
+  doc.setFillColor(245, 247, 250);
+  doc.setDrawColor(180);
+  doc.roundedRect(x, state.y, w, cardH, 1.5, 1.5, "FD");
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.text("Atendimento", x + 3, state.y + 4);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7);
+
+  let lineY = state.y + 8;
+
+  doc.text(`Unidade: ${reg.unidade || "—"}`, x + 3, lineY);
+  lineY += 4;
+
+  doc.text(`Profissional: ${reg.profissional || "—"}`, x + 3, lineY);
+  lineY += 4;
+
+  doc.text(
+    `Tipo: ${reg.tipoRegistro || "—"} | Risco: ${reg.classificacaoRisco || "—"} | Dt: ${reg.dataRegistro}`,
+    x + 3,
+    lineY
+  );
+
+  state.y += cardH + 3;
+
+  //
+  // --- FIM DO CARD ---
+
   // Estimate block height
   doc.setFontSize(8);
   const conteudoLines = doc.splitTextToSize(reg.conteudo || "", w - 4);
-  const estimated = 5 /*hdr line*/ + 5 /*meta1*/ + 5 /*meta2*/ + conteudoLines.length * LINE_H + 4;
+  const estimated = 5 + 5 + 5 + conteudoLines.length * LINE_H + 4;
   ensureSpace(state, paciente, estimated);
 
   // Separator
   doc.setDrawColor(210);
   doc.setLineWidth(0.2);
   doc.line(x, state.y, x + w, state.y);
-  state.y += 3;
+  state.y += 5; 
 
   // Linha 1: Profissional
+  const labelValueSpacing = 3;
+
   doc.setFont("helvetica", "bold");
   doc.setFontSize(8);
   doc.text("Profissional:", x, state.y);
   doc.setFont("helvetica", "normal");
-  const profLines = doc.splitTextToSize(reg.profissional || "—", w - doc.getTextWidth("Profissional: "));
-  doc.text(profLines, x + doc.getTextWidth("Profissional: "), state.y);
+  const profLabelW = doc.getTextWidth("Profissional: ");
+  const profLines = doc.splitTextToSize(reg.profissional || "—", w - profLabelW - labelValueSpacing);
+  doc.text(profLines, x + profLabelW + labelValueSpacing, state.y);
   state.y += profLines.length * LINE_H;
 
   // Linha 2: Unidade
   doc.setFont("helvetica", "bold");
   doc.text("Unidade:", x, state.y);
   doc.setFont("helvetica", "normal");
-  const uniLines = doc.splitTextToSize(reg.unidade || "—", w - doc.getTextWidth("Unidade: "));
-  doc.text(uniLines, x + doc.getTextWidth("Unidade: "), state.y);
+  const uniLabelW = doc.getTextWidth("Unidade: ");
+  const uniLines = doc.splitTextToSize(reg.unidade || "—", w - uniLabelW - labelValueSpacing);
+  doc.text(uniLines, x + uniLabelW + labelValueSpacing, state.y);
   state.y += uniLines.length * LINE_H;
 
   // Linha 3: Dt Registro / Tipo / Classificação
   doc.setFont("helvetica", "bold");
   doc.text("Dt Registro:", x, state.y);
   doc.setFont("helvetica", "normal");
-  doc.text(reg.dataRegistro || "—", x + doc.getTextWidth("Dt Registro: "), state.y);
+  const dtLabelW = doc.getTextWidth("Dt Registro: ");
+  doc.text(reg.dataRegistro || "—", x + dtLabelW + labelValueSpacing, state.y);
 
   const meta2X = x + 70;
   doc.setFont("helvetica", "bold");
   doc.text("Tipo:", meta2X, state.y);
   doc.setFont("helvetica", "normal");
-  doc.text(reg.tipoRegistro || "—", meta2X + doc.getTextWidth("Tipo: "), state.y);
+  const tipoLabelW = doc.getTextWidth("Tipo: ");
+  doc.text(reg.tipoRegistro || "—", meta2X + tipoLabelW + labelValueSpacing, state.y);
 
   if (reg.classificacaoRisco) {
     const meta3X = x + 120;
     doc.setFont("helvetica", "bold");
     doc.text("Risco:", meta3X, state.y);
     doc.setFont("helvetica", "normal");
-    doc.text(reg.classificacaoRisco, meta3X + doc.getTextWidth("Risco: "), state.y);
+    const riscoLabelW = doc.getTextWidth("Risco: ");
+    doc.text(reg.classificacaoRisco, meta3X + riscoLabelW + labelValueSpacing, state.y);
   }
   state.y += LINE_H + 1;
 
   // Conteúdo
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
-  // Re-fluxo com possível quebra de página
   for (const line of conteudoLines) {
     ensureSpace(state, paciente, LINE_H);
     doc.text(line, x, state.y);
@@ -296,7 +343,6 @@ export function gerarProntuarioPdf(paciente: Paciente, registros: ProntuarioRegi
 }
 
 function parseDate(s: string): number {
-  // "20/04/2025 08:18:47"
   const m = s?.match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2}):(\d{2}))?/);
   if (!m) return 0;
   const [, dd, mm, yyyy, hh = "0", mi = "0", ss = "0"] = m;
