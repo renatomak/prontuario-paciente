@@ -3,6 +3,8 @@ import { Paciente, PacienteResumo } from "@/domain/models";
 import { usePacienteSearch } from "../ui/hooks/usePacienteSearch";
 import { usePaciente } from "../ui/hooks/usePaciente";
 import { useVacinas } from "../ui/hooks/useVacinas";
+import { useProntuario } from "../ui/hooks/useProntuario";
+import { gerarProntuarioPdf } from "@/lib/prontuarioPdf";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,7 +13,7 @@ import { PacienteHeaderCard } from "@/components/PacienteHeaderCard";
 import { VacinasTable } from "@/components/VacinasTable";
 import { VacinaDetalheSheet } from "@/components/VacinaDetalheSheet";
 import { PacientesPickerDialog } from "@/components/PacientesPickerDialog";
-import { Search, Loader2, Syringe } from "lucide-react";
+import { Search, Loader2, Syringe, FileDown } from "lucide-react";
 import { toast } from "sonner";
 
 const Index = () => {
@@ -25,7 +27,27 @@ const Index = () => {
   const pacienteSearch = usePacienteSearch();
   const paciente = usePaciente(pacienteId ?? 0, !!pacienteId && !picker);
   const vacinas = useVacinas(pacienteId ?? 0, !!pacienteId && !picker);
+  const prontuario = useProntuario();
 
+  function handleGerarProntuario() {
+    if (!paciente.data) return;
+    const p = paciente.data;
+    prontuario.mutate(p.id, {
+      onSuccess: (registros) => {
+        try {
+          gerarProntuarioPdf(p, registros);
+          toast.success("Prontuário gerado com sucesso.");
+        } catch (err) {
+          toast.error("Falha ao gerar PDF do prontuário.");
+          console.error(err);
+        }
+      },
+      onError: (e: unknown) => {
+        const msg = e && typeof e === "object" && "message" in e ? (e as { message?: string }).message : null;
+        toast.error(msg || "Erro ao buscar prontuário.");
+      },
+    });
+  }
 
   function handleSearch(e?: React.FormEvent) {
     e?.preventDefault();
@@ -71,8 +93,8 @@ const Index = () => {
       </header>
 
       <main className="container py-8 space-y-6">
-        <form onSubmit={handleSearch} className="flex gap-2 max-w-2xl">
-          <div className="relative flex-1">
+        <form onSubmit={handleSearch} className="flex gap-2 max-w-3xl flex-wrap">
+          <div className="relative flex-1 min-w-[240px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               value={query}
@@ -84,6 +106,24 @@ const Index = () => {
           <Button type="submit" disabled={pacienteSearch.isPending} className="h-11 px-6">
             {pacienteSearch.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Buscar"}
           </Button>
+          {paciente.data && (
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={handleGerarProntuario}
+              disabled={prontuario.isPending}
+              className="h-11 px-5"
+            >
+              {prontuario.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <>
+                  <FileDown className="h-4 w-4" />
+                  Gerar Prontuário
+                </>
+              )}
+            </Button>
+          )}
         </form>
 
         {!pacienteId && !pacienteSearch.isPending && (

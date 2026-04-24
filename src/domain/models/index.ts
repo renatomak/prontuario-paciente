@@ -79,3 +79,12 @@ export interface VacinaDetalhe {
 export type SearchResult =
   | { tipo: "paciente"; paciente: Paciente }
   | { tipo: "lista"; pacientes: PacienteResumo[] };
+
+export interface ProntuarioRegistro {
+  dataRegistro: string;
+  profissional: string;
+  unidade: string;
+  tipoRegistro: string;
+  classificacaoRisco: string | null;
+  conteudo: string;
+}

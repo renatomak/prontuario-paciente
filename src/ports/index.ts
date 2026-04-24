@@ -1,5 +1,5 @@
 // Contratos (ports) para acesso a pacientes e vacinas
-import type { Paciente, PacienteResumo, SearchResult, VacinaResumo, VacinaDetalhe } from "../domain/models";
+import type { Paciente, PacienteResumo, SearchResult, VacinaResumo, VacinaDetalhe, ProntuarioRegistro } from "../domain/models";
 
 export interface PacientePort {
   search(query: string): Promise<SearchResult>;
@@ -9,4 +9,8 @@ export interface PacientePort {
 export interface VacinaPort {
   listByPaciente(id: number): Promise<VacinaResumo[]>;
   getDetalhe(idAplicacao: number): Promise<VacinaDetalhe>;
+}
+
+export interface ProntuarioPort {
+  getByPacienteId(id: number): Promise<ProntuarioRegistro[]>;
 }
