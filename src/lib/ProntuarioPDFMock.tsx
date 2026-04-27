@@ -6,9 +6,14 @@ import {
   Image,
   StyleSheet,
 } from "@react-pdf/renderer";
-import type { MockProntuario } from "@/data/patientMock";
+import type {
+  MockProntuario,
+  MockAtendimento,
+  MockRegistro,
+  MockRegistroConteudo,
+} from "@/data/patientMock";
 
-function parseDate(str?: string) {
+function parseDate(str?: string | null) {
   if (!str) return 0;
   const datePart = str.split(" ")[0];
   const [dd, mm, yyyy] = datePart.split("/");
@@ -16,8 +21,31 @@ function parseDate(str?: string) {
   return new Date(`${yyyy}-${mm}-${dd}`).getTime();
 }
 
-function sortAtendimentos(atendimentos: MockProntuario["atendimentos"] = []) {
+function sortAtendimentos(atendimentos: MockAtendimento[] = []) {
   return [...atendimentos].sort((a, b) => parseDate(b.chegada) - parseDate(a.chegada));
+}
+
+function linhasConteudo(c: MockRegistroConteudo): { label?: string; texto: string }[] {
+  const linhas: { label?: string; texto: string }[] = [];
+  if (c.subtitulo) linhas.push({ texto: c.subtitulo });
+  if (c.motivoConsulta) linhas.push({ label: "Motivo", texto: c.motivoConsulta });
+  if (c.historico) linhas.push({ label: "Histórico", texto: c.historico });
+  if (c.evolucao) linhas.push({ label: "Evolução", texto: c.evolucao });
+  if (c.observacao) linhas.push({ label: "Obs.", texto: c.observacao });
+  const antro: string[] = [];
+  if (c.peso != null) antro.push(`Peso: ${c.peso}kg`);
+  if (c.altura != null) antro.push(`Altura: ${c.altura}cm`);
+  if (c.perimetroCefalico != null) antro.push(`PC: ${c.perimetroCefalico}cm`);
+  if (antro.length) linhas.push({ texto: antro.join("   |   ") });
+  if (c.cid?.codigo) linhas.push({ label: "CID", texto: `${c.cid.codigo} - ${c.cid.descricao ?? ""}` });
+  if (c.procedimentos?.length)
+    linhas.push({ label: "Procedimentos", texto: c.procedimentos.join("; ") });
+  if (c.exames?.itens?.length)
+    linhas.push({
+      label: `Exames (${c.exames.grupo ?? ""})`,
+      texto: c.exames.itens.join("; "),
+    });
+  return linhas;
 }
 
 interface Props {
@@ -32,7 +60,7 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
   return (
     <Document>
       <Page size="A4" style={styles.page} wrap>
-        {/* Cabeçalho fixo em todas as páginas */}
+        {/* Cabeçalho fixo */}
         <View style={styles.headerContainer} fixed>
           <View style={styles.headerRow}>
             {logoBase64 ? <Image src={logoBase64} style={styles.logo} /> : <View style={styles.logo} />}
@@ -77,29 +105,49 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
           <Text style={styles.emptyText}>Nenhum atendimento registrado.</Text>
         ) : (
           atendimentos.map((a, idx) => (
-            <View key={idx} style={styles.atendimento} wrap={false}>
+            <View key={idx} style={styles.atendimento}>
               <View style={styles.atendimentoHeader}>
-                <Text style={styles.atendimentoTitle}>Atendimento</Text>
-                <Text style={styles.atendimentoDate}>{a.chegada}</Text>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.atendimentoTitle}>{a.unidade}</Text>
+                  {a.tipoAtendimento && (
+                    <Text style={styles.atendimentoSub}>{a.tipoAtendimento}</Text>
+                  )}
+                </View>
+                <View style={{ alignItems: "flex-end" }}>
+                  <Text style={styles.atendimentoDate}>Chegada: {a.chegada}</Text>
+                  {a.numeroAtendimento && (
+                    <Text style={styles.atendimentoDate}>Nº {a.numeroAtendimento}</Text>
+                  )}
+                </View>
               </View>
-              <View style={styles.atendimentoBody}>
-                <Text style={styles.metaLine}>
-                  <Text style={styles.metaLabel}>Unidade: </Text>
-                  {a.unidade || "—"}
-                </Text>
-                {a.profissional && (
-                  <Text style={styles.metaLine}>
-                    <Text style={styles.metaLabel}>Profissional: </Text>
-                    {a.profissional}
+
+              {a.registros?.map((r: MockRegistro, ri) => (
+                <View key={ri} style={styles.registro} wrap={false}>
+                  <View style={styles.registroHeader}>
+                    <Text style={styles.registroProf}>
+                      {r.profissional?.nome}
+                      {r.profissional?.tipoRegistro && r.profissional?.registro
+                        ? ` (${r.profissional.tipoRegistro} ${r.profissional.registro})`
+                        : ""}
+                    </Text>
+                    <Text style={styles.registroDate}>{r.dataRegistro}</Text>
+                  </View>
+                  <Text style={styles.registroMeta}>
+                    <Text style={styles.metaLabel}>Tipo: </Text>
+                    {r.tipo || "—"}
+                    {r.conteudo.classificacaoRisco
+                      ? `   |   Risco: ${r.conteudo.classificacaoRisco}`
+                      : ""}
+                    {r.profissional?.cboDescricao ? `   |   ${r.profissional.cboDescricao}` : ""}
                   </Text>
-                )}
-                <Text style={styles.metaLine}>
-                  <Text style={styles.metaLabel}>Tipo: </Text>
-                  {a.tipoRegistro || "—"}
-                  {a.classificacaoRisco ? `   |   Risco: ${a.classificacaoRisco}` : ""}
-                </Text>
-                {a.conteudo && <Text style={styles.conteudo}>{a.conteudo}</Text>}
-              </View>
+                  {linhasConteudo(r.conteudo).map((l, li) => (
+                    <Text key={li} style={styles.conteudo}>
+                      {l.label ? <Text style={styles.metaLabel}>{l.label}: </Text> : null}
+                      {l.texto}
+                    </Text>
+                  ))}
+                </View>
+              ))}
             </View>
           ))
         )}
@@ -201,39 +249,62 @@ const styles = StyleSheet.create({
   },
   atendimento: {
     borderWidth: 0.5,
-    borderColor: "#ccc",
+    borderColor: "#bbb",
     borderRadius: 3,
-    marginBottom: 8,
+    marginBottom: 10,
   },
   atendimentoHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: "#eef2f7",
+    backgroundColor: "#dde6f0",
     paddingHorizontal: 6,
-    paddingVertical: 3,
+    paddingVertical: 4,
   },
   atendimentoTitle: {
     fontFamily: "Helvetica-Bold",
-    fontSize: 9,
+    fontSize: 9.5,
+  },
+  atendimentoSub: {
+    fontSize: 8,
+    color: "#444",
+    marginTop: 1,
   },
   atendimentoDate: {
-    fontSize: 9,
+    fontSize: 8,
   },
-  atendimentoBody: {
-    padding: 6,
+  registro: {
+    paddingHorizontal: 6,
+    paddingVertical: 5,
+    borderTopWidth: 0.4,
+    borderTopColor: "#ddd",
   },
-  metaLine: {
-    fontSize: 8.5,
+  registroHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 2,
+  },
+  registroProf: {
+    fontSize: 8.5,
+    fontFamily: "Helvetica-Bold",
+    flex: 1,
+    paddingRight: 6,
+  },
+  registroDate: {
+    fontSize: 8,
+  },
+  registroMeta: {
+    fontSize: 8,
+    marginBottom: 3,
+    color: "#333",
   },
   metaLabel: {
     fontFamily: "Helvetica-Bold",
   },
   conteudo: {
-    marginTop: 4,
     fontSize: 8.5,
     lineHeight: 1.4,
     textAlign: "justify",
+    marginTop: 2,
   },
   emptyText: {
     fontSize: 9,
