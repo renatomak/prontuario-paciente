@@ -1,28 +1,54 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { pdf } from "@react-pdf/renderer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Download, Loader2, FileText, MapPin, User, Calendar } from "lucide-react";
+import { Download, Loader2, FileText, MapPin, User, Calendar, Stethoscope } from "lucide-react";
 import { toast } from "sonner";
 import ProntuarioPDFMock from "@/lib/ProntuarioPDFMock";
 import { getLogoBase64 } from "@/lib/logoGoiania";
-import { patientMockData, type MockProntuario } from "@/data/patientMock";
+import {
+  patientMockData,
+  type MockProntuario,
+  type MockRegistro,
+  type MockRegistroConteudo,
+} from "@/data/patientMock";
 
 // CPF fixo usado internamente nesta aba para fins de teste do novo fluxo de PDF.
-// Independe do CPF buscado no fluxo principal.
 const CPF_FIXO_TESTE = "121.694.411-31";
 
 interface Props {
   data?: MockProntuario;
 }
 
+function renderConteudo(c: MockRegistroConteudo): string[] {
+  const linhas: string[] = [];
+  if (c.subtitulo) linhas.push(c.subtitulo);
+  if (c.motivoConsulta) linhas.push(`Motivo: ${c.motivoConsulta}`);
+  if (c.historico) linhas.push(`Histórico: ${c.historico}`);
+  if (c.evolucao) linhas.push(c.evolucao);
+  if (c.observacao) linhas.push(`Obs.: ${c.observacao}`);
+  const antro: string[] = [];
+  if (c.peso != null) antro.push(`Peso: ${c.peso}kg`);
+  if (c.altura != null) antro.push(`Altura: ${c.altura}cm`);
+  if (c.perimetroCefalico != null) antro.push(`PC: ${c.perimetroCefalico}cm`);
+  if (antro.length) linhas.push(antro.join("  |  "));
+  if (c.cid?.codigo) linhas.push(`CID: ${c.cid.codigo} - ${c.cid.descricao ?? ""}`);
+  if (c.procedimentos?.length) linhas.push(`Procedimentos: ${c.procedimentos.join("; ")}`);
+  if (c.exames?.itens?.length) {
+    linhas.push(`Exames (${c.exames.grupo ?? ""}): ${c.exames.itens.join("; ")}`);
+  }
+  return linhas;
+}
+
 export function ProntuarioAtendimentos({ data: _data }: Props = {}) {
-  // Sempre força o uso do mock referente ao CPF de teste, ignorando qualquer dado externo.
-  const data: MockProntuario = {
-    ...patientMockData,
-    paciente: { ...patientMockData.paciente, cpf: CPF_FIXO_TESTE },
-  };
+  const data: MockProntuario = useMemo(
+    () => ({
+      ...patientMockData,
+      paciente: { ...patientMockData.paciente, cpf: CPF_FIXO_TESTE },
+    }),
+    [],
+  );
   const [downloading, setDownloading] = useState(false);
 
   async function handleDownload() {
@@ -47,6 +73,7 @@ export function ProntuarioAtendimentos({ data: _data }: Props = {}) {
   }
 
   const { paciente, atendimentos } = data;
+  const totalRegistros = atendimentos.reduce((acc, a) => acc + (a.registros?.length ?? 0), 0);
 
   return (
     <div className="space-y-4">
@@ -57,8 +84,8 @@ export function ProntuarioAtendimentos({ data: _data }: Props = {}) {
             Prontuário de Atendimentos
           </h2>
           <p className="text-sm text-muted-foreground">
-            {atendimentos.length} atendimento{atendimentos.length === 1 ? "" : "s"} registrado
-            {atendimentos.length === 1 ? "" : "s"}
+            {atendimentos.length} atendimento{atendimentos.length === 1 ? "" : "s"} • {totalRegistros}{" "}
+            registro{totalRegistros === 1 ? "" : "s"}
           </p>
         </div>
         <Button onClick={handleDownload} disabled={downloading} className="gap-2">
@@ -96,16 +123,14 @@ export function ProntuarioAtendimentos({ data: _data }: Props = {}) {
                     <MapPin className="h-4 w-4 text-primary" />
                     {a.unidade}
                   </div>
-                  {a.profissional && (
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <User className="h-3.5 w-3.5" />
-                      {a.profissional}
-                    </div>
+                  {a.tipoAtendimento && (
+                    <div className="text-xs text-muted-foreground">{a.tipoAtendimento}</div>
                   )}
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  {a.tipoRegistro && <Badge variant="secondary">{a.tipoRegistro}</Badge>}
-                  {a.classificacaoRisco && <Badge variant="outline">{a.classificacaoRisco}</Badge>}
+                  {a.numeroAtendimento && (
+                    <Badge variant="outline">Nº {a.numeroAtendimento}</Badge>
+                  )}
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
                     <Calendar className="h-3.5 w-3.5" />
                     {a.chegada}
@@ -113,13 +138,51 @@ export function ProntuarioAtendimentos({ data: _data }: Props = {}) {
                 </div>
               </div>
             </CardHeader>
-            {a.conteudo && (
-              <CardContent className="pt-0">
-                <p className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap">
-                  {a.conteudo}
-                </p>
-              </CardContent>
-            )}
+            <CardContent className="pt-0 space-y-3">
+              {a.registros?.map((r: MockRegistro, ri) => {
+                const linhas = renderConteudo(r.conteudo);
+                return (
+                  <div key={ri} className="rounded-md border border-border/60 bg-card p-3 space-y-2">
+                    <div className="flex items-start justify-between gap-2 flex-wrap">
+                      <div className="flex items-center gap-2 text-xs">
+                        <User className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span className="font-medium">{r.profissional?.nome}</span>
+                        {r.profissional?.tipoRegistro && r.profissional?.registro && (
+                          <span className="text-muted-foreground">
+                            ({r.profissional.tipoRegistro} {r.profissional.registro})
+                          </span>
+                        )}
+                        {r.profissional?.cboDescricao && (
+                          <span className="text-muted-foreground inline-flex items-center gap-1">
+                            <Stethoscope className="h-3 w-3" />
+                            {r.profissional.cboDescricao}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="secondary">{r.tipo}</Badge>
+                        {r.conteudo.classificacaoRisco && (
+                          <Badge variant="outline">{r.conteudo.classificacaoRisco}</Badge>
+                        )}
+                        <span className="text-xs text-muted-foreground">{r.dataRegistro}</span>
+                      </div>
+                    </div>
+                    {linhas.length > 0 && (
+                      <div className="space-y-1.5">
+                        {linhas.map((l, li) => (
+                          <p
+                            key={li}
+                            className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap"
+                          >
+                            {l}
+                          </p>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </CardContent>
           </Card>
         ))}
       </div>
