@@ -29,7 +29,7 @@ export function ProntuarioAtendimentos({ data: _data }: Props = {}) {
     try {
       setDownloading(true);
       const logoBase64 = await getLogoBase64();
-      const blob = await pdf(<ProntuarioPDF data={data} logoBase64={logoBase64} />).toBlob();
+      const blob = await pdf(<ProntuarioPDFMock data={data} logoBase64={logoBase64} />).toBlob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
