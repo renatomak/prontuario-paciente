@@ -33,17 +33,24 @@ const Index = () => {
   function handleGerarProntuario() {
     if (!paciente.data) return;
     const p = paciente.data;
+    console.info("[Prontuario] gerando para paciente id =", p.id);
     prontuario.mutate(p.id, {
       onSuccess: async (registros) => {
+        console.info("[Prontuario] registros para PDF:", registros?.length, registros);
         try {
           await gerarProntuarioPdf(p, registros);
-          toast.success("Prontuário gerado com sucesso.");
+          if (!registros || registros.length === 0) {
+            toast.warning("Prontuário gerado, mas sem atendimentos retornados pela API.");
+          } else {
+            toast.success(`Prontuário gerado (${registros.length} registros).`);
+          }
         } catch (err) {
           toast.error("Falha ao gerar PDF do prontuário.");
           console.error(err);
         }
       },
       onError: (e: unknown) => {
+        console.error("[Prontuario] erro:", e);
         const msg = e && typeof e === "object" && "message" in e ? (e as { message?: string }).message : null;
         toast.error(msg || "Erro ao buscar prontuário.");
       },
