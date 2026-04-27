@@ -5,15 +5,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Download, Loader2, FileText, MapPin, User, Calendar } from "lucide-react";
 import { toast } from "sonner";
-import ProntuarioPDF from "@/lib/ProntuarioPDF";
+import ProntuarioPDFMock from "@/lib/ProntuarioPDFMock";
 import { getLogoBase64 } from "@/lib/logoGoiania";
 import { patientMockData, type MockProntuario } from "@/data/patientMock";
+
+// CPF fixo usado internamente nesta aba para fins de teste do novo fluxo de PDF.
+// Independe do CPF buscado no fluxo principal.
+const CPF_FIXO_TESTE = "121.694.411-31";
 
 interface Props {
   data?: MockProntuario;
 }
 
-export function ProntuarioAtendimentos({ data = patientMockData }: Props) {
+export function ProntuarioAtendimentos({ data: _data }: Props = {}) {
+  // Sempre força o uso do mock referente ao CPF de teste, ignorando qualquer dado externo.
+  const data: MockProntuario = {
+    ...patientMockData,
+    paciente: { ...patientMockData.paciente, cpf: CPF_FIXO_TESTE },
+  };
   const [downloading, setDownloading] = useState(false);
 
   async function handleDownload() {
