@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PacienteDados } from "@/components/PacienteDados";
 import { PacienteHeaderCard } from "@/components/PacienteHeaderCard";
+import { ProntuarioAtendimentos } from "@/components/ProntuarioAtendimentos";
 import { VacinasTable } from "@/components/VacinasTable";
 import { VacinaDetalheSheet } from "@/components/VacinaDetalheSheet";
 import { PacientesPickerDialog } from "@/components/PacientesPickerDialog";
@@ -141,6 +142,7 @@ const Index = () => {
               <TabsList>
                 <TabsTrigger value="dados">Dados do Paciente</TabsTrigger>
                 <TabsTrigger value="vacinas">Vacinas ({vacinas.data?.length ?? 0})</TabsTrigger>
+                <TabsTrigger value="prontuarios">Prontuários de Atendimentos</TabsTrigger>
               </TabsList>
               <TabsContent value="dados">
                 <PacienteDados paciente={paciente.data} />
@@ -151,6 +153,9 @@ const Index = () => {
                   selectedId={selectedVacina ?? undefined}
                   onSelect={(id) => { setSelectedVacina(id); setSheetOpen(true); }}
                 />
+              </TabsContent>
+              <TabsContent value="prontuarios">
+                <ProntuarioAtendimentos />
               </TabsContent>
             </Tabs>
           </div>
