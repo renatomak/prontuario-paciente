@@ -6,12 +6,14 @@ import {
   Image,
   StyleSheet,
 } from "@react-pdf/renderer";
+
 import type {
   ApiProntuarioResponse as MockProntuario,
   ApiAtendimento as MockAtendimento,
   ApiRegistro as MockRegistro,
   ApiRegistroConteudo as MockRegistroConteudo,
 } from "@/lib/prontuarioApi";
+import { limparHtml } from "@/lib/limparHtml";
 
 function parseDate(str?: string | null) {
   if (!str) return 0;
@@ -47,11 +49,12 @@ function htmlToText(html?: string | null): string {
     .trim();
 }
 
+// Para o PDF, limpar o HTML e caracteres especiais do conteúdo
 function blocosConteudo(c: MockRegistroConteudo): { label: string; texto: string }[] {
   const out: { label: string; texto: string }[] = [];
-  const av = htmlToText(c.avaliacao);
-  const ev = htmlToText(c.evolucao);
-  const ex = htmlToText(c.exame);
+  const av = limparHtml(c.avaliacao);
+  const ev = limparHtml(c.evolucao);
+  const ex = limparHtml(c.exame);
   if (av) out.push({ label: "Avaliação", texto: av });
   if (ev) out.push({ label: "Evolução", texto: ev });
   if (ex) out.push({ label: "Exame", texto: ex });

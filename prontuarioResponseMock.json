@@ -1,0 +1,845 @@
+{
+  "paciente": {
+    "id": "9282479",
+    "nome": "THALLYA VALENTINA GOMES RAMOS",
+    "nomeSocial": null,
+    "sexo": "FEMININO",
+    "mae": "NAYANNE GOMES SODRE RAMOS",
+    "dataNascimento": "30/06/2024",
+    "idade": "1 Ano e 1 Mês",
+    "cpf": "121.694.411-31",
+    "cns": "709.2012.7977.9639",
+    "endereco": {
+      "rua": "RUA RB 51 A, SN, Residencial Recanto do Bosque",
+      "cidade": "GOIANIA - GO",
+      "quadra": "51",
+      "lote": "72"
+    },
+    "telefone": "(62) 99870-2201",
+    "celular": "(62) 99870-2201"
+  },
+  "atendimentos": [
+    {
+      "unidade": "UPA MARIA PIRES PERILLO - UPA NOROESTE",
+      "telefone": "(62) 3524-3461",
+      "chegada": "20/04/2025 07:12:54",
+      "saida": null,
+      "tempoPermanencia": "2888:37",
+      "numeroAtendimento": "101677656",
+      "tipoAtendimento": "UPA - CLASSIFICAÇÃO DE RISCO",
+      "registros": [
+        {
+          "profissional": {
+            "nome": "DIANA FERREIRA DE SOUZA",
+            "registro": "622698",
+            "tipoRegistro": "COREN",
+            "cbo": "223505",
+            "cboDescricao": "Enfermeiro"
+          },
+          "tipoAtendimento": "UPA - CLASSIFICAÇÃO DE RISCO",
+          "dataRegistro": "20/04/2025 07:44:55",
+          "tipo": "Avaliação",
+          "conteudo": {
+            "motivoConsulta": "PACIENTE ACOMPANHADA PELO PAIS PACIENTE RESPONSAVEL AFIRMA QUE HÁ 03 DIAS A PACIENTE INICIOU COM CHORO PERSISTENTE, 1 EPISODIO FEBRE 38,5ºC, AFIRMA DIARREIA 04 EPISODIOS SEM SANGUE, DIUSERE CONCENTRADA HÁ 2 DIAS, NAUSEAS, NEGA VÔMITOS, GEMENTE",
+            "classificacaoRisco": "Pouco Urgente",
+            "evolucao": null,
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "LUIS FELIPE PIRES FONTANA",
+            "registro": "28160",
+            "tipoRegistro": "CRM",
+            "cbo": "225124",
+            "cboDescricao": "MEDICO PEDIATRA"
+          },
+          "tipoAtendimento": "UPA - ATENDIMENTO INFANTIL",
+          "dataRegistro": "20/04/2025 07:54:41",
+          "tipo": "Evolução",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": "JÁ TEM UNS DIAS QUE TAVA MEIO RUIM, DEPOIS QUE SAROU FICOU GEMENDO TODA HORA. - USO DE CEFALEXINA E ATB TÓPICO.\n\nABDOME RÍGIDO, CRIANÇA GEMENTE, SEM ALTERAÇÃO DE RIGIDEZ OU DE CHORO A PALPAÇÃO.\n\nHD - DISBIOSE PÓS ATB.\n\nSOLICITO RADIOGRAFIA",
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "LUIS FELIPE PIRES FONTANA",
+            "registro": "28160",
+            "tipoRegistro": "CRM",
+            "cbo": "225124",
+            "cboDescricao": "MEDICO PEDIATRA"
+          },
+          "tipoAtendimento": "UPA - OBSERVAÇÃO - INFANTIL",
+          "dataRegistro": "20/04/2025 08:18:47",
+          "tipo": "Evolução",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": "RX - DISTENÇÃO ABDOMINAL EM PONTOS ESPECÍFICOS\n\nFLORA B + PREDNISOLONA\nINICI",
+            "exames": null
+          }
+        }
+      ]
+    },
+    {
+      "unidade": "UPA MARIA PIRES PERILLO - UPA NOROESTE",
+      "telefone": "(62) 3524-3461",
+      "chegada": "18/04/2025 18:20:19",
+      "saida": null,
+      "tempoPermanencia": null,
+      "numeroAtendimento": null,
+      "tipoAtendimento": "UPA - CLASSIFICAÇÃO DE RISCO",
+      "registros": [
+        {
+          "profissional": {
+            "nome": "SELOMITE BERNARDES DE MORAES",
+            "registro": "178992",
+            "tipoRegistro": "COREN",
+            "cbo": "223505",
+            "cboDescricao": "Enfermeiro"
+          },
+          "tipoAtendimento": "UPA - CLASSIFICAÇÃO DE RISCO",
+          "dataRegistro": "18/04/2025 18:20:19",
+          "tipo": "Avaliação",
+          "conteudo": {
+            "motivoConsulta": "MAE REFERE CRIANÇA COM CHORO PERSISTENTE, DIARREIA LIQUIDA, FEBRE (ONTEM), NEGA ALERGIA A MEDICAMENTOS, COMORBIDADE. NO MOMENTO AFEBRIL",
+            "classificacaoRisco": "Pouco Urgente",
+            "evolucao": null,
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "MARLON HORA MARTINS",
+            "registro": "35135",
+            "tipoRegistro": "CRM",
+            "cbo": "225125",
+            "cboDescricao": "MEDICO CLINICO"
+          },
+          "tipoAtendimento": "UPA - ATENDIMENTO INFANTIL",
+          "dataRegistro": "18/04/2025 18:34:18",
+          "tipo": "Evolução",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": "# PESO: 8 KG\n\n# HDA: PACIENTE COMPARECE ACOMPANHADA DA MÃE, NAYANNE. RESPONSAVEL AFIRMA QUE HÁ 01 DIA A PACIENTE INICIOU COM CHORO PERSISNTENTE E TEVE 01 EPISÓDIO DE FEBRE 38,5ºC. ALÉM DISSO, AFIRMA DIARREIA 04 EPISODIOS SEM SANGUE E SEM MUCO COM INICIO HÁ 01 DIA. NEGA NAUSEAS, VÔMITOS, SINAIS DE ESFORÇO RESPIRATÓRIO, TOSSE, CORIZA, E NEGA OUTROS SINAIS E SINTOMAS DE ALARME.\n\n# HPP:\nNEGA COMORBIDADES\nMUC: NEGA\nNEGA ALERGIAS.\n\n# AO EXAME FISICO:\nBEG, AAA, CORADA E HIDRATADA\nATIVA, REATIVA E CONTACTUANTE\nNEURO: PIFR, SEM DÉFICITS FOCAIS. SEM SINAIS DE IRRITAÇÃO MENINGEA.\nOROSCOPIA: NDN.\nOTOSCOPIA: MT SEM ABAULAMENTO. SEM HIPEREMIA EM CONDUTO AUDITIVO, SEM SAIDA DE SECREÇÃO E SEM CORPO ESTRANHO\nACV: RCR, BNF EM 2 T S/ SOPROS\nAR: MV + S/ RA, EUPNENEICA.\nABDOME: FLACIDO, NORMOTENSO, INDOLOR A PALPAÇÃO, SEM SINAIS DE PERITONITE.\nMMII: SEM EDEMAS, SEM LESÕES. SEM EMPASTAMENTO DE PANTURRILHAS E SEM SINAIS DE TVP.\n\n# HD: FEBRE A/E??\n\n# CD:\n- ORIENTAÇÕES GERAIS E ESPECIFICAS SOBRE O QUADRO CLÍNICO;\n- SOLICITO HMG E EAS.\n- REAVALIAR APÓS RESULTADO DE EXAME.\n\n# UNIDADE SEM LABORATÓRIO/ BIOQUÍMICA FUNCIONANTES - SMS E GESTÃO DA UNIDADE CIENTES. ORIENTO REALIZAR EXAME NA UNIDADE MAIS PROXIMA E RETORNAR IMEDIATAMENTE APÓS RESULTADO DO EXAME.",
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "MARLON HORA MARTINS",
+            "registro": "35135",
+            "tipoRegistro": "CRM",
+            "cbo": "225125",
+            "cboDescricao": "MEDICO CLINICO"
+          },
+          "tipoAtendimento": "UPA - ATENDIMENTO INFANTIL",
+          "dataRegistro": "18/04/2025 18:48:38",
+          "tipo": "Exame",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": null,
+            "exames": {
+              "grupo": "UPA - EXAMES LABORATORIAIS DE URGÊNCIA",
+              "itens": [
+                "URG - ANÁLISE DE CARACTERES FÍSICOS, ELEMENTOS E SEDIMENTO DA URINA (EAS)",
+                "URG - HEMOGRAMA COMPLETO"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "unidade": "UPA MARIA PIRES PERILLO - UPA NOROESTE",
+      "telefone": null,
+      "chegada": "24/03/2025 19:31:02",
+      "saida": null,
+      "tempoPermanencia": null,
+      "numeroAtendimento": null,
+      "tipoAtendimento": "UPA - CLASSIFICAÇÃO DE RISCO",
+      "registros": [
+        {
+          "profissional": {
+            "nome": "ERIKA KAREM GOMES DA SILVA ARAUJO",
+            "registro": "214785",
+            "tipoRegistro": "COREN",
+            "cbo": "223505",
+            "cboDescricao": "Enfermeiro"
+          },
+          "tipoAtendimento": "UPA - CLASSIFICAÇÃO DE RISCO",
+          "dataRegistro": "24/03/2025 19:31:02",
+          "tipo": "Avaliação",
+          "conteudo": {
+            "motivoConsulta": "Mãe Naiane",
+            "classificacaoRisco": "Pouco Urgente",
+            "historico": "Mãe relata secreção no ouvido esquerdo, incio a aprox. 3 semanas. Em uso de de pomada de neomicina e anti alérgico desloratadina, sem melhora. Nega ou desconhece alergias. Nega comorbiade. Peso aprox. 8200 kg",
+            "evolucao": null,
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "LUIS FELIPE PIRES FONTANA",
+            "registro": "28160",
+            "tipoRegistro": "CRM",
+            "cbo": "225125",
+            "cboDescricao": "MEDICO CLINICO"
+          },
+          "tipoAtendimento": "UPA - ATENDIMENTO INFANTIL",
+          "dataRegistro": "24/03/2025 19:58:22",
+          "tipo": "Evolução",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": "VISUALIZAÇÃO DIFÍCIL\nHD - OTITE EXTERNA\n\nCEFALEXINA + OTOCIRIAX",
+            "exames": null
+          }
+        }
+      ]
+    },
+    {
+      "unidade": "USF / APS",
+      "telefone": null,
+      "chegada": "24/02/2025 11:40:55",
+      "saida": null,
+      "tempoPermanencia": null,
+      "numeroAtendimento": null,
+      "tipoAtendimento": "APS - CONSULTA DE ENFERMAGEM",
+      "registros": [
+        {
+          "profissional": {
+            "nome": "MARIA APARECIDA DE LIMA",
+            "registro": "165805",
+            "tipoRegistro": "COREN",
+            "cbo": "223565",
+            "cboDescricao": "ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "APS - CONSULTA DE ENFERMAGEM",
+          "dataRegistro": "24/02/2025 11:40:55",
+          "tipo": "Evolução",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": "Paciente não compareceu a consulta agendada para hoje",
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "MARIA APARECIDA DE LIMA",
+            "registro": "165805",
+            "tipoRegistro": "COREN",
+            "cbo": "223565",
+            "cboDescricao": "ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "APS - CONSULTA DE ENFERMAGEM",
+          "dataRegistro": "24/02/2025 11:42:22",
+          "tipo": "Avaliação",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": "Não Urgente",
+            "peso": 7.5,
+            "altura": 63.0,
+            "evolucao": null,
+            "exames": null
+          }
+        }
+      ]
+    },
+    {
+      "unidade": "USF / APS",
+      "telefone": null,
+      "chegada": "14/02/2025 08:54:00",
+      "saida": null,
+      "tempoPermanencia": null,
+      "numeroAtendimento": null,
+      "tipoAtendimento": "USF - ACOLHIMENTO À DEMANDA ESPONTÂNEA",
+      "registros": [
+        {
+          "profissional": {
+            "nome": "MARIA GEOVANIA DA SILVA CONCEICAO",
+            "registro": "841432",
+            "tipoRegistro": "COREN",
+            "cbo": "322250",
+            "cboDescricao": "AUXILIAR DE ENFERMAGEM DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "USF - ACOLHIMENTO À DEMANDA ESPONTÂNEA",
+          "dataRegistro": "14/02/2025 08:54:00",
+          "tipo": "Avaliação",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": "Não Urgente",
+            "peso": 7.5,
+            "altura": 63.0,
+            "evolucao": null,
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "MARIA APARECIDA DE LIMA",
+            "registro": "165805",
+            "tipoRegistro": "COREN",
+            "cbo": "223565",
+            "cboDescricao": "ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "APS - ACOMPANHAMENTO BENEFICIÁRIO BOLSA FAMILIA",
+          "dataRegistro": "14/02/2025 08:55:56",
+          "tipo": "Avaliação",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": "Não Urgente",
+            "peso": 7.5,
+            "altura": 63.0,
+            "observacao": "Acompanhamento bolsa familia",
+            "evolucao": null,
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "MARIA APARECIDA DE LIMA",
+            "registro": "165805",
+            "tipoRegistro": "COREN",
+            "cbo": "223565",
+            "cboDescricao": "ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "APS - CONSULTA DE ENFERMAGEM",
+          "dataRegistro": "14/02/2025 09:08:37",
+          "tipo": "Evolução",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": "Acompanhamento do bolsa familia",
+            "exames": null
+          }
+        }
+      ]
+    },
+    {
+      "unidade": "USF / APS",
+      "telefone": null,
+      "chegada": "18/12/2024 10:07:30",
+      "saida": null,
+      "tempoPermanencia": null,
+      "numeroAtendimento": null,
+      "tipoAtendimento": "APS - ACOLHIMENTO À DEMANDA ESPONTÂNEA",
+      "registros": [
+        {
+          "profissional": {
+            "nome": "EDNA PEREIRA DOS SANTOS",
+            "registro": "758895",
+            "tipoRegistro": "COREN",
+            "cbo": "322205",
+            "cboDescricao": "Técnico de enfermagem"
+          },
+          "tipoAtendimento": "APS - ACOLHIMENTO À DEMANDA ESPONTÂNEA",
+          "dataRegistro": "18/12/2024 10:07:30",
+          "tipo": "Avaliação",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": "Não Urgente",
+            "peso": 7.5,
+            "altura": 63.0,
+            "evolucao": null,
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "EDNA PEREIRA DOS SANTOS",
+            "registro": "758895",
+            "tipoRegistro": "COREN",
+            "cbo": "322205",
+            "cboDescricao": "Técnico de enfermagem"
+          },
+          "tipoAtendimento": "APS - ACOLHIMENTO À DEMANDA ESPONTÂNEA",
+          "dataRegistro": "18/12/2024 10:09:45",
+          "tipo": "Evolução",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": "Realizado triagem para consulta\nPESO .7,500\nESTATURA .63\n\nCd encaminhado a consulta médica",
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "JAMES NOGUEIRA PIMENTA",
+            "registro": "10062",
+            "tipoRegistro": "CRM",
+            "cbo": "225124",
+            "cboDescricao": "MEDICO PEDIATRA"
+          },
+          "tipoAtendimento": "APS - CONSULTA PEDIATRIA",
+          "dataRegistro": "18/12/2024 11:01:46",
+          "tipo": "Evolução",
+          "conteudo": {
+            "subtitulo": "Puericultura",
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": "Corado, hidratado, acianotico, anicterico, eupneico afebril, TEC menor que 3 segundos\nRCR 2t BNF sem sopro ou extrassistoles\nMvau sem ra sem esforco\nAbdome flacido Rh + ausencia de vcm ou massas palpaveis\nMMiis sem alteracoes\n\ncd: orientações, vit d neutrofer",
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "JAMES NOGUEIRA PIMENTA",
+            "registro": "10062",
+            "tipoRegistro": "CRM",
+            "cbo": "225124",
+            "cboDescricao": "MEDICO PEDIATRA"
+          },
+          "tipoAtendimento": "APS - CONSULTA PEDIATRIA",
+          "dataRegistro": "18/12/2024 11:01:47",
+          "tipo": "Atendimento",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": null,
+            "cid": {
+              "codigo": "Z001",
+              "descricao": "Exame de rotina de saúde da criança"
+            },
+            "exames": null
+          }
+        }
+      ]
+    },
+    {
+      "unidade": "USF / APS",
+      "telefone": null,
+      "chegada": "27/11/2024 16:07:00",
+      "saida": null,
+      "tempoPermanencia": null,
+      "numeroAtendimento": null,
+      "tipoAtendimento": "USF - ACOLHIMENTO À DEMANDA ESPONTÂNEA",
+      "registros": [
+        {
+          "profissional": {
+            "nome": "MARIA ANITA RODRIGUES DOS SANTOS",
+            "registro": "551858",
+            "tipoRegistro": "COREN",
+            "cbo": "322245",
+            "cboDescricao": "TECNICO DE ENFERMAGEM DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "USF - ACOLHIMENTO À DEMANDA ESPONTÂNEA",
+          "dataRegistro": "27/11/2024 16:07:00",
+          "tipo": "Avaliação",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": "Não Urgente",
+            "peso": 7.6,
+            "altura": null,
+            "evolucao": null,
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "MARIA APARECIDA DE LIMA",
+            "registro": "165805",
+            "tipoRegistro": "COREN",
+            "cbo": "223565",
+            "cboDescricao": "ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "APS - ACOMPANHAMENTO BENEFICIÁRIO BOLSA FAMILIA",
+          "dataRegistro": "27/11/2024 16:29:10",
+          "tipo": "Avaliação",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": "Não Urgente",
+            "peso": 7.6,
+            "altura": 59.0,
+            "observacao": "Acompanhamento do bolsa família",
+            "evolucao": null,
+            "exames": null
+          }
+        }
+      ]
+    },
+    {
+      "unidade": "USF / APS",
+      "telefone": null,
+      "chegada": "18/09/2024 09:24:02",
+      "saida": null,
+      "tempoPermanencia": null,
+      "numeroAtendimento": null,
+      "tipoAtendimento": "APS - ACOLHIMENTO",
+      "registros": [
+        {
+          "profissional": {
+            "nome": "LUCIA GONCALVES DA SILVA",
+            "registro": "267171",
+            "tipoRegistro": "COREN",
+            "cbo": "322205",
+            "cboDescricao": "Técnico de enfermagem"
+          },
+          "tipoAtendimento": "APS - ACOLHIMENTO",
+          "dataRegistro": "18/09/2024 09:24:02",
+          "tipo": "Avaliação",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": "Não Urgente",
+            "peso": 5.27,
+            "altura": 56.5,
+            "perimetroCefalico": 39.0,
+            "evolucao": null,
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "LUCIA GONCALVES DA SILVA",
+            "registro": "267171",
+            "tipoRegistro": "COREN",
+            "cbo": "322205",
+            "cboDescricao": "Técnico de enfermagem"
+          },
+          "tipoAtendimento": "APS - ACOLHIMENTO",
+          "dataRegistro": "18/09/2024 09:24:48",
+          "tipo": "Evolução",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": "Aguardando consulta medica",
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "RODRIGO CAETANO DE ALMEIDA",
+            "registro": "6445",
+            "tipoRegistro": "CRM",
+            "cbo": "225124",
+            "cboDescricao": "MEDICO PEDIATRA"
+          },
+          "tipoAtendimento": "APS - CONSULTA PEDIATRIA",
+          "dataRegistro": "18/09/2024 09:44:09",
+          "tipo": "Evolução",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": "rotina sem queixas suga bem eliminaçoes ok gripadinha\nvacina ok\nlme /vit d\nvacina ok\nao xame : sem alt\ncd: orientÇOES",
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "RODRIGO CAETANO DE ALMEIDA",
+            "registro": "6445",
+            "tipoRegistro": "CRM",
+            "cbo": "225124",
+            "cboDescricao": "MEDICO PEDIATRA"
+          },
+          "tipoAtendimento": "APS - CONSULTA PEDIATRIA",
+          "dataRegistro": "18/09/2024 09:44:10",
+          "tipo": "Atendimento",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": null,
+            "cid": {
+              "codigo": "Z001",
+              "descricao": "Exame de rotina de saúde da criança"
+            },
+            "exames": null
+          }
+        }
+      ]
+    },
+    {
+      "unidade": "USF / APS",
+      "telefone": null,
+      "chegada": "09/09/2024 08:57:00",
+      "saida": null,
+      "tempoPermanencia": null,
+      "numeroAtendimento": null,
+      "tipoAtendimento": "USF - ACOLHIMENTO À DEMANDA ESPONTÂNEA",
+      "registros": [
+        {
+          "profissional": {
+            "nome": "MARIA ANITA RODRIGUES DOS SANTOS",
+            "registro": "551858",
+            "tipoRegistro": "COREN",
+            "cbo": "322245",
+            "cboDescricao": "TECNICO DE ENFERMAGEM DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "USF - ACOLHIMENTO À DEMANDA ESPONTÂNEA",
+          "dataRegistro": "09/09/2024 08:57:00",
+          "tipo": "Avaliação",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": "Não Urgente",
+            "peso": 5.5,
+            "altura": null,
+            "evolucao": null,
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "ANA CAROLINA MATIAS FERREIRA",
+            "registro": "27907",
+            "tipoRegistro": "CRM",
+            "cbo": "225142",
+            "cboDescricao": "MEDICO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "APS - CONSULTA MÉDICA",
+          "dataRegistro": "09/09/2024 09:18:16",
+          "tipo": "Evolução",
+          "conteudo": {
+            "subtitulo": "Q.P.: \"CONSULTA DE ROTINA\"",
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": "HDA: PACIENTE ACOMPANHADA PELA MÃE, COMPARECE PARA CONSULTA DE CRESCIMENTO E DESENVOLVIMENTO. NEGA QUEIXAS NO MOMENTO.\n\nMEDICAMENTOS EM USO:\nVIT D 200UI 2GOTAS/DIA\n\nEXAME FÍSICO:\nBOM ESTADO GERAL, NORMOCORADA, HIDRATADA, ANICTÉRICA E ACIANÓTICA\nFONTANELAS NORMOTENSAS\nRITMO CARDÍACO REGULAR EM 2 TEMPOS BULHAS NORMOFONÉTICAS SEM SOPRO\nMURMÚRIO VESICULAR PRESENTE BILATERALMENTE, SEM RUÍDOS ADVENTÍCIOS\nABDOME: RUÍDOS HIDROAEREOS PRESENTES, FLÁCIDO\nMEMBROS SEM ALTERAÇÕES\nDESENVOLVIMENTO NEUROPSICOMOTOR ADEQUADO PARA IDADE\n\nEXAMES COMPLEMENTARES:\nTESTE DO CORAÇAOZINHO DIA 01/07/2024 NORMAL\nTESTE DO OLHINHO 01/07/2024 NORMAL\nTESTE DA ORELHINHA 01/07/2024 NORMA\nPESO 5,5 EST 45 CM PC: 40CM\nTESTES DE TRIAGEM NEONATAL SEM ALTERAÇÕES REALIZADO DIA 12/07/2024\n\nCD: MANTENHO MEDICAMENTOS\nENCMINHO AO PEDIATRA (TESTE DO OLHINHO)\nORIENTO SOBRE QUADRO CLÍNICO. MÃE COMPREENDE\nRETORNO SE NECESSÁRIO",
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "ANA CAROLINA MATIAS FERREIRA",
+            "registro": "27907",
+            "tipoRegistro": "CRM",
+            "cbo": "225142",
+            "cboDescricao": "MEDICO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "APS - CONSULTA MÉDICA",
+          "dataRegistro": "09/09/2024 09:18:17",
+          "tipo": "Atendimento",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": null,
+            "cid": {
+              "codigo": "Z001",
+              "descricao": "Exame de rotina de saúde da criança"
+            },
+            "exames": null
+          }
+        }
+      ]
+    },
+    {
+      "unidade": "USF / APS",
+      "telefone": null,
+      "chegada": "05/08/2024 09:12:23",
+      "saida": null,
+      "tempoPermanencia": null,
+      "numeroAtendimento": null,
+      "tipoAtendimento": "APS - CONSULTA DE ENFERMAGEM",
+      "registros": [
+        {
+          "profissional": {
+            "nome": "MARIA APARECIDA DE LIMA",
+            "registro": "165805",
+            "tipoRegistro": "COREN",
+            "cbo": "223565",
+            "cboDescricao": "ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "APS - CONSULTA DE ENFERMAGEM",
+          "dataRegistro": "05/08/2024 09:12:23",
+          "tipo": "Evolução",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": "MAE TRAX LACTENTE PARA CONSULTA DE CD\nMAE NEGA PATOLOGIAS INFECTOCONTAGIOSAS TRIADAS NO PRÉ NATAL\nIMUNE A TOXOPLASMOSE\nNASCIDO DE PARTO NORMAL\nAPGAR 1`9 2' 9\nPC 34 CM PT 32 CM IG 38 s e 4 dias\nTESTE DO CORAÇAOZINHO DIA 01/07/2024 NORMAL\nTESTE DO OLHINHO 01/07/2024 NORMAL\nTESTE DA ORELHINHA 01/07/2024 NORMA\nPESO 2940 EST 45 CM\nTESTES DE TRIAGEM NEONATAL SEM ALTERAÇÕES REALIZADO DIA 12/07/2024\n\nMae traz criança para consulta de cd. nega queixas no momento\nAlimentação: LM exclusivo\nEvacuações: amarelo tipo qualidade\nPC 37 cm peso 4200 est 54 cm\n\nBOM ESTADO GERAL, NORMOCORADA, HIDRATADA, ANICTÉRICA E ACIANÓTICA\nFONTANELAS NORMOTENSAS\nACV: RITMO CARDÍACO REGULA\nAR: MURMÚRIO VESICULAR PRESENTE BILATERALMENTE, SEM RUÍDOS ADVENTÍCIOS\nABDOME: RUÍDOS HIDROAEREOS PRESENTES, FLÁCIDO\nMEMBROS SEM ALTERAÇÕES\n\nlactente com crescimento e desenvolvimento adequado para idade e sexo\nconduta: orientação\nEncaminho para oftalmologia conforme solicitação pediatrica ao nascimento após teste do olhinho",
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "MARIA APARECIDA DE LIMA",
+            "registro": "165805",
+            "tipoRegistro": "COREN",
+            "cbo": "223565",
+            "cboDescricao": "ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "APS - CONSULTA DE ENFERMAGEM",
+          "dataRegistro": "05/08/2024 09:39:55",
+          "tipo": "Procedimentos",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": null,
+            "procedimentos": [
+              "AVALIAÇÃO ANTROPOMÉTRICA"
+            ],
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "MARIA APARECIDA DE LIMA",
+            "registro": "165805",
+            "tipoRegistro": "COREN",
+            "cbo": "223565",
+            "cboDescricao": "ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "APS - CONSULTA DE ENFERMAGEM",
+          "dataRegistro": "05/08/2024 09:40:08",
+          "tipo": "Procedimentos",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": null,
+            "procedimentos": [
+              "AVALIAÇÃO DO DESENVOLVIMENTO DA CRIANÇA NA PUERICULTURA"
+            ],
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "MARIA APARECIDA DE LIMA",
+            "registro": "165805",
+            "tipoRegistro": "COREN",
+            "cbo": "223565",
+            "cboDescricao": "ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "APS - CONSULTA DE ENFERMAGEM",
+          "dataRegistro": "05/08/2024 09:40:18",
+          "tipo": "Procedimentos",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": null,
+            "procedimentos": [
+              "AVALIAÇÃO DO CRESCIMENTO NA PUERICULTURA"
+            ],
+            "exames": null
+          }
+        }
+      ]
+    },
+    {
+      "unidade": "USF / APS",
+      "telefone": null,
+      "chegada": "08/07/2024 10:47:00",
+      "saida": null,
+      "tempoPermanencia": null,
+      "numeroAtendimento": null,
+      "tipoAtendimento": "USF - ACOLHIMENTO À DEMANDA ESPONTÂNEA",
+      "registros": [
+        {
+          "profissional": {
+            "nome": "ADRIANA BORGES RIBEIRO CARRIJO",
+            "registro": "7742",
+            "tipoRegistro": "COREN",
+            "cbo": "322245",
+            "cboDescricao": "TECNICO DE ENFERMAGEM DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "USF - ACOLHIMENTO À DEMANDA ESPONTÂNEA",
+          "dataRegistro": "08/07/2024 10:47:00",
+          "tipo": "Avaliação",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": "Não Urgente",
+            "peso": 3.2,
+            "altura": null,
+            "evolucao": null,
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "ANA CAROLINA MATIAS FERREIRA",
+            "registro": "27907",
+            "tipoRegistro": "CRM",
+            "cbo": "225142",
+            "cboDescricao": "MEDICO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "APS - CONSULTA MÉDICA",
+          "dataRegistro": "08/07/2024 11:29:07",
+          "tipo": "Evolução",
+          "conteudo": {
+            "subtitulo": "Q.P.: \"CONSULTA DE ROTINA\"",
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": "HDA: PACIENTE ACOMPANHADA PELA MÃE, QUE COMPARECE PARA CONSULTA DE PUERICULTURA. NEGA QUEIXAS NO MOMENTO.\n\nMEDICAMENTOS EM USO: NEGA\n\nEXAME FÍSICO:\nPC: 36CM\nPESO: 3,2G\nCOMP: 45CM\nBOM ESTADO GERAL, NORMOCORADA, HIDRATADA, ANICTÉRICA E ACIANÓTICA\nFONTANELAS NORMOTENSAS\nACV: RITMO CARDÍACO REGULAR EM 2 TEMPOS BULHAS NORMOFONÉTICAS SEM SOPRO\nAR: MURMÚRIO VESICULAR PRESENTE BILATERALMENTE, SEM RUÍDOS ADVENTÍCIOS\nABDOME: RUÍDOS HIDROAEREOS PRESENTES, FLÁCIDO\nMEMBROS SEM ALTERAÇÕES\nTESTES DE TRIAGEM NEONATAL SEM ALTERAÇÕES\n\nCD: PRESCREVO:\n1) VITAMINA D 200UI: 2GOTAS/DIA ATÉ OS 2 ANOS\n2) GROW FERRO 5MG: 1 GOTA/DIA ATÉ OS 2 ANOS\nAGUARDO RESULTADO DE TESTE DO PEZINHO\nORIENTO SOBRE QUADRO CLÍNICO. MÃE COMPREENDE\nRETORNO MENSAL",
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "ANA CAROLINA MATIAS FERREIRA",
+            "registro": "27907",
+            "tipoRegistro": "CRM",
+            "cbo": "225142",
+            "cboDescricao": "MEDICO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "APS - CONSULTA MÉDICA",
+          "dataRegistro": "08/07/2024 11:29:08",
+          "tipo": "Atendimento",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": null,
+            "cid": {
+              "codigo": "Z001",
+              "descricao": "Exame de rotina de saúde da criança"
+            },
+            "exames": null
+          }
+        }
+      ]
+    },
+    {
+      "unidade": "USF / APS",
+      "telefone": null,
+      "chegada": "04/07/2024 13:01:18",
+      "saida": null,
+      "tempoPermanencia": null,
+      "numeroAtendimento": null,
+      "tipoAtendimento": "APS - SALA DE PROCEDIMENTOS",
+      "registros": [
+        {
+          "profissional": {
+            "nome": "ISABEL MADALENA DE SOUZA TRINDADE",
+            "registro": "115701",
+            "tipoRegistro": "COREN",
+            "cbo": "322250",
+            "cboDescricao": "AUXILIAR DE ENFERMAGEM DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "APS - SALA DE PROCEDIMENTOS",
+          "dataRegistro": "04/07/2024 13:01:18",
+          "tipo": "Evolução",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": "coleta teste do pezinho",
+            "exames": null
+          }
+        },
+        {
+          "profissional": {
+            "nome": "ISABEL MADALENA DE SOUZA TRINDADE",
+            "registro": "115701",
+            "tipoRegistro": "COREN",
+            "cbo": "322250",
+            "cboDescricao": "AUXILIAR DE ENFERMAGEM DA ESTRATEGIA DE SAUDE DA FAMILIA"
+          },
+          "tipoAtendimento": "APS - SALA DE PROCEDIMENTOS",
+          "dataRegistro": "04/07/2024 13:02:22",
+          "tipo": "Procedimentos",
+          "conteudo": {
+            "motivoConsulta": null,
+            "classificacaoRisco": null,
+            "evolucao": null,
+            "procedimentos": [
+              "COLETA DE SANGUE PARA TRIAGEM NEONATAL"
+            ],
+            "exames": null
+          }
+        }
+      ]
+    }
+  ],
+  "listaProblemas": []
+}

@@ -4,8 +4,8 @@ import { usePacienteSearch } from "../ui/hooks/usePacienteSearch";
 import { usePaciente } from "../ui/hooks/usePaciente";
 import { useVacinas } from "../ui/hooks/useVacinas";
 import { useProntuario } from "../ui/hooks/useProntuario";
-import { gerarProntuarioPdf } from "@/lib/prontuarioPdf";
-import { fetchProntuarioByPacienteId } from "@/lib/prontuarioApi";
+// import { gerarProntuarioPdf } from "@/lib/prontuarioPdf";
+// import { fetchProntuarioByPacienteId } from "@/lib/prontuarioApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -31,127 +31,7 @@ const Index = () => {
   const vacinas = useVacinas(pacienteId ?? 0, !!pacienteId && !picker);
   const prontuario = useProntuario();
 
-  function htmlToText(html: string | null | undefined): string {
-    if (!html) return "";
-    // Decodifica entidades e remove tags HTML preservando quebras de linha
-    const withBreaks = html
-      .replace(/<\s*br\s*\/?\s*>/gi, "\n")
-      .replace(/<\/\s*(p|div|li|tr|h[1-6])\s*>/gi, "\n")
-      .replace(/<\s*li\s*[^>]*>/gi, "• ");
-    const tmp = document.createElement("div");
-    tmp.innerHTML = withBreaks;
-    const text = tmp.textContent || tmp.innerText || "";
-    return text
-      .replace(/\u00a0/g, " ")
-      .replace(/[ \t]+\n/g, "\n")
-      .replace(/\n{3,}/g, "\n\n")
-      .replace(/[ \t]{2,}/g, " ")
-      .trim();
-  }
-
-  async function handleGerarProntuario() {
-    if (!paciente.data) return;
-    try {
-      const data = await fetchProntuarioByPacienteId(paciente.data.id);
-      console.log("Resposta da API:", data);
-
-      const p: any = data.paciente ?? {};
-      const end = p.endereco ?? null;
-
-      // Mapeia paciente para o modelo do frontend
-      const pacientePdf = {
-        id: p.id,
-        nome: p.nome,
-        cpf: p.cpf ?? null,
-        sexo: p.sexo ?? null,
-        nomeMae: p.nome_mae ?? null,
-        nomePai: p.nome_pai ?? null,
-        dataNascimento: p.data_nascimento ?? null,
-        telefone: p.telefone ?? null,
-        idade: "",
-        endereco: end
-          ? {
-              keyword: end.keyword ?? null,
-              tipoLogradouro: end.tipo_logradouro ?? null,
-              logradouro: end.logradouro ?? null,
-              complemento: end.complemento ?? null,
-              numero: end.numero ?? null,
-              cep: end.cep ?? null,
-              bairro: end.bairro ?? null,
-              cidadeId: end.cidade_id ?? null,
-              cidade: end.cidade ?? null,
-              uf: end.uf ?? null,
-            }
-          : null,
-      };
-
-      // Novo formato: atendimentos[] com registros[] aninhados.
-      // Achatamos cada registro em ProntuarioRegistro do PDF.
-      const atendimentos: any[] = Array.isArray(data.atendimentos) ? data.atendimentos : [];
-      const registrosPdf = atendimentos.flatMap((a: any) => {
-        const unidadeNome = a?.unidade?.nome ?? "";
-        const unidadeTel = a?.unidade?.telefone ? ` (${a.unidade.telefone})` : "";
-        const unidadeStr = `${unidadeNome}${unidadeTel}`.trim();
-        const prof = a?.profissional ?? {};
-        const profStr = [
-          prof.nome,
-          prof.tipo_conselho && prof.registro ? `${prof.tipo_conselho}: ${prof.registro}` : null,
-          prof.cbo ? `CBO: (${prof.cbo})${prof.cbo_descricao ? " " + prof.cbo_descricao : ""}` : null,
-        ]
-          .filter(Boolean)
-          .join("   ");
-        const tipoAtend = a?.tipo_atendimento ?? "";
-        const numAtend = a?.numero_atendimento ? `Nº ${a.numero_atendimento}` : "";
-        const classRisco = a?.classificacao_risco ?? null;
-        const dataChegada = a?.data_chegada ?? "";
-
-        const registros: any[] = Array.isArray(a?.registros) ? a.registros : [];
-        if (registros.length === 0) {
-          return [
-            {
-              dataRegistro: dataChegada,
-              profissional: profStr,
-              unidade: unidadeStr,
-              tipoRegistro: [tipoAtend, numAtend].filter(Boolean).join(" - "),
-              classificacaoRisco: classRisco,
-              conteudo: "(Sem registros clínicos)",
-            },
-          ];
-        }
-        return registros.map((r: any) => {
-          const partes: string[] = [];
-          const av = htmlToText(r?.conteudo?.avaliacao);
-          const ev = htmlToText(r?.conteudo?.evolucao);
-          const ex = htmlToText(r?.conteudo?.exame);
-          if (av) partes.push(`Avaliação:\n${av}`);
-          if (ev) partes.push(`Evolução:\n${ev}`);
-          if (ex) partes.push(`Exame:\n${ex}`);
-          const conteudo = partes.join("\n\n") || "(Sem conteúdo)";
-          const tipo = [r?.tipo, tipoAtend, numAtend].filter(Boolean).join(" - ");
-          return {
-            dataRegistro: r?.data ?? dataChegada,
-            profissional: profStr,
-            unidade: unidadeStr,
-            tipoRegistro: tipo,
-            classificacaoRisco: classRisco,
-            conteudo,
-          };
-        });
-      });
-
-      console.info("[Prontuario] atendimentos:", atendimentos.length, "registros achatados:", registrosPdf.length);
-
-      await gerarProntuarioPdf(pacientePdf, registrosPdf);
-      if (!registrosPdf.length) {
-        toast.warning("Prontuário gerado, mas sem atendimentos retornados pela API.");
-      } else {
-        toast.success(`Prontuário gerado (${registrosPdf.length} registros).`);
-      }
-    } catch (err) {
-      toast.error("Falha ao gerar PDF do prontuário.");
-      console.error(err);
-    }
-  }
+  // Removido: função htmlToText usada apenas para PDF
 
   function handleSearch(e?: React.FormEvent) {
     e?.preventDefault();
@@ -210,24 +90,7 @@ const Index = () => {
           <Button type="submit" disabled={pacienteSearch.isPending} className="h-11 px-6">
             {pacienteSearch.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Buscar"}
           </Button>
-          {paciente.data && (
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={handleGerarProntuario}
-              disabled={prontuario.isPending}
-              className="h-11 px-5"
-            >
-              {prontuario.isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <>
-                  <FileDown className="h-4 w-4" />
-                  Gerar Prontuário
-                </>
-              )}
-            </Button>
-          )}
+          {/* Botão Gerar Prontuário removido */}
         </form>
 
         {!pacienteId && !pacienteSearch.isPending && (

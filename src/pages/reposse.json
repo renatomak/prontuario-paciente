@@ -1,0 +1,162 @@
+{
+    "paciente": {
+        "id": 9282479,
+        "nome": "THALLYA VALENTINA GOMES RAMOS",
+        "cpf": "12169441131",
+        "sexo": "FEMININO",
+        "nome_mae": "NAYANNE GOMES SODRE RAMOS",
+        "nome_pai": "MACKSON DE SOUSA RAMOS",
+        "data_nascimento": "2024-06-30",
+        "telefone": "62998702201",
+        "endereco": {
+            "keyword": "RUA RB 51 A Residencial Recanto do Bosque SN QD 51 LT 72",
+            "tipo_logradouro": "RUA",
+            "logradouro": "RB 51 A",
+            "complemento": "QD 51 LT 72",
+            "numero": "SN",
+            "cep": "74474396",
+            "bairro": "Residencial Recanto do Bosque",
+            "cidade_id": 520870,
+            "cidade": "GOIANIA",
+            "uf": "GO"
+        }
+    },
+    "atendimentos": [
+        {
+            "data_registro": "20/04/2025 07:44:55",
+            "profissional": "DIANA FERREIRA DE SOUZA - COREN: 622698   CBO: (223505) Enfermeiro",
+            "unidade": "UPA MARIA PIRES PERILLO - UPA NOROESTE",
+            "tipo_registro": "Avaliação",
+            "classificacao_risco": "Pouco Urgente",
+            "conteudo": "PACIENTE ACOMPANHADA PELO PAIS PACIENTE RESPONSAVEL AFIRMA QUE HÁ 03 DIAS A PACIENTE INICIOU COM CHORO PERSISTENTE, 1 EPISODIO FEBRE 38,5ºC, AFIRMA DIARREIA 04 EPISODIOS SEM SANGUE, DIUSERE CONCENTRADA HÁ 2 DIAS, NAUSEAS, NEGA VÔMITOS, GEMENTE"
+        },
+        {
+            "data_registro": "20/04/2025 07:54:41",
+            "profissional": "LUIS FELIPE PIRES FONTANA - CRM: 28160   CBO: (225124) MEDICO PEDIATRA",
+            "unidade": "UPA MARIA PIRES PERILLO - UPA NOROESTE",
+            "tipo_registro": "Evolução",
+            "classificacao_risco": "Pouco Urgente",
+            "conteudo": "JÁ TEM UNS DIAS QUE TAVA MEIO RUIM, DEPOIS QUE SAROU FICOU GEMENDO TODA HORA. - USO DE CEFALEXINA E ATB TÓPICO. ABDOME RÍGIDO, CRIANÇA GEMENTE, SEM ALTERAÇÃO DE RIGIDEZ OU DE CHORO A PALPAÇÃO. HD - DISBIOSE PÓS ATB. SOLICITO RADIOGRAFIA"
+        },
+        {
+            "data_registro": "20/04/2025 08:18:47",
+            "profissional": "LUIS FELIPE PIRES FONTANA - CRM: 28160   CBO: (225124) MEDICO PEDIATRA",
+            "unidade": "UPA MARIA PIRES PERILLO - UPA NOROESTE",
+            "tipo_registro": "Evolução",
+            "classificacao_risco": "Pouco Urgente",
+            "conteudo": "RX - DISTENÇÃO ABDOMINAL EM PONTOS ESPECÍFICOS FLORA B + PREDNISOLONA INICI"
+        },
+        {
+            "data_registro": "18/04/2025 18:20:19",
+            "profissional": "SELOMITE BERNARDES DE MORAES - COREN: 178992   CBO: (223505) Enfermeiro",
+            "unidade": "UPA - FINSOCIAL",
+            "tipo_registro": "Avaliação",
+            "classificacao_risco": "Pouco Urgente",
+            "conteudo": "MAE REFERE CRIANÇA COM CHORO PERSISTENTE, DIARREIA LIQUIDA, FEBRE (ONTEM), NEGA ALERGIA A MEDICAMENTOS, COMORBIDADE . NO MOMENTO AFEBRIL"
+        },
+        {
+            "data_registro": "18/04/2025 18:34:18",
+            "profissional": "MARLON HORA MARTINS - CRM: 35135   CBO: (225125) MEDICO CLINICO",
+            "unidade": "UPA - FINSOCIAL",
+            "tipo_registro": "Evolução",
+            "classificacao_risco": "Pouco Urgente",
+            "conteudo": "# PESO: 8 KG # HDA: PACIENTE COMPARECE ACOMPANHADA DA MÃE, NAYANNE. RESPONSAVEL AFIRMA QUE HÁ 01 DIA A PACIENTE INICIOU COM CHORO PERSISNTENTE E TEVE 01 EPISÓDIO DE FEBRE 38,5ºC. ALÉM DISSO, AFIRMA DIARREIA 04 EPISODIOS SEM SANGUE E SEM MUCO COM INICIO HÁ 01 DIA. NEGA NAUSEAS, VÔMITOS, SINAIS DE ESFORÇO RESPIRATÓRIO, TOSSE, CORIZA, E NEGA OUTROS SINAIS E SINTOMAS DE ALARME. # HPP: NEGA COMORBIDADES MUC: NEGA NEGA ALERGIAS. # AO EXAME FISICO: BEG, AAA, CORADA E HIDRATADA ATIVA, REATIVA E CONTACTUANTE NEURO: PIFR, SEM DÉFICITS FOCAIS. SEM SINAIS DE IRRITAÇÃO MENINGEA. OROSCOPIA: NDN. OTOSCOPIA: MT SEM ABAULAMENTO. SEM HIPEREMIA EM CONDUTO AUDITIVO, SEM SAIDA DE SECREÇÃO E SEM CORPO ESTRANHO ACV: RCR, BNF EM 2 T S/ SOPROS AR: MV + S/ RA, EUPNENEICA. ABDOME: FLACIDO, NORMOTENSO, INDOLOR A PALPAÇÃO, SEM SINAIS DE PERITONITE. MMII: SEM EDEMAS, SEM LESÕES. SEM EMPASTAMENTO DE PANTURRILHAS E SEM SINAIS DE TVP. # HD: FEBRE A/E?? # CD: - ORIENTAÇÕES GERAIS E ESPECIFICAS SOBRE O QUADRO CLÍNICO; - SOLICITO HMG E EAS. - REAVALIAR APÓS RESULTADO DE EXAME. # UNIDADE SEM LABORATÓRIO/ BIOQUÍMICA FUNCIONANTES - SMS E GESTÃO DA UNIDADE CIENTES. ORIENTO REALIZAR EXAME NA UNIDADE MAIS PROXIMA E RETORNAR IMEDIATAMENTE APÓS RESULTADO DO EXAME."
+        },
+        {
+            "data_registro": "24/03/2025 19:31:02",
+            "profissional": "ERIKA KAREM GOMES DA SILVA ARAUJO - COREN: 214785   CBO: (223505) Enfermeiro",
+            "unidade": "UPA - FINSOCIAL",
+            "tipo_registro": "Avaliação",
+            "classificacao_risco": "Pouco Urgente",
+            "conteudo": "Mãe Naiane Mãe relata secreção no ouvido esquerdo, incio a aprox. 3 semanas. Em uso de de pomada de neomicina e anti alérgico desloratadina, sem melhora. Nega ou desconhece alergias. Nega comorbiade. Peso aprox. 8200 kg"
+        },
+        {
+            "data_registro": "24/03/2025 19:58:22",
+            "profissional": "LUIS FELIPE PIRES FONTANA - CRM: 28160   CBO: (225125) MEDICO CLINICO",
+            "unidade": "UPA - FINSOCIAL",
+            "tipo_registro": "Evolução",
+            "classificacao_risco": "Pouco Urgente",
+            "conteudo": "VISUALIZAÇÃO DIFÍCIL HD - OTITE EXTERNA CEFALEXINA + OTOCIRIAX"
+        },
+        {
+            "data_registro": "24/02/2025 11:40:55",
+            "profissional": "MARIA APARECIDA DE LIMA - COREN: 165805   CBO: (223565) ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA",
+            "unidade": "USF BRISAS DA MATA",
+            "tipo_registro": "Avaliação",
+            "classificacao_risco": "Não Urgente",
+            "conteudo": "Paciente não compareceu a consulta agendada para hoje"
+        },
+        {
+            "data_registro": "14/02/2025 09:08:37",
+            "profissional": "MARIA APARECIDA DE LIMA - COREN: 165805   CBO: (223565) ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA",
+            "unidade": "USF BRISAS DA MATA",
+            "tipo_registro": "Evolução",
+            "classificacao_risco": "Não Urgente",
+            "conteudo": "Acompanhamento do bolsa familia"
+        },
+        {
+            "data_registro": "18/12/2024 10:09:45",
+            "profissional": "EDNA PEREIRA DOS SANTOS - COREN: 758895   CBO: (322205) Técnico de enfermagem",
+            "unidade": "CENTRO DE SAUDE NORTE FERROVIARIO",
+            "tipo_registro": "Avaliação",
+            "classificacao_risco": "Não Urgente",
+            "conteudo": "Realizado triagem para consulta PESO .7,500 ESTATURA .63 Cd encaminhado a consulta médica"
+        },
+        {
+            "data_registro": "18/12/2024 11:01:46",
+            "profissional": "JAMES NOGUEIRA PIMENTA - CRM: 10062   CBO: (225124) MEDICO PEDIATRA",
+            "unidade": "CENTRO DE SAUDE NORTE FERROVIARIO",
+            "tipo_registro": "Evolução",
+            "classificacao_risco": "Não Urgente",
+            "conteudo": "Puericultura Corado, hidratado, acianotico, anicterico , eupneico afebril, TEC menor que 3 segundos RCR 2t BNF sem sopro ou extrassistoles Mvau sem ra sem esforco Abdome flacido Rh + ausencia de vcm ou massas palpaveis MMiis sem alteracoes cd: orientações, vit d neutrofer"
+        },
+        {
+            "data_registro": "18/09/2024 09:24:48",
+            "profissional": "LUCIA GONCALVES DA SILVA - COREN: 267171   CBO: (322205) Técnico de enfermagem",
+            "unidade": "CENTRO DE SAUDE SETOR PERIM BENEDITO DOS SANTOS VIEIRA",
+            "tipo_registro": "Avaliação",
+            "classificacao_risco": "Não Urgente",
+            "conteudo": "Aguardando consulta medica"
+        },
+        {
+            "data_registro": "18/09/2024 09:44:09",
+            "profissional": "RODRIGO CAETANO DE ALMEIDA - CRM: 6445   CBO: (225124) MEDICO PEDIATRA",
+            "unidade": "CENTRO DE SAUDE SETOR PERIM BENEDITO DOS SANTOS VIEIRA",
+            "tipo_registro": "Evolução",
+            "classificacao_risco": "Não Urgente",
+            "conteudo": "rotina sem queixas suga bem eliminaçoes ok gripadinha vacina ok lme /vit d vacina ok ao xame : sem alt cd: orientÇOES"
+        },
+        {
+            "data_registro": "09/09/2024 09:18:16",
+            "profissional": "ANA CAROLINA MATIAS FERREIRA - CRM: 27907   CBO: (225142) MEDICO DA ESTRATEGIA DE SAUDE DA FAMILIA",
+            "unidade": "USF BRISAS DA MATA",
+            "tipo_registro": "Evolução",
+            "classificacao_risco": "Não Urgente",
+            "conteudo": "Q.P.: \"CONSULTA DE ROTINA\" HDA: PACIENTE ACOMPANHADA PELA MÃE, COMPARECE PARA CONSULTA DE CRESCIMENTO E DESENVOLVIMENTO. NEGA QUEIXAS NO MOMENTO. MEDICAMENTOS EM USO: 1) VIT D 200UI 2GOTAS/DIA EXAME FÍSICO: BOM ESTADO GERAL, NORMOCORADA, HIDRATADA, ANICTÉRICA E ACIANÓTICA FONTANELAS NORMOTENSAS RITMO CARDÍACO REGULAR EM 2 TEMPOS BULHAS NORMOFONÉTICAS SEM SOPRO MURMÚRIO VESICULAR PRESENTE BILATERALMENTE, SEM RUÍDOS ADVENTÍCIOS ABDOME: RUÍDOS HIDROAEREOS PRESENTES, FLÁCIDO MEMBROS SEM ALTERAÇÕES DESENVOLVIMENTO NEUROPSICOMOTOR ADEQUADO PARA IDADE EXAMES COMPLEMENTARES: TESTE DO CORAÇAOZINHO DIA 01/07/2024 NORMAL TESTE DO OLHINHO 01/07/2024 NORMAL TESTE DA ORELHINHA 01/07/2024 NORMA PESO 5,5 EST 45 CM PC: 40CM TESTES DE TRIAGEM NEONATAL SEM ALTERAÇÕES REALIZADO DIA 12/07/2024 CD: MANTENHO MEDICAMENTOS ENCAMINHO AO PEDIATRA (TESTE DO OLHINHO) ORIENTO SOBRE QUADRO CLÍNICO. MÃE COMPREENDE RETORNO SE NECESSÁRIO"
+        },
+        {
+            "data_registro": "05/08/2024 09:12:23",
+            "profissional": "MARIA APARECIDA DE LIMA - COREN: 165805   CBO: (223565) ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA",
+            "unidade": "USF BRISAS DA MATA",
+            "tipo_registro": "Evolução",
+            "classificacao_risco": "Não Urgente",
+            "conteudo": "MAE TRAX LACTENTE PARA CONSULTA DE CD MAE NEGA PATOLOGIAS INFECTOCONTAGIOSAS TRIADAS NO PRÉ NATAL IMUNE A TOXOPLASMOSE NASCIDO DE PARTO NORMAL APGAR 1`9 2' 9 PC 34 CM PT 32 CM IG 38 s e 4 dias TESTE DO CORAÇAOZINHO DIA 01/07/2024 NORMAL TESTE DO OLHINHO 01/07/2024 NORMAL TESTE DA ORELHINHA 01/07/2024 NORMA PESO 2940 EST 45 CM TESTES DE TRIAGEM NEONATAL SEM ALTERAÇÕES REALIZADO DIA 12/07/2024 Mae traz criança para consulta de cd . nega queixas no momento Alimentação: LM exclusivo Evacuações: amarelo tipo qualidade PC 37 cm peso 4200 est 54 cm BOM ESTADO GERAL, NORMOCORADA, HIDRATADA, ANICTÉRICA E ACIANÓTICA FONTANELAS NORMOTENSAS ACV: RITMO CARDÍACO REGULA AR: MURMÚRIO VESICULAR PRESENTE BILATERALMENTE, SEM RUÍDOS ADVENTÍCIOS ABDOME: RUÍDOS HIDROAEREOS PRESENTES, FLÁCIDO MEMBROS SEM ALTERAÇÕES lactente com crescimento e desenvolvimento adequado para idade e sexo conduta: orientação Encaminho para oftalmologia conforme solicitação pediatrica ao nascimento após teste do olhinho"
+        },
+        {
+            "data_registro": "08/07/2024 11:29:07",
+            "profissional": "ANA CAROLINA MATIAS FERREIRA - CRM: 27907   CBO: (225142) MEDICO DA ESTRATEGIA DE SAUDE DA FAMILIA",
+            "unidade": "USF BRISAS DA MATA",
+            "tipo_registro": "Evolução",
+            "classificacao_risco": "Não Urgente",
+            "conteudo": "Q.P.: \"CONSULTA DE ROTINA\" HDA: PACIENTE ACOMPANHADA PELA MÃE, QUE COMPARECE PARA CONSULTA DE PUERICULTURA. NEGA QUEIXAS NO MOMENTO. MEDICAMENTOS EM USO: NEGA EXAME FÍSICO: PC: 36CM PESO: 3,2G COMP: 45CM BOM ESTADO GERAL, NORMOCORADA, HIDRATADA, ANICTÉRICA E ACIANÓTICA FONTANELAS NORMOTENSAS ACV: RITMO CARDÍACO REGULAR EM 2 TEMPOS BULHAS NORMOFONÉTICAS SEM SOPRO AR: MURMÚRIO VESICULAR PRESENTE BILATERALMENTE, SEM RUÍDOS ADVENTÍCIOS ABDOME: RUÍDOS HIDROAEREOS PRESENTES, FLÁCIDO MEMBROS SEM ALTERAÇÕES TESTES DE TRIAGEM NEONATAL SEM ALTERAÇÕES CD: PRESCREVO: 1) VITAMINA D 200UI: 2GOTAS/DIA ATÉ OS 2 ANOS 2) GROW FERRO 5MG: 1 GOTA/DIA ATÉ OS 2 ANOS AGUARDO RESULTADO DE TESTE DO PEZINHO ORIENTO SOBRE QUADRO CLÍNICO. MÃE COMPREENDE RETORNO MENSAL"
+        },
+        {
+            "data_registro": "04/07/2024 13:01:18",
+            "profissional": "ISABEL MADALENA DE SOUZA TRINDADE - COREN: 115701   CBO: (322250) AUXILIAR DE ENFERMAGEM DA ESTRATEGIA DE SAUDE DA FAMILIA",
+            "unidade": "USF ALTO DO VALE",
+            "tipo_registro": "Evolução",
+            "classificacao_risco": "Não Urgente",
+            "conteudo": "coleta teste do pezinho"
+        }
+    ]
+}

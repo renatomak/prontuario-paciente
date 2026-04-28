@@ -1,0 +1,778 @@
+{
+    "paciente": {
+        "id": 9282479,
+        "nome": "THALLYA VALENTINA GOMES RAMOS",
+        "cpf": "121.694.411-31",
+        "sexo": "FEMININO",
+        "nome_mae": "NAYANNE GOMES SODRE RAMOS",
+        "nome_pai": "MACKSON DE SOUSA RAMOS",
+        "data_nascimento": "30/06/2024",
+        "telefone": "(62) 99870-2201",
+        "endereco": {
+            "keyword": "RUA RB 51 A Residencial Recanto do Bosque SN QD 51 LT 72",
+            "tipo_logradouro": "RUA",
+            "logradouro": "RB 51 A",
+            "complemento": "QD 51 LT 72",
+            "numero": "SN",
+            "cep": "74474-396",
+            "bairro": "Residencial Recanto do Bosque",
+            "cidade_id": 520870,
+            "cidade": "GOIANIA",
+            "uf": "GO"
+        }
+    },
+    "atendimentos": [
+        {
+            "numero_atendimento": 101677656,
+            "data_chegada": "2025-04-20",
+            "unidade": {
+                "nome": "UPA MARIA PIRES PERILLO - UPA NOROESTE",
+                "telefone": "6235243461"
+            },
+            "tipo_atendimento": "UPA - CLASSIFICAÇÃO DE RISCO",
+            "profissional": {
+                "nome": "DIANA FERREIRA DE SOUZA",
+                "registro": "622698",
+                "tipo_conselho": "COREN",
+                "cbo": "223505",
+                "cbo_descricao": "Enfermeiro"
+            },
+            "classificacao_risco": "Pouco Urgente",
+            "registros": [
+                {
+                    "data": "2025-04-20",
+                    "tipo": "Avaliacao",
+                    "conteudo": {
+                        "avaliacao": "<html>  <head>      </head>  <body>    <p style=\"margin-bottom: 0.0; margin-top: 0\"><b>Motivo Consulta: </b>PACIENTE ACOMPANHADA PELO PAIS  \r\n\r\nPACIENTE RESPONSAVEL AFIRMA QUE HÁ 03 DIAS A PACIENTE INICIOU COM CHORO PERSISTENTE, 1 EPISODIO FEBRE 38,5ºC, AFIRMA DIARREIA 04 EPISODIOS SEM SANGUE, DIUSERE CONCENTRADA HÁ 2 DIAS,  NAUSEAS, NEGA VÔMITOS, GEMENTE, <b>Classificação de Risco: </b>Pouco Urgente, </p></body></html>",
+                        "evolucao": null,
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 101678211,
+            "data_chegada": "2025-04-20",
+            "unidade": {
+                "nome": "UPA MARIA PIRES PERILLO - UPA NOROESTE",
+                "telefone": "6235243461"
+            },
+            "tipo_atendimento": "UPA - ATENDIMENTO INFANTIL",
+            "profissional": {
+                "nome": "LUIS FELIPE PIRES FONTANA",
+                "registro": "28160",
+                "tipo_conselho": "CRM",
+                "cbo": "225124",
+                "cbo_descricao": "MEDICO PEDIATRA"
+            },
+            "classificacao_risco": "Pouco Urgente",
+            "registros": [
+                {
+                    "data": "2025-04-20",
+                    "tipo": "Evolucao",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": "<p>J&Aacute; TEM UNS DIAS QUE TAVA MEIO RUIM, DEPOIS QUE SAROU FICOU GEMENDO TODA HORA. - USO DE CEFALEXINA E ATB T&Oacute;PICO.</p>\n<p>&nbsp;</p>\n<p>ABDOME R&Iacute;GIDO, CRIAN&Ccedil;A GEMENTE, SEM ALTERA&Ccedil;&Atilde;O DE RIGIDEZ OU DE CHORO A PALPA&Ccedil;&Atilde;O.</p>\n<p>&nbsp;</p>\n<p>HD - DISBIOSE P&Oacute;S ATB.</p>\n<p>&nbsp;</p>\n<p>SOLICITO RADIOGRAFIA&nbsp;</p>",
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 101678612,
+            "data_chegada": "2025-04-20",
+            "unidade": {
+                "nome": "UPA MARIA PIRES PERILLO - UPA NOROESTE",
+                "telefone": "6235243461"
+            },
+            "tipo_atendimento": "UPA - OBSERVAÇÃO - INFANTIL",
+            "profissional": {
+                "nome": "LUIS FELIPE PIRES FONTANA",
+                "registro": "28160",
+                "tipo_conselho": "CRM",
+                "cbo": "225124",
+                "cbo_descricao": "MEDICO PEDIATRA"
+            },
+            "classificacao_risco": "Pouco Urgente",
+            "registros": [
+                {
+                    "data": "2025-04-20",
+                    "tipo": "Evolucao",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": "<p>RX - DISTEN&Ccedil;&Atilde;O ABDOMINAL EM PONTOS ESPEC&Iacute;FICOS</p>\n<p>&nbsp;</p>\n<p>FLORA B + PREDNISOLONA</p>\n<p>INICI</p>",
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 101620758,
+            "data_chegada": "2025-04-18",
+            "unidade": {
+                "nome": "UPA - FINSOCIAL",
+                "telefone": "6235243533"
+            },
+            "tipo_atendimento": "UPA - CLASSIFICAÇÃO DE RISCO",
+            "profissional": {
+                "nome": "SELOMITE BERNARDES DE MORAES",
+                "registro": "178992",
+                "tipo_conselho": "COREN",
+                "cbo": "223505",
+                "cbo_descricao": "Enfermeiro"
+            },
+            "classificacao_risco": "Pouco Urgente",
+            "registros": [
+                {
+                    "data": "2025-04-18",
+                    "tipo": "Avaliacao",
+                    "conteudo": {
+                        "avaliacao": "<html>  <head>      </head>  <body>    <p style=\"margin-bottom: 0.0; margin-top: 0\"><b>Motivo Consulta: </b>MAE REFERE CRIANÇA COM CHORO PERSISTENTE, DIARREIA LIQUIDA, FEBRE (ONTEM), NEGA ALERGIA A MEDICAMENTOS, COMORBIDADE . NO MOMENTO AFEBRIL, <b>Classificação de Risco: </b>Pouco Urgente, </p></body></html>",
+                        "evolucao": null,
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 101620969,
+            "data_chegada": "2025-04-18",
+            "unidade": {
+                "nome": "UPA - FINSOCIAL",
+                "telefone": "6235243533"
+            },
+            "tipo_atendimento": "UPA - ATENDIMENTO INFANTIL",
+            "profissional": {
+                "nome": "MARLON HORA MARTINS",
+                "registro": "35135",
+                "tipo_conselho": "CRM",
+                "cbo": "225125",
+                "cbo_descricao": "MEDICO CLINICO"
+            },
+            "classificacao_risco": "Pouco Urgente",
+            "registros": [
+                {
+                    "data": "2025-04-18",
+                    "tipo": "Evolucao",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": "<p># PESO: 8 KG&nbsp;</p>\n<p>&nbsp;</p>\n<p># HDA: PACIENTE COMPARECE ACOMPANHADA DA M&Atilde;E, NAYANNE. RESPONSAVEL AFIRMA QUE H&Aacute; 01 DIA A PACIENTE INICIOU COM CHORO PERSISNTENTE E TEVE 01 EPIS&Oacute;DIO DE FEBRE 38,5&ordm;C. AL&Eacute;M DISSO, AFIRMA DIARREIA 04 EPISODIOS SEM SANGUE E SEM MUCO COM INICIO H&Aacute; 01 DIA. NEGA NAUSEAS, V&Ocirc;MITOS, SINAIS DE ESFOR&Ccedil;O RESPIRAT&Oacute;RIO, TOSSE, CORIZA, E NEGA OUTROS SINAIS E SINTOMAS DE ALARME.</p>\n<p>&nbsp;</p>\n<p># HPP: <br />NEGA COMORBIDADES<br />MUC: NEGA<br />NEGA ALERGIAS.</p>\n<p>&nbsp;</p>\n<p># AO EXAME FISICO:<br />BEG, AAA, CORADA E HIDRATADA<br />ATIVA, REATIVA E CONTACTUANTE<br />NEURO: PIFR, SEM D&Eacute;FICITS FOCAIS. SEM SINAIS DE IRRITA&Ccedil;&Atilde;O MENINGEA.<br />OROSCOPIA: NDN.&nbsp;<br />OTOSCOPIA: MT SEM ABAULAMENTO. SEM HIPEREMIA EM CONDUTO AUDITIVO, SEM SAIDA DE SECRE&Ccedil;&Atilde;O E SEM CORPO ESTRANHO<br />ACV: RCR, BNF EM 2 T S/ SOPROS<br />AR: MV + S/ RA, EUPNENEICA.<br />ABDOME: FLACIDO, NORMOTENSO, INDOLOR A PALPA&Ccedil;&Atilde;O, SEM SINAIS DE PERITONITE.<br />MMII: SEM EDEMAS, SEM LES&Otilde;ES. SEM EMPASTAMENTO DE PANTURRILHAS E SEM SINAIS DE TVP.</p>\n<p>&nbsp;</p>\n<p># HD: FEBRE A/E??</p>\n<p>&nbsp;</p>\n<p># CD:<br />- ORIENTA&Ccedil;&Otilde;ES GERAIS E ESPECIFICAS SOBRE O QUADRO CL&Iacute;NICO;<br />- SOLICITO HMG E EAS.&nbsp;</p>\n<p>- REAVALIAR AP&Oacute;S RESULTADO DE EXAME.&nbsp;</p>\n<p>&nbsp;</p>\n<p># UNIDADE SEM LABORAT&Oacute;RIO/ BIOQU&Iacute;MICA FUNCIONANTES - SMS E GEST&Atilde;O DA UNIDADE CIENTES. ORIENTO REALIZAR EXAME NA UNIDADE MAIS PROXIMA E RETORNAR IMEDIATAMENTE AP&Oacute;S RESULTADO DO EXAME.</p>",
+                        "exame": null
+                    }
+                },
+                {
+                    "data": "2025-04-18",
+                    "tipo": "Exame",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": null,
+                        "exame": "<b><u>Exames Solicitados - UPA - EXAMES LABORATORIAIS DE URGÊNCIA / </b></u>\n<br />URG - ANÁLISE DE CARACTERES FÍSICOS, ELEMENTOS E SEDIMENTO DA URINA (EAS)\n<br />URG - HEMOGRAMA COMPLETO"
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 99418682,
+            "data_chegada": "2025-03-24",
+            "unidade": {
+                "nome": "UPA - FINSOCIAL",
+                "telefone": "6235243533"
+            },
+            "tipo_atendimento": "UPA - CLASSIFICAÇÃO DE RISCO",
+            "profissional": {
+                "nome": "ERIKA KAREM GOMES DA SILVA ARAUJO",
+                "registro": "214785",
+                "tipo_conselho": "COREN",
+                "cbo": "223505",
+                "cbo_descricao": "Enfermeiro"
+            },
+            "classificacao_risco": "Pouco Urgente",
+            "registros": [
+                {
+                    "data": "2025-03-24",
+                    "tipo": "Avaliacao",
+                    "conteudo": {
+                        "avaliacao": "<html>  <head>      </head>  <body>    <p style=\"margin-bottom: 0.0; margin-top: 0\"><b>Motivo Consulta: </b>Mãe Naiane, <b>Classificação de Risco: </b>Pouco Urgente, <b>Historico: </b>Mãe relata secreção no ouvido esquerdo, incio a aprox. 3 semanas.\r\nEm uso de de pomada de neomicina e anti alérgico desloratadina, sem melhora.\r\nNega ou desconhece alergias.\r\nNega comorbiade.\r\nPeso aprox. 8200 kg, </p></body></html>",
+                        "evolucao": null,
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 99420002,
+            "data_chegada": "2025-03-24",
+            "unidade": {
+                "nome": "UPA - FINSOCIAL",
+                "telefone": "6235243533"
+            },
+            "tipo_atendimento": "UPA - ATENDIMENTO INFANTIL",
+            "profissional": {
+                "nome": "LUIS FELIPE PIRES FONTANA",
+                "registro": "28160",
+                "tipo_conselho": "CRM",
+                "cbo": "225125",
+                "cbo_descricao": "MEDICO CLINICO"
+            },
+            "classificacao_risco": "Pouco Urgente",
+            "registros": [
+                {
+                    "data": "2025-03-24",
+                    "tipo": "Evolucao",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": "<p>VISUALIZA&Ccedil;&Atilde;O DIF&Iacute;CIL</p>\n<p>HD - OTITE EXTERNA</p>\n<p>&nbsp;</p>\n<p>CEFALEXINA + OTOCIRIAX</p>",
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 97062779,
+            "data_chegada": "2025-02-24",
+            "unidade": {
+                "nome": "USF BRISAS DA MATA",
+                "telefone": "06235243006"
+            },
+            "tipo_atendimento": "APS - CONSULTA DE ENFERMAGEM",
+            "profissional": {
+                "nome": "MARIA APARECIDA DE LIMA",
+                "registro": "165805",
+                "tipo_conselho": "COREN",
+                "cbo": "223565",
+                "cbo_descricao": "ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+            },
+            "classificacao_risco": "Não Urgente",
+            "registros": [
+                {
+                    "data": "2025-02-24",
+                    "tipo": "Evolucao",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": "<p>Paciente n&atilde;o compareceu a consulta agendada para hoje</p>",
+                        "exame": null
+                    }
+                },
+                {
+                    "data": "2025-02-24",
+                    "tipo": "Avaliacao",
+                    "conteudo": {
+                        "avaliacao": "<html>  <head>      </head>  <body>    <p style=\"margin-bottom: 0.0; margin-top: 0\"><b>Peso (Kg): </b>7,500, <b>Altura (cm): </b>63.0, <b>Classificação de Risco: </b>Não Urgente, </p></body></html>",
+                        "evolucao": null,
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 96196958,
+            "data_chegada": "2025-02-14",
+            "unidade": {
+                "nome": "USF BRISAS DA MATA",
+                "telefone": "06235243006"
+            },
+            "tipo_atendimento": "USF - ACOLHIMENTO À DEMANDA ESPONTÂNEA",
+            "profissional": {
+                "nome": "MARIA GEOVANIA DA SILVA CONCEICAO",
+                "registro": "841432",
+                "tipo_conselho": "COREN",
+                "cbo": "322250",
+                "cbo_descricao": "AUXILIAR DE ENFERMAGEM DA ESTRATEGIA DE SAUDE DA FAMILIA"
+            },
+            "classificacao_risco": "Não Urgente",
+            "registros": [
+                {
+                    "data": "2025-02-14",
+                    "tipo": "Avaliacao",
+                    "conteudo": {
+                        "avaliacao": "<html>  <head>      </head>  <body>    <p style=\"margin-bottom: 0.0; margin-top: 0\"><b>Peso (Kg): </b>7,500, <b>Altura (cm): </b>63.0, <b>Classificação de Risco: </b>Não Urgente, </p></body></html>",
+                        "evolucao": null,
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 96196827,
+            "data_chegada": "2025-02-14",
+            "unidade": {
+                "nome": "USF BRISAS DA MATA",
+                "telefone": "06235243006"
+            },
+            "tipo_atendimento": "APS - ACOMPANHAMENTO BENEFICIÁRIO BOLSA FAMILIA",
+            "profissional": {
+                "nome": "MARIA APARECIDA DE LIMA",
+                "registro": "165805",
+                "tipo_conselho": "COREN",
+                "cbo": "223565",
+                "cbo_descricao": "ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+            },
+            "classificacao_risco": "Não Urgente",
+            "registros": [
+                {
+                    "data": "2025-02-14",
+                    "tipo": "Avaliacao",
+                    "conteudo": {
+                        "avaliacao": "<html>  <head>      </head>  <body>    <p style=\"margin-bottom: 0.0; margin-top: 0\"><b>Peso (Kg): </b>7,500, <b>Altura (cm): </b>63.0, <b>Classificação de Risco: </b>Não Urgente, <b>Observa&#231;&#227;o: </b>Acompanhamento bolsa familia, </p></body></html>",
+                        "evolucao": null,
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 96199390,
+            "data_chegada": "2025-02-14",
+            "unidade": {
+                "nome": "USF BRISAS DA MATA",
+                "telefone": "06235243006"
+            },
+            "tipo_atendimento": "APS - CONSULTA DE ENFERMAGEM",
+            "profissional": {
+                "nome": "MARIA APARECIDA DE LIMA",
+                "registro": "165805",
+                "tipo_conselho": "COREN",
+                "cbo": "223565",
+                "cbo_descricao": "ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+            },
+            "classificacao_risco": "Não Urgente",
+            "registros": [
+                {
+                    "data": "2025-02-14",
+                    "tipo": "Evolucao",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": "<p>Acompanhamento do bolsa familia&nbsp;</p>",
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 92150306,
+            "data_chegada": "2024-12-18",
+            "unidade": {
+                "nome": "CENTRO DE SAUDE NORTE FERROVIARIO",
+                "telefone": "6235241921"
+            },
+            "tipo_atendimento": "APS - ACOLHIMENTO À DEMANDA ESPONTÂNEA",
+            "profissional": {
+                "nome": "EDNA PEREIRA DOS SANTOS",
+                "registro": "758895",
+                "tipo_conselho": "COREN",
+                "cbo": "322205",
+                "cbo_descricao": "Técnico de enfermagem"
+            },
+            "classificacao_risco": "Não Urgente",
+            "registros": [
+                {
+                    "data": "2024-12-18",
+                    "tipo": "Avaliacao",
+                    "conteudo": {
+                        "avaliacao": "<html>  <head>      </head>  <body>    <p style=\"margin-bottom: 0.0; margin-top: 0\"><b>Peso (Kg): </b>7,500, <b>Altura (cm): </b>63.0, <b>Classificação de Risco: </b>Não Urgente, </p></body></html>",
+                        "evolucao": null,
+                        "exame": null
+                    }
+                },
+                {
+                    "data": "2024-12-18",
+                    "tipo": "Evolucao",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": "<p>&nbsp;</p>\n<p><span><span style=\"font-family: 'Arial';\"><span style=\"font-size: medium;\"><b><span style=\"color: #252b27;\">Realizado triagem para consulta&nbsp;</span></b></span></span></span></p>\n<p>&nbsp;</p>\n<p><span><span style=\"color: #252b27;\"><span style=\"font-family: 'Arial';\"><span style=\"font-size: medium;\"><span><span><b><span>PESO </span></b></span></span></span></span></span></span><span style=\"color: #8d281e;\">🍅</span><span><span style=\"color: #ff0000;\"><span style=\"font-family: 'Arial';\"><span style=\"font-size: medium;\"><span><span><b><span><span>🍒</span></span></b></span></span></span></span></span></span><span style=\"color: #000000;\"><span style=\"font-family: 'Arial';\"><span style=\"font-size: medium;\"><span><span><b><span><span>.7,500</span></span></b></span></span></span></span></span></p>\n<p>&nbsp;</p>\n<p><span><span style=\"font-family: 'Arial';\"><span style=\"font-size: medium;\"><b><span style=\"color: #252b27;\">ESTATURA <span style=\"color: #1c1c1c;\"><span>👶</span></span>⚖️.63</span></b></span></span></span></p>\n<p>&nbsp;</p>\n<p><span><span style=\"font-family: 'Arial';\"><span style=\"font-size: medium;\"><b><span style=\"color: #252b27;\">Cd encaminhado a consulta m&eacute;dica</span></b></span></span></span></p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>",
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 92151575,
+            "data_chegada": "2024-12-18",
+            "unidade": {
+                "nome": "CENTRO DE SAUDE NORTE FERROVIARIO",
+                "telefone": "6235241921"
+            },
+            "tipo_atendimento": "APS - CONSULTA PEDIATRIA",
+            "profissional": {
+                "nome": "JAMES NOGUEIRA PIMENTA",
+                "registro": "10062",
+                "tipo_conselho": "CRM",
+                "cbo": "225124",
+                "cbo_descricao": "MEDICO PEDIATRA"
+            },
+            "classificacao_risco": "Não Urgente",
+            "registros": [
+                {
+                    "data": "2024-12-18",
+                    "tipo": "Evolucao",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": "<p>Puericultura</p>\n<p><br />Corado, hidratado, acianotico, anicterico , eupneico afebril, TEC menor que 3 segundos<br />RCR 2t BNF sem sopro ou extrassistoles<br />Mvau sem ra sem esforco<br />Abdome flacido Rh + ausencia de vcm ou massas palpaveis<br />MMiis sem alteracoes</p>\n<p>&nbsp;</p>\n<p>cd: orienta&ccedil;&otilde;es, vit d&nbsp; neutrofer</p>",
+                        "exame": null
+                    }
+                },
+                {
+                    "data": "2024-12-18",
+                    "tipo": "Outro",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": null,
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 90538985,
+            "data_chegada": "2024-11-27",
+            "unidade": {
+                "nome": "USF BRISAS DA MATA",
+                "telefone": "06235243006"
+            },
+            "tipo_atendimento": "APS - ACOMPANHAMENTO BENEFICIÁRIO BOLSA FAMILIA",
+            "profissional": {
+                "nome": "MARIA APARECIDA DE LIMA",
+                "registro": "165805",
+                "tipo_conselho": "COREN",
+                "cbo": "223565",
+                "cbo_descricao": "ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+            },
+            "classificacao_risco": "Não Urgente",
+            "registros": [
+                {
+                    "data": "2024-11-27",
+                    "tipo": "Avaliacao",
+                    "conteudo": {
+                        "avaliacao": "<html>  <head>      </head>  <body>    <p style=\"margin-bottom: 0.0; margin-top: 0\"><b>Peso (Kg): </b>7,600, <b>Altura (cm): </b>59.0, <b>Classificação de Risco: </b>Não Urgente, <b>Observa&#231;&#227;o: </b>Acompanhamento do bolsa família, </p></body></html>",
+                        "evolucao": null,
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 90538878,
+            "data_chegada": "2024-11-27",
+            "unidade": {
+                "nome": "USF BRISAS DA MATA",
+                "telefone": "06235243006"
+            },
+            "tipo_atendimento": "USF - ACOLHIMENTO À DEMANDA ESPONTÂNEA",
+            "profissional": {
+                "nome": "MARIA ANITA RODRIGUES DOS SANTOS",
+                "registro": "551858",
+                "tipo_conselho": "COREN",
+                "cbo": "322245",
+                "cbo_descricao": "TECNICO DE ENFERMAGEM DA ESTRATEGIA DE SAUDE DA FAMILIA"
+            },
+            "classificacao_risco": "Não Urgente",
+            "registros": [
+                {
+                    "data": "2024-11-27",
+                    "tipo": "Avaliacao",
+                    "conteudo": {
+                        "avaliacao": "<html>  <head>      </head>  <body>    <p style=\"margin-bottom: 0.0; margin-top: 0\"><b>Peso (Kg): </b>7,600, <b>Classificação de Risco: </b>Não Urgente, </p></body></html>",
+                        "evolucao": null,
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 85327309,
+            "data_chegada": "2024-09-18",
+            "unidade": {
+                "nome": "CENTRO DE SAUDE SETOR PERIM BENEDITO DOS SANTOS VIEIRA",
+                "telefone": null
+            },
+            "tipo_atendimento": "APS - ACOLHIMENTO",
+            "profissional": {
+                "nome": "LUCIA GONCALVES DA SILVA",
+                "registro": "267171",
+                "tipo_conselho": "COREN",
+                "cbo": "322205",
+                "cbo_descricao": "Técnico de enfermagem"
+            },
+            "classificacao_risco": "Não Urgente",
+            "registros": [
+                {
+                    "data": "2024-09-18",
+                    "tipo": "Avaliacao",
+                    "conteudo": {
+                        "avaliacao": "<html>  <head>      </head>  <body>    <p style=\"margin-bottom: 0.0; margin-top: 0\"><b>Peso (Kg): </b>5,270, <b>Altura (cm): </b>56.5, <b>Per&#237;metro Cef&#225;lico (cm): </b>39,00, <b>Classificação de Risco: </b>Não Urgente, </p></body></html>",
+                        "evolucao": null,
+                        "exame": null
+                    }
+                },
+                {
+                    "data": "2024-09-18",
+                    "tipo": "Evolucao",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": "<p>Aguardando consulta medica</p>",
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 85332152,
+            "data_chegada": "2024-09-18",
+            "unidade": {
+                "nome": "CENTRO DE SAUDE SETOR PERIM BENEDITO DOS SANTOS VIEIRA",
+                "telefone": null
+            },
+            "tipo_atendimento": "APS - CONSULTA PEDIATRIA",
+            "profissional": {
+                "nome": "RODRIGO CAETANO DE ALMEIDA",
+                "registro": "6445",
+                "tipo_conselho": "CRM",
+                "cbo": "225124",
+                "cbo_descricao": "MEDICO PEDIATRA"
+            },
+            "classificacao_risco": "Não Urgente",
+            "registros": [
+                {
+                    "data": "2024-09-18",
+                    "tipo": "Evolucao",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": "<p>rotina sem queixas suga bem elimina&ccedil;oes ok gripadinha&nbsp;</p>\n<p>vacina ok&nbsp;</p>\n<p>lme /vit d&nbsp;</p>\n<p>vacina ok&nbsp;</p>\n<p>ao xame : sem alt</p>\n<p>cd: orient&Ccedil;OES&nbsp;</p>",
+                        "exame": null
+                    }
+                },
+                {
+                    "data": "2024-09-18",
+                    "tipo": "Outro",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": null,
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 84578785,
+            "data_chegada": "2024-09-09",
+            "unidade": {
+                "nome": "USF BRISAS DA MATA",
+                "telefone": "06235243006"
+            },
+            "tipo_atendimento": "USF - ACOLHIMENTO À DEMANDA ESPONTÂNEA",
+            "profissional": {
+                "nome": "MARIA ANITA RODRIGUES DOS SANTOS",
+                "registro": "551858",
+                "tipo_conselho": "COREN",
+                "cbo": "322245",
+                "cbo_descricao": "TECNICO DE ENFERMAGEM DA ESTRATEGIA DE SAUDE DA FAMILIA"
+            },
+            "classificacao_risco": "Não Urgente",
+            "registros": [
+                {
+                    "data": "2024-09-09",
+                    "tipo": "Avaliacao",
+                    "conteudo": {
+                        "avaliacao": "<html>  <head>      </head>  <body>    <p style=\"margin-bottom: 0.0; margin-top: 0\"><b>Peso (Kg): </b>5,500, <b>Classificação de Risco: </b>Não Urgente, </p></body></html>",
+                        "evolucao": null,
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 84579670,
+            "data_chegada": "2024-09-09",
+            "unidade": {
+                "nome": "USF BRISAS DA MATA",
+                "telefone": "06235243006"
+            },
+            "tipo_atendimento": "APS - CONSULTA MÉDICA",
+            "profissional": {
+                "nome": "ANA CAROLINA MATIAS FERREIRA",
+                "registro": "27907",
+                "tipo_conselho": "CRM",
+                "cbo": "225142",
+                "cbo_descricao": "MEDICO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+            },
+            "classificacao_risco": "Não Urgente",
+            "registros": [
+                {
+                    "data": "2024-09-09",
+                    "tipo": "Evolucao",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": "<p>Q.P.: \"CONSULTA DE ROTINA\"</p>\n<p>&nbsp;</p>\n<p>HDA: PACIENTE ACOMPANHADA PELA M&Atilde;E, COMPARECE PARA CONSULTA DE CRESCIMENTO E DESENVOLVIMENTO. NEGA QUEIXAS NO MOMENTO.&nbsp;</p>\n<p>&nbsp;</p>\n<p>MEDICAMENTOS EM USO:&nbsp;</p>\n<p>1) VIT D 200UI 2GOTAS/DIA</p>\n<p>&nbsp;</p>\n<p>EXAME F&Iacute;SICO:</p>\n<p>BOM ESTADO GERAL, NORMOCORADA, HIDRATADA, ANICT&Eacute;RICA E ACIAN&Oacute;TICA<br />FONTANELAS NORMOTENSAS<br />RITMO CARD&Iacute;ACO REGULAR EM 2 TEMPOS BULHAS NORMOFON&Eacute;TICAS SEM<br />SOPRO<br />MURM&Uacute;RIO VESICULAR PRESENTE BILATERALMENTE, SEM RU&Iacute;DOS ADVENT&Iacute;CIOS<br />ABDOME: RU&Iacute;DOS HIDROAEREOS PRESENTES, FL&Aacute;CIDO<br />MEMBROS SEM ALTERA&Ccedil;&Otilde;ES<br /><br />DESENVOLVIMENTO NEUROPSICOMOTOR ADEQUADO PARA IDADE</p>\n<p>&nbsp;</p>\n<p>EXAMES COMPLEMENTARES:&nbsp;</p>\n<p>&nbsp;</p>\n<p>TESTE DO CORA&Ccedil;AOZINHO&nbsp; DIA 01/07/2024&nbsp; NORMAL</p>\n<p>TESTE DO OLHINHO 01/07/2024 NORMAL&nbsp;</p>\n<p>TESTE DA ORELHINHA 01/07/2024 NORMA&nbsp;</p>\n<p>PESO 5,5&nbsp; &nbsp; EST 45 CM&nbsp; &nbsp;PC: 40CM&nbsp;</p>\n<p>&nbsp;</p>\n<p>TESTES DE TRIAGEM NEONATAL SEM ALTERA&Ccedil;&Otilde;ES REALIZADO DIA 12/07/2024</p>\n<p>&nbsp;</p>\n<p>CD: MANTENHO MEDICAMENTOS&nbsp;</p>\n<p>ENCAMINHO AO PEDIATRA (TESTE DO OLHINHO)</p>\n<p>ORIENTO SOBRE QUADRO CL&Iacute;NICO. M&Atilde;E COMPREENDE</p>\n<p>RETORNO SE NECESS&Aacute;RIO</p>",
+                        "exame": null
+                    }
+                },
+                {
+                    "data": "2024-09-09",
+                    "tipo": "Outro",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": null,
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 81793688,
+            "data_chegada": "2024-08-05",
+            "unidade": {
+                "nome": "USF BRISAS DA MATA",
+                "telefone": "06235243006"
+            },
+            "tipo_atendimento": "APS - CONSULTA DE ENFERMAGEM",
+            "profissional": {
+                "nome": "MARIA APARECIDA DE LIMA",
+                "registro": "165805",
+                "tipo_conselho": "COREN",
+                "cbo": "223565",
+                "cbo_descricao": "ENFERMEIRO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+            },
+            "classificacao_risco": "Não Urgente",
+            "registros": [
+                {
+                    "data": "2024-08-05",
+                    "tipo": "Evolucao",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": "<p>MAE TRAX LACTENTE PARA CONSULTA DE CD&nbsp;</p>\n<p>MAE NEGA PATOLOGIAS INFECTOCONTAGIOSAS TRIADAS NO PR&Eacute; NATAL</p>\n<p>&nbsp;</p>\n<p>IMUNE A TOXOPLASMOSE&nbsp;</p>\n<p>NASCIDO DE PARTO NORMAL&nbsp;</p>\n<p>APGAR 1`9&nbsp; &nbsp;2' 9&nbsp;</p>\n<p>PC 34 CM PT 32 CM IG 38 s e 4 dias&nbsp;</p>\n<p>&nbsp;</p>\n<p>TESTE DO CORA&Ccedil;AOZINHO&nbsp; DIA 01/07/2024&nbsp; NORMAL</p>\n<p>TESTE DO OLHINHO 01/07/2024 NORMAL&nbsp;</p>\n<p>TESTE DA ORELHINHA 01/07/2024 NORMA&nbsp;</p>\n<p>PESO 2940&nbsp; &nbsp; EST 45 CM&nbsp;</p>\n<p>&nbsp;</p>\n<p>TESTES DE TRIAGEM NEONATAL SEM ALTERA&Ccedil;&Otilde;ES REALIZADO DIA 12/07/2024</p>\n<p>&nbsp;</p>\n<p>Mae traz crian&ccedil;a para consulta de cd . nega queixas no momento&nbsp;</p>\n<p>Alimenta&ccedil;&atilde;o: LM exclusivo&nbsp;</p>\n<p>Evacua&ccedil;&otilde;es: amarelo tipo qualidade&nbsp;</p>\n<p>PC 37 cm&nbsp; &nbsp; peso 4200&nbsp; &nbsp;est 54 cm&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>BOM ESTADO GERAL, NORMOCORADA, HIDRATADA, ANICT&Eacute;RICA E ACIAN&Oacute;TICA<br />FONTANELAS NORMOTENSAS<br />ACV: RITMO CARD&Iacute;ACO REGULA<br />AR: MURM&Uacute;RIO VESICULAR PRESENTE BILATERALMENTE, SEM RU&Iacute;DOS ADVENT&Iacute;CIOS<br />ABDOME: RU&Iacute;DOS HIDROAEREOS PRESENTES, FL&Aacute;CIDO<br />MEMBROS SEM ALTERA&Ccedil;&Otilde;ES</p>\n<p>&nbsp;</p>\n<p>lactente com crescimento e desenvolvimento adequado para idade e sexo</p>\n<p>conduta: orienta&ccedil;&atilde;o&nbsp;</p>\n<p>Encaminho para oftalmologia conforme solicita&ccedil;&atilde;o pediatrica ao nascimento ap&oacute;s teste do olhinho&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>",
+                        "exame": null
+                    }
+                },
+                {
+                    "data": "2024-08-05",
+                    "tipo": "Outro",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": null,
+                        "exame": null
+                    }
+                },
+                {
+                    "data": "2024-08-05",
+                    "tipo": "Outro",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": null,
+                        "exame": null
+                    }
+                },
+                {
+                    "data": "2024-08-05",
+                    "tipo": "Outro",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": null,
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 79845193,
+            "data_chegada": "2024-07-08",
+            "unidade": {
+                "nome": "USF BRISAS DA MATA",
+                "telefone": "06235243006"
+            },
+            "tipo_atendimento": "USF - ACOLHIMENTO À DEMANDA ESPONTÂNEA",
+            "profissional": {
+                "nome": "ADRIANA BORGES RIBEIRO CARRIJO",
+                "registro": "7742",
+                "tipo_conselho": "COREN",
+                "cbo": "322245",
+                "cbo_descricao": "TECNICO DE ENFERMAGEM DA ESTRATEGIA DE SAUDE DA FAMILIA"
+            },
+            "classificacao_risco": "Não Urgente",
+            "registros": [
+                {
+                    "data": "2024-07-08",
+                    "tipo": "Avaliacao",
+                    "conteudo": {
+                        "avaliacao": "<html>  <head>      </head>  <body>    <p style=\"margin-bottom: 0.0; margin-top: 0\"><b>Peso (Kg): </b>3,200, <b>Classificação de Risco: </b>Não Urgente, </p></body></html>",
+                        "evolucao": null,
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 79845999,
+            "data_chegada": "2024-07-08",
+            "unidade": {
+                "nome": "USF BRISAS DA MATA",
+                "telefone": "06235243006"
+            },
+            "tipo_atendimento": "APS - CONSULTA MÉDICA",
+            "profissional": {
+                "nome": "ANA CAROLINA MATIAS FERREIRA",
+                "registro": "27907",
+                "tipo_conselho": "CRM",
+                "cbo": "225142",
+                "cbo_descricao": "MEDICO DA ESTRATEGIA DE SAUDE DA FAMILIA"
+            },
+            "classificacao_risco": "Não Urgente",
+            "registros": [
+                {
+                    "data": "2024-07-08",
+                    "tipo": "Evolucao",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": "<p>Q.P.: \"CONSULTA DE ROTINA\"</p>\n<p>&nbsp;</p>\n<p>HDA: PACIENTE ACOMPANHADA PELA M&Atilde;E, QUE COMPARECE PARA CONSULTA DE PUERICULTURA. NEGA QUEIXAS NO MOMENTO.&nbsp;</p>\n<p>&nbsp;</p>\n<p>MEDICAMENTOS EM USO: NEGA&nbsp;</p>\n<p>&nbsp;</p>\n<p>EXAME F&Iacute;SICO:&nbsp;</p>\n<p>PC: 36CM&nbsp;</p>\n<p>PESO: 3,2G&nbsp;</p>\n<p>COMP: 45CM&nbsp;</p>\n<p>&nbsp;</p>\n<p>BOM ESTADO GERAL, NORMOCORADA, HIDRATADA, ANICT&Eacute;RICA E ACIAN&Oacute;TICA<br />FONTANELAS NORMOTENSAS<br />ACV: RITMO CARD&Iacute;ACO REGULAR EM 2 TEMPOS BULHAS NORMOFON&Eacute;TICAS SEM<br />SOPRO<br />AR: MURM&Uacute;RIO VESICULAR PRESENTE BILATERALMENTE, SEM RU&Iacute;DOS ADVENT&Iacute;CIOS<br />ABDOME: RU&Iacute;DOS HIDROAEREOS PRESENTES, FL&Aacute;CIDO<br />MEMBROS SEM ALTERA&Ccedil;&Otilde;ES</p>\n<p>&nbsp;</p>\n<p>TESTES DE TRIAGEM NEONATAL SEM ALTERA&Ccedil;&Otilde;ES</p>\n<p>&nbsp;</p>\n<p>CD: PRESCREVO:</p>\n<p>1) VITAMINA D 200UI: 2GOTAS/DIA AT&Eacute; OS 2 ANOS</p>\n<p>2) GROW FERRO 5MG: 1 GOTA/DIA AT&Eacute; OS 2 ANOS</p>\n<p>AGUARDO RESULTADO DE TESTE DO PEZINHO&nbsp;</p>\n<p>ORIENTO SOBRE QUADRO CL&Iacute;NICO. M&Atilde;E COMPREENDE</p>\n<p>RETORNO MENSAL&nbsp;</p>",
+                        "exame": null
+                    }
+                },
+                {
+                    "data": "2024-07-08",
+                    "tipo": "Outro",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": null,
+                        "exame": null
+                    }
+                }
+            ]
+        },
+        {
+            "numero_atendimento": 79614642,
+            "data_chegada": "2024-07-04",
+            "unidade": {
+                "nome": "USF ALTO DO VALE",
+                "telefone": "6235243503"
+            },
+            "tipo_atendimento": "APS - SALA DE PROCEDIMENTOS",
+            "profissional": {
+                "nome": "ISABEL MADALENA DE SOUZA TRINDADE",
+                "registro": "115701",
+                "tipo_conselho": "COREN",
+                "cbo": "322250",
+                "cbo_descricao": "AUXILIAR DE ENFERMAGEM DA ESTRATEGIA DE SAUDE DA FAMILIA"
+            },
+            "classificacao_risco": "Não Urgente",
+            "registros": [
+                {
+                    "data": "2024-07-04",
+                    "tipo": "Evolucao",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": "<p>coleta teste do pezinho</p>",
+                        "exame": null
+                    }
+                },
+                {
+                    "data": "2024-07-04",
+                    "tipo": "Outro",
+                    "conteudo": {
+                        "avaliacao": null,
+                        "evolucao": null,
+                        "exame": null
+                    }
+                }
+            ]
+        }
+    ]
+}
