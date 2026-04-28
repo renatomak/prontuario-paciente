@@ -1,24 +1,21 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { pdf } from "@react-pdf/renderer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Download, Loader2, FileText, MapPin, User, Calendar, Stethoscope } from "lucide-react";
+import { Download, Loader2, FileText, MapPin, User, Calendar, Stethoscope, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import ProntuarioPDFMock from "@/lib/ProntuarioPDFMock";
 import { getLogoBase64 } from "@/lib/logoGoiania";
 import {
-  patientMockData,
-  type MockProntuario,
-  type MockRegistro,
-  type MockRegistroConteudo,
-} from "@/data/patientMock";
-
-// CPF fixo usado internamente nesta aba para fins de teste do novo fluxo de PDF.
-const CPF_FIXO_TESTE = "121.694.411-31";
+  fetchProntuarioByPacienteId,
+  type ApiProntuarioResponse,
+  type ApiRegistro,
+  type ApiRegistroConteudo,
+} from "@/lib/prontuarioApi";
 
 interface Props {
-  data?: MockProntuario;
+  pacienteId: number;
 }
 
 function htmlToText(html?: string | null): string {
@@ -38,12 +35,9 @@ function htmlToText(html?: string | null): string {
     .trim();
 }
 
-interface Bloco {
-  label: string;
-  texto: string;
-}
+interface Bloco { label: string; texto: string; }
 
-function blocosConteudo(c: MockRegistroConteudo): Bloco[] {
+function blocosConteudo(c: ApiRegistroConteudo): Bloco[] {
   const out: Bloco[] = [];
   const av = htmlToText(c.avaliacao);
   const ev = htmlToText(c.evolucao);
@@ -54,17 +48,29 @@ function blocosConteudo(c: MockRegistroConteudo): Bloco[] {
   return out;
 }
 
-export function ProntuarioAtendimentos({ data: _data }: Props = {}) {
-  const data: MockProntuario = useMemo(
-    () => ({
-      ...patientMockData,
-      paciente: { ...patientMockData.paciente, cpf: CPF_FIXO_TESTE },
-    }),
-    [],
-  );
+export function ProntuarioAtendimentos({ pacienteId }: Props) {
+  const [data, setData] = useState<ApiProntuarioResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [downloading, setDownloading] = useState(false);
 
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    setData(null);
+    fetchProntuarioByPacienteId(pacienteId)
+      .then((r) => { if (!cancelled) setData(r); })
+      .catch((err) => {
+        console.error(err);
+        if (!cancelled) setError(err instanceof Error ? err.message : "Falha ao carregar prontuário.");
+      })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [pacienteId]);
+
   async function handleDownload() {
+    if (!data) return;
     try {
       setDownloading(true);
       const logoBase64 = await getLogoBase64();
@@ -85,6 +91,29 @@ export function ProntuarioAtendimentos({ data: _data }: Props = {}) {
     }
   }
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16 text-muted-foreground gap-2">
+        <Loader2 className="h-5 w-5 animate-spin" />
+        Carregando prontuário...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-start gap-3 rounded-md border border-destructive/40 bg-destructive/5 p-4 text-sm">
+        <AlertCircle className="h-4 w-4 mt-0.5 text-destructive" />
+        <div>
+          <p className="font-medium text-destructive">Não foi possível carregar o prontuário</p>
+          <p className="text-muted-foreground">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) return null;
+
   const { paciente, atendimentos } = data;
   const totalRegistros = atendimentos.reduce((acc, a) => acc + (a.registros?.length ?? 0), 0);
   const enderecoStr = paciente.endereco
@@ -94,9 +123,7 @@ export function ProntuarioAtendimentos({ data: _data }: Props = {}) {
         paciente.endereco.numero,
         paciente.endereco.bairro,
         paciente.endereco.cidade && `${paciente.endereco.cidade} - ${paciente.endereco.uf ?? ""}`,
-      ]
-        .filter(Boolean)
-        .join(", ")
+      ].filter(Boolean).join(", ")
     : "";
 
   return (
@@ -190,7 +217,7 @@ export function ProntuarioAtendimentos({ data: _data }: Props = {}) {
                 {(a.registros ?? []).length === 0 && (
                   <p className="text-xs italic text-muted-foreground">(Sem registros clínicos)</p>
                 )}
-                {a.registros?.map((r: MockRegistro, ri) => {
+                {a.registros?.map((r: ApiRegistro, ri) => {
                   const blocos = blocosConteudo(r.conteudo);
                   return (
                     <div key={ri} className="rounded-md border border-border/60 bg-card p-3 space-y-2">
