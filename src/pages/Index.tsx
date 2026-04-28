@@ -55,7 +55,7 @@ const Index = () => {
       const data = await fetchProntuarioByPacienteId(paciente.data.id);
       console.log("Resposta da API:", data);
 
-      const p = data.paciente ?? {};
+      const p: any = data.paciente ?? {};
       const end = p.endereco ?? null;
 
       // Mapeia paciente para o modelo do frontend
