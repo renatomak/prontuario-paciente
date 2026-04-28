@@ -21,24 +21,37 @@ interface Props {
   data?: MockProntuario;
 }
 
-function renderConteudo(c: MockRegistroConteudo): string[] {
-  const linhas: string[] = [];
-  if (c.subtitulo) linhas.push(c.subtitulo);
-  if (c.motivoConsulta) linhas.push(`Motivo: ${c.motivoConsulta}`);
-  if (c.historico) linhas.push(`Histórico: ${c.historico}`);
-  if (c.evolucao) linhas.push(c.evolucao);
-  if (c.observacao) linhas.push(`Obs.: ${c.observacao}`);
-  const antro: string[] = [];
-  if (c.peso != null) antro.push(`Peso: ${c.peso}kg`);
-  if (c.altura != null) antro.push(`Altura: ${c.altura}cm`);
-  if (c.perimetroCefalico != null) antro.push(`PC: ${c.perimetroCefalico}cm`);
-  if (antro.length) linhas.push(antro.join("  |  "));
-  if (c.cid?.codigo) linhas.push(`CID: ${c.cid.codigo} - ${c.cid.descricao ?? ""}`);
-  if (c.procedimentos?.length) linhas.push(`Procedimentos: ${c.procedimentos.join("; ")}`);
-  if (c.exames?.itens?.length) {
-    linhas.push(`Exames (${c.exames.grupo ?? ""}): ${c.exames.itens.join("; ")}`);
-  }
-  return linhas;
+function htmlToText(html?: string | null): string {
+  if (!html) return "";
+  const withBreaks = html
+    .replace(/<\s*br\s*\/?\s*>/gi, "\n")
+    .replace(/<\/\s*(p|div|li|tr|h[1-6])\s*>/gi, "\n")
+    .replace(/<\s*li\s*[^>]*>/gi, "• ");
+  const tmp = document.createElement("div");
+  tmp.innerHTML = withBreaks;
+  const text = tmp.textContent || tmp.innerText || "";
+  return text
+    .replace(/\u00a0/g, " ")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .replace(/[ \t]{2,}/g, " ")
+    .trim();
+}
+
+interface Bloco {
+  label: string;
+  texto: string;
+}
+
+function blocosConteudo(c: MockRegistroConteudo): Bloco[] {
+  const out: Bloco[] = [];
+  const av = htmlToText(c.avaliacao);
+  const ev = htmlToText(c.evolucao);
+  const ex = htmlToText(c.exame);
+  if (av) out.push({ label: "Avaliação", texto: av });
+  if (ev) out.push({ label: "Evolução", texto: ev });
+  if (ex) out.push({ label: "Exame", texto: ex });
+  return out;
 }
 
 export function ProntuarioAtendimentos({ data: _data }: Props = {}) {
@@ -74,6 +87,17 @@ export function ProntuarioAtendimentos({ data: _data }: Props = {}) {
 
   const { paciente, atendimentos } = data;
   const totalRegistros = atendimentos.reduce((acc, a) => acc + (a.registros?.length ?? 0), 0);
+  const enderecoStr = paciente.endereco
+    ? [
+        paciente.endereco.tipo_logradouro,
+        paciente.endereco.logradouro,
+        paciente.endereco.numero,
+        paciente.endereco.bairro,
+        paciente.endereco.cidade && `${paciente.endereco.cidade} - ${paciente.endereco.uf ?? ""}`,
+      ]
+        .filter(Boolean)
+        .join(", ")
+    : "";
 
   return (
     <div className="space-y-4">
@@ -100,11 +124,12 @@ export function ProntuarioAtendimentos({ data: _data }: Props = {}) {
         </CardHeader>
         <CardContent className="grid gap-2 text-sm sm:grid-cols-2">
           <Info label="Nome" value={paciente.nome} />
-          <Info label="CPF" value={paciente.cpf} />
-          <Info label="Dt. Nascimento" value={paciente.dataNascimento} />
-          <Info label="Idade" value={paciente.idade} />
-          <Info label="Mãe" value={paciente.mae} />
-          <Info label="CNS" value={paciente.cns} />
+          <Info label="CPF" value={paciente.cpf ?? ""} />
+          <Info label="Dt. Nascimento" value={paciente.data_nascimento ?? ""} />
+          <Info label="Sexo" value={paciente.sexo ?? ""} />
+          <Info label="Mãe" value={paciente.nome_mae ?? ""} />
+          <Info label="Telefone" value={paciente.telefone ?? ""} />
+          <Info label="Endereço" value={enderecoStr} />
         </CardContent>
       </Card>
 
@@ -114,77 +139,86 @@ export function ProntuarioAtendimentos({ data: _data }: Props = {}) {
             Nenhum atendimento registrado.
           </p>
         )}
-        {atendimentos.map((a, idx) => (
-          <Card key={idx}>
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between gap-3 flex-wrap">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-sm font-medium">
-                    <MapPin className="h-4 w-4 text-primary" />
-                    {a.unidade}
-                  </div>
-                  {a.tipoAtendimento && (
-                    <div className="text-xs text-muted-foreground">{a.tipoAtendimento}</div>
-                  )}
-                </div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  {a.numeroAtendimento && (
-                    <Badge variant="outline">Nº {a.numeroAtendimento}</Badge>
-                  )}
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Calendar className="h-3.5 w-3.5" />
-                    {a.chegada}
-                  </div>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0 space-y-3">
-              {a.registros?.map((r: MockRegistro, ri) => {
-                const linhas = renderConteudo(r.conteudo);
-                return (
-                  <div key={ri} className="rounded-md border border-border/60 bg-card p-3 space-y-2">
-                    <div className="flex items-start justify-between gap-2 flex-wrap">
-                      <div className="flex items-center gap-2 text-xs">
-                        <User className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span className="font-medium">{r.profissional?.nome}</span>
-                        {r.profissional?.tipoRegistro && r.profissional?.registro && (
-                          <span className="text-muted-foreground">
-                            ({r.profissional.tipoRegistro} {r.profissional.registro})
-                          </span>
-                        )}
-                        {r.profissional?.cboDescricao && (
-                          <span className="text-muted-foreground inline-flex items-center gap-1">
-                            <Stethoscope className="h-3 w-3" />
-                            {r.profissional.cboDescricao}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="secondary">{r.tipo}</Badge>
-                        {r.conteudo.classificacaoRisco && (
-                          <Badge variant="outline">{r.conteudo.classificacaoRisco}</Badge>
-                        )}
-                        <span className="text-xs text-muted-foreground">{r.dataRegistro}</span>
-                      </div>
+        {atendimentos.map((a, idx) => {
+          const prof = a.profissional;
+          return (
+            <Card key={idx}>
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between gap-3 flex-wrap">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 text-sm font-medium">
+                      <MapPin className="h-4 w-4 text-primary" />
+                      {a.unidade?.nome}
+                      {a.unidade?.telefone && (
+                        <span className="text-xs text-muted-foreground">({a.unidade.telefone})</span>
+                      )}
                     </div>
-                    {linhas.length > 0 && (
-                      <div className="space-y-1.5">
-                        {linhas.map((l, li) => (
-                          <p
-                            key={li}
-                            className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap"
-                          >
-                            {l}
-                          </p>
-                        ))}
+                    {a.tipo_atendimento && (
+                      <div className="text-xs text-muted-foreground">{a.tipo_atendimento}</div>
+                    )}
+                    {prof?.nome && (
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
+                        <User className="h-3.5 w-3.5" />
+                        <span className="font-medium">{prof.nome}</span>
+                        {prof.tipo_conselho && prof.registro && (
+                          <span>({prof.tipo_conselho}: {prof.registro})</span>
+                        )}
+                        {prof.cbo_descricao && (
+                          <span className="inline-flex items-center gap-1">
+                            <Stethoscope className="h-3 w-3" />
+                            {prof.cbo_descricao}
+                          </span>
+                        )}
                       </div>
                     )}
                   </div>
-                );
-              })}
-            </CardContent>
-          </Card>
-        ))}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {a.numero_atendimento && (
+                      <Badge variant="outline">Nº {a.numero_atendimento}</Badge>
+                    )}
+                    {a.classificacao_risco && (
+                      <Badge variant="outline">{a.classificacao_risco}</Badge>
+                    )}
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <Calendar className="h-3.5 w-3.5" />
+                      {a.data_chegada}
+                    </div>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0 space-y-3">
+                {(a.registros ?? []).length === 0 && (
+                  <p className="text-xs italic text-muted-foreground">(Sem registros clínicos)</p>
+                )}
+                {a.registros?.map((r: MockRegistro, ri) => {
+                  const blocos = blocosConteudo(r.conteudo);
+                  return (
+                    <div key={ri} className="rounded-md border border-border/60 bg-card p-3 space-y-2">
+                      <div className="flex items-start justify-between gap-2 flex-wrap">
+                        <Badge variant="secondary">{r.tipo}</Badge>
+                        <span className="text-xs text-muted-foreground">{r.data}</span>
+                      </div>
+                      {blocos.length > 0 ? (
+                        <div className="space-y-2">
+                          {blocos.map((b, bi) => (
+                            <div key={bi} className="space-y-0.5">
+                              <p className="text-xs font-semibold text-muted-foreground">{b.label}</p>
+                              <p className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap">
+                                {b.texto}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-xs italic text-muted-foreground">(Sem conteúdo)</p>
+                      )}
+                    </div>
+                  );
+                })}
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );
