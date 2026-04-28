@@ -5,6 +5,7 @@ import { usePaciente } from "../ui/hooks/usePaciente";
 import { useVacinas } from "../ui/hooks/useVacinas";
 import { useProntuario } from "../ui/hooks/useProntuario";
 import { gerarProntuarioPdf } from "@/lib/prontuarioPdf";
+import { fetchProntuarioByPacienteId } from "@/lib/prontuarioApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -51,12 +52,10 @@ const Index = () => {
   async function handleGerarProntuario() {
     if (!paciente.data) return;
     try {
-      const res = await fetch(`http://localhost:8083/api/prontuario/${paciente.data.id}`);
-      if (!res.ok) throw new Error("Erro ao buscar registros do prontuário");
-      const data = await res.json();
+      const data = await fetchProntuarioByPacienteId(paciente.data.id);
       console.log("Resposta da API:", data);
 
-      const p = data.paciente ?? {};
+      const p: any = data.paciente ?? {};
       const end = p.endereco ?? null;
 
       // Mapeia paciente para o modelo do frontend
@@ -259,7 +258,7 @@ const Index = () => {
                 />
               </TabsContent>
               <TabsContent value="prontuarios">
-                <ProntuarioAtendimentos />
+                <ProntuarioAtendimentos pacienteId={paciente.data.id} />
               </TabsContent>
             </Tabs>
           </div>
