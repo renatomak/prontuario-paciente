@@ -7,11 +7,11 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 import type {
-  MockProntuario,
-  MockAtendimento,
-  MockRegistro,
-  MockRegistroConteudo,
-} from "@/data/patientMock";
+  ApiProntuarioResponse as MockProntuario,
+  ApiAtendimento as MockAtendimento,
+  ApiRegistro as MockRegistro,
+  ApiRegistroConteudo as MockRegistroConteudo,
+} from "@/lib/prontuarioApi";
 
 function parseDate(str?: string | null) {
   if (!str) return 0;

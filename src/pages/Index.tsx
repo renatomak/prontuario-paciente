@@ -259,7 +259,7 @@ const Index = () => {
                 />
               </TabsContent>
               <TabsContent value="prontuarios">
-                <ProntuarioAtendimentos />
+                <ProntuarioAtendimentos pacienteId={paciente.data.id} />
               </TabsContent>
             </Tabs>
           </div>
