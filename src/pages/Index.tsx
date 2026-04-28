@@ -30,31 +30,61 @@ const Index = () => {
   const vacinas = useVacinas(pacienteId ?? 0, !!pacienteId && !picker);
   const prontuario = useProntuario();
 
-  function handleGerarProntuario() {
+  async function handleGerarProntuario() {
     if (!paciente.data) return;
-    const p = paciente.data;
-    console.info("[Prontuario] gerando para paciente id =", p.id);
-    prontuario.mutate(p.id, {
-      onSuccess: async (registros) => {
-        console.info("[Prontuario] registros para PDF:", registros?.length, registros);
-        try {
-          await gerarProntuarioPdf(p, registros);
-          if (!registros || registros.length === 0) {
-            toast.warning("Prontuário gerado, mas sem atendimentos retornados pela API.");
-          } else {
-            toast.success(`Prontuário gerado (${registros.length} registros).`);
-          }
-        } catch (err) {
-          toast.error("Falha ao gerar PDF do prontuário.");
-          console.error(err);
-        }
-      },
-      onError: (e: unknown) => {
-        console.error("[Prontuario] erro:", e);
-        const msg = e && typeof e === "object" && "message" in e ? (e as { message?: string }).message : null;
-        toast.error(msg || "Erro ao buscar prontuário.");
-      },
-    });
+    try {
+      const res = await fetch(`http://localhost:8083/api/prontuario/${paciente.data.id}`);
+      if (!res.ok) throw new Error("Erro ao buscar registros do prontuário");
+      const data = await res.json();
+      console.log("Resposta da API:", data);
+
+      // Mapeia os campos do backend para o modelo do frontend
+      const pacientePdf = {
+        id: data.paciente.id,
+        nome: data.paciente.nome,
+        cpf: data.paciente.cpf,
+        sexo: data.paciente.sexo,
+        nomeMae: data.paciente.nome_mae,
+        nomePai: data.paciente.nome_pai,
+        dataNascimento: data.paciente.data_nascimento,
+        telefone: data.paciente.telefone,
+        idade: '', // pode ser calculada se necessário
+        endereco: data.paciente.endereco
+          ? {
+              keyword: data.paciente.endereco.keyword,
+              tipoLogradouro: data.paciente.endereco.tipo_logradouro,
+              logradouro: data.paciente.endereco.logradouro,
+              complemento: data.paciente.endereco.complemento,
+              numero: data.paciente.endereco.numero,
+              cep: data.paciente.endereco.cep,
+              bairro: data.paciente.endereco.bairro,
+              cidadeId: data.paciente.endereco.cidade_id,
+              cidade: data.paciente.endereco.cidade,
+              uf: data.paciente.endereco.uf,
+            }
+          : null,
+      };
+
+      // Mapeia os atendimentos para o modelo esperado
+      const atendimentosPdf = (data.atendimentos || []).map((a: any) => ({
+        dataRegistro: a.data_registro,
+        profissional: a.profissional,
+        unidade: a.unidade,
+        tipoRegistro: a.tipo_registro,
+        classificacaoRisco: a.classificacao_risco,
+        conteudo: a.conteudo,
+      }));
+
+      await gerarProntuarioPdf(pacientePdf, atendimentosPdf);
+      if (!atendimentosPdf || atendimentosPdf.length === 0) {
+        toast.warning("Prontuário gerado, mas sem atendimentos retornados pela API.");
+      } else {
+        toast.success(`Prontuário gerado (${atendimentosPdf.length} registros).`);
+      }
+    } catch (err) {
+      toast.error("Falha ao gerar PDF do prontuário.");
+      console.error(err);
+    }
   }
 
   function handleSearch(e?: React.FormEvent) {

@@ -6,6 +6,7 @@
   "main": "main.cjs",
   "scripts": {
     "dev": "vite",
+    "debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --port 8080",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
