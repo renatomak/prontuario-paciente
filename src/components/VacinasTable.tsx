@@ -12,8 +12,13 @@ interface Props {
 
 function fmtDate(d: string) {
   if (!d) return "";
-  const [y, m, day] = d.split("-");
-  return `${day}/${m}/${y}`;
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(d)) return d;
+  const isoMatch = d.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (isoMatch) {
+    const [, y, m, day] = isoMatch;
+    return `${day}/${m}/${y}`;
+  }
+  return d;
 }
 
 export function VacinasTable({ vacinas, onSelect, selectedId }: Props) {

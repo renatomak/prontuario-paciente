@@ -23,8 +23,15 @@ function Field({ label, value }: { label: string; value: React.ReactNode }) {
 
 function fmtDate(d: string | null) {
   if (!d) return "";
-  const [y, m, day] = d.split("-");
-  return `${day}/${m}/${y}`;
+  // Já em DD/MM/YYYY
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(d)) return d;
+  // ISO YYYY-MM-DD (com possível timestamp)
+  const isoMatch = d.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (isoMatch) {
+    const [, y, m, day] = isoMatch;
+    return `${day}/${m}/${y}`;
+  }
+  return d;
 }
 
 
