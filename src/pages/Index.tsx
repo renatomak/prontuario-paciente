@@ -33,12 +33,31 @@ const Index = () => {
 
   // Removido: função htmlToText usada apenas para PDF
 
+  function formatCpfMask(value: string): string {
+    const digits = value.replace(/\D/g, "").slice(0, 11);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`;
+    if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`;
+    return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`;
+  }
+
+  function handleQueryChange(value: string) {
+    const digits = value.replace(/\D/g, "");
+    // Se parece um CPF (somente dígitos/pontuação de CPF), aplica máscara
+    const isCpfLike = /^[\d.\-\s]*$/.test(value) && digits.length > 0;
+    setQuery(isCpfLike ? formatCpfMask(value) : value);
+  }
+
   function handleSearch(e?: React.FormEvent) {
     e?.preventDefault();
     if (!query.trim()) return;
     setPicker(null);
     setPacienteId(null);
-    pacienteSearch.mutate(query.trim(), {
+    const raw = query.trim();
+    const digits = raw.replace(/\D/g, "");
+    // Se for CPF formatado (11 dígitos numéricos), envia apenas dígitos
+    const searchTerm = digits.length === 11 && /^[\d.\-\s]*$/.test(raw) ? digits : raw;
+    pacienteSearch.mutate(searchTerm, {
       onSuccess: (res) => {
         if (res.tipo === "paciente") {
           setPacienteId(res.paciente.id);
@@ -82,8 +101,10 @@ const Index = () => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Buscar por Nome ou CPF..."
+              onChange={(e) => handleQueryChange(e.target.value)}
+              placeholder="Buscar por Nome ou CPF (000.000.000-00)..."
+              inputMode="text"
+              maxLength={120}
               className="pl-10 h-11"
             />
           </div>
