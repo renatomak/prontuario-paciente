@@ -1,4 +1,73 @@
-// Função para limpar HTML e caracteres especiais do campo conteudo, baseada na lógica Java fornecida
+// Função para limpar HTML e caracteres especiais do campo conteudo
+
+// Mapa de entidades HTML nomeadas mais comuns (Latin-1 + símbolos frequentes)
+const NAMED_ENTITIES: Record<string, string> = {
+  nbsp: " ",
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  apos: "'",
+  copy: "©",
+  reg: "®",
+  trade: "™",
+  hellip: "…",
+  mdash: "—",
+  ndash: "–",
+  lsquo: "‘",
+  rsquo: "’",
+  ldquo: "“",
+  rdquo: "”",
+  laquo: "«",
+  raquo: "»",
+  bull: "•",
+  middot: "·",
+  ordm: "º",
+  ordf: "ª",
+  deg: "°",
+  micro: "µ",
+  para: "¶",
+  sect: "§",
+  iexcl: "¡",
+  iquest: "¿",
+  cent: "¢",
+  pound: "£",
+  yen: "¥",
+  euro: "€",
+  // Vogais com acento - maiúsculas
+  Aacute: "Á", Eacute: "É", Iacute: "Í", Oacute: "Ó", Uacute: "Ú",
+  Agrave: "À", Egrave: "È", Igrave: "Ì", Ograve: "Ò", Ugrave: "Ù",
+  Acirc: "Â", Ecirc: "Ê", Icirc: "Î", Ocirc: "Ô", Ucirc: "Û",
+  Atilde: "Ã", Ntilde: "Ñ", Otilde: "Õ",
+  Auml: "Ä", Euml: "Ë", Iuml: "Ï", Ouml: "Ö", Uuml: "Ü",
+  Ccedil: "Ç",
+  // Vogais com acento - minúsculas
+  aacute: "á", eacute: "é", iacute: "í", oacute: "ó", uacute: "ú",
+  agrave: "à", egrave: "è", igrave: "ì", ograve: "ò", ugrave: "ù",
+  acirc: "â", ecirc: "ê", icirc: "î", ocirc: "ô", ucirc: "û",
+  atilde: "ã", ntilde: "ñ", otilde: "õ",
+  auml: "ä", euml: "ë", iuml: "ï", ouml: "ö", uuml: "ü",
+  ccedil: "ç",
+};
+
+function decodeEntities(text: string): string {
+  // Numéricas decimais &#123;
+  let out = text.replace(/&#(\d+);/g, (_, n) => {
+    try { return String.fromCodePoint(parseInt(n, 10)); } catch { return ""; }
+  });
+  // Numéricas hex &#xAB;
+  out = out.replace(/&#x([0-9a-fA-F]+);/g, (_, n) => {
+    try { return String.fromCodePoint(parseInt(n, 16)); } catch { return ""; }
+  });
+  // Nomeadas &name;
+  out = out.replace(/&([a-zA-Z][a-zA-Z0-9]+);/g, (m, name) => {
+    return Object.prototype.hasOwnProperty.call(NAMED_ENTITIES, name)
+      ? NAMED_ENTITIES[name]
+      : m;
+  });
+  return out;
+}
+
 export function limparHtml(texto?: string | null): string {
   if (!texto || !texto.trim()) return "";
 
@@ -8,21 +77,21 @@ export function limparHtml(texto?: string | null): string {
     .replace(/<\/p>/gi, " ___BR___ ")
     .replace(/<\/div>/gi, " ___BR___ ");
 
-  // 2. Extrair texto limpo de tags (sem jsoup, mas usando DOMParser se disponível, senão regex)
-  // Como estamos em ambiente Node/React-pdf, usar regex simples para remover tags
+  // 2. Remover tags
   let textoLimpo = preparoTexto.replace(/<[^>]+>/g, "");
 
-  // 3. Recuperar quebras e limpeza pesada
+  // 3. Decodificar entidades HTML (nomeadas + numéricas)
+  textoLimpo = decodeEntities(textoLimpo);
+
+  // 4. Recuperar quebras
   textoLimpo = textoLimpo.replace(/___BR___/g, "\n");
 
-  // 4. Regex para remover tudo que não for ASCII, Latin-1 ou \n
-  // [^\x00-\x7F\xA0-\xFF\n]
-  textoLimpo = textoLimpo.replace(/[^\x00-\x7F\xA0-\xFF\n]/g, "");
-
-  // 5. Normalização de espaços residuais
+  // 5. Normalização de espaços
   return textoLimpo
-    .replace(/^[ \t]+/gm, "") // Remove espaços no início das linhas
-    .replace(/[ \t]+$/gm, "") // Remove espaços no fim das linhas
-    .replace(/[ ]{2,}/g, " ") // Espaços duplos para simples
+    .replace(/\u00a0/g, " ")
+    .replace(/^[ \t]+/gm, "")
+    .replace(/[ \t]+$/gm, "")
+    .replace(/[ ]{2,}/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
