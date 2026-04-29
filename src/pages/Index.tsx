@@ -101,8 +101,10 @@ const Index = () => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Buscar por Nome ou CPF..."
+              onChange={(e) => handleQueryChange(e.target.value)}
+              placeholder="Buscar por Nome ou CPF (000.000.000-00)..."
+              inputMode="text"
+              maxLength={120}
               className="pl-10 h-11"
             />
           </div>
