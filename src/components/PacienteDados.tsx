@@ -5,6 +5,9 @@ interface Props { paciente: Paciente }
 
 function fmtDateBR(d: string | null) {
   if (!d) return "";
+  // Já está no formato DD/MM/YYYY
+  if (/^\d{1,2}\/\d{1,2}\/\d{4}/.test(d)) return d;
+  // ISO YYYY-MM-DD
   const [y, m, day] = d.split("-");
   if (!y || !m || !day) return d;
   return `${day}/${m}/${y}`;
