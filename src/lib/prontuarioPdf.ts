@@ -135,13 +135,13 @@ function drawPacienteBox(state: RenderState, paciente: Paciente) {
   const e = paciente.endereco;
   const enderecoStr = e
     ? [
-        [e.tipoLogradouro, e.logradouro].filter(Boolean).join(" "),
-        e.numero ? `Nº ${e.numero}` : null,
-        e.bairro,
-        [e.cidade, e.uf].filter(Boolean).join(" - "),
-      ]
-        .filter(Boolean)
-        .join(", ")
+      [e.tipoLogradouro, e.logradouro].filter(Boolean).join(" "),
+      e.numero ? `Nº ${e.numero}` : null,
+      e.bairro,
+      [e.cidade, e.uf].filter(Boolean).join(" - "),
+    ]
+      .filter(Boolean)
+      .join(", ")
     : "";
 
   const rows: Array<Array<[string, string]>> = [
@@ -269,7 +269,7 @@ function drawRegistro(state: RenderState, paciente: Paciente, reg: ProntuarioReg
   doc.setDrawColor(210);
   doc.setLineWidth(0.2);
   doc.line(x, state.y, x + w, state.y);
-  state.y += 5; 
+  state.y += 5;
 
   // Linha 1: Profissional
   const labelValueSpacing = 3;
@@ -339,7 +339,7 @@ export async function gerarProntuarioPdf(paciente: Paciente, registros: Prontuar
     pageW,
     pageH,
     page: 1,
-    totalPlaceholder: () => {},
+    totalPlaceholder: () => { },
   };
 
   drawHeader(state, paciente, false);

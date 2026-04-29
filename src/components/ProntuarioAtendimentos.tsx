@@ -118,12 +118,12 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
   const totalRegistros = atendimentos.reduce((acc, a) => acc + (a.registros?.length ?? 0), 0);
   const enderecoStr = paciente.endereco
     ? [
-        paciente.endereco.tipo_logradouro,
-        paciente.endereco.logradouro,
-        paciente.endereco.numero,
-        paciente.endereco.bairro,
-        paciente.endereco.cidade && `${paciente.endereco.cidade} - ${paciente.endereco.uf ?? ""}`,
-      ].filter(Boolean).join(", ")
+      paciente.endereco.tipo_logradouro,
+      paciente.endereco.logradouro,
+      paciente.endereco.numero,
+      paciente.endereco.bairro,
+      paciente.endereco.cidade && `${paciente.endereco.cidade} - ${paciente.endereco.uf ?? ""}`,
+    ].filter(Boolean).join(", ")
     : "";
 
   return (
