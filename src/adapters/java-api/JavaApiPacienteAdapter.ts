@@ -28,6 +28,7 @@ interface RawPaciente {
   telefone?: string | null;
   idade?: string;
   endereco?: RawEndereco | null;
+  cd_usu_cadsus?: number | string | null;
 }
 
 function parseDataNascimento(dataNascimento: string | null | undefined): Date | null {
@@ -87,6 +88,7 @@ function mapPaciente(p: RawPaciente): Paciente {
     telefone: p.telefone ?? null,
     idade: p.idade ?? calcIdade(p.data_nascimento),
     endereco: mapEndereco(p.endereco),
+    cd_usu_cadsus: p.cd_usu_cadsus ?? null,
   };
 }
 

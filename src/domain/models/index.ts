@@ -29,6 +29,7 @@ export interface Paciente {
   telefone: string | null;
   idade: string;
   endereco: Endereco | null;
+  cd_usu_cadsus?: number | string | null;
 }
 
 export interface VacinaResumo {
@@ -87,4 +88,40 @@ export interface ProntuarioRegistro {
   tipoRegistro: string;
   classificacaoRisco: string | null;
   conteudo: string;
+  possui_aih?: boolean;
+  aih_detalhes?: {
+    data_cadastro?: string;
+    diagnostico_inicial?: string;
+    principais_sinais?: string;
+    condicoes_internacao?: string;
+    principais_resultados?: string;
+  };
+}
+
+export interface RegistroClinico {
+  data: string;
+  tipo: string;
+  conteudo: {
+    avaliacao?: string;
+    evolucao?: string;
+    exame?: string;
+  };
+}
+
+export interface Atendimento {
+  numeroAtendimento: number;
+  dataChegada: string;
+  unidade: { nome: string; telefone: string };
+  tipoAtendimento: string;
+  profissional: { nome: string; registro: string; tipoConselho: string };
+  classificacaoRisco: string;
+  possuiAih: boolean;
+  aihDetalhes?: {
+    dataCadastro: string;
+    principaisSinais: string;
+    condicoesInternacao: string;
+    principaisResultados: string;
+    diagnosticoInicial: string;
+  };
+  registros: RegistroClinico[];
 }

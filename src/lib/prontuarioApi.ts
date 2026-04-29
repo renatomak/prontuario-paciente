@@ -51,16 +51,25 @@ export interface ApiRegistro {
   conteudo: ApiRegistroConteudo;
 }
 
+export interface ApiAihDetalhes {
+  data_cadastro?: string | null;
+  principais_sinais?: string | null;
+  condicoes_internacao?: string | null;
+  principais_resultados?: string | null;
+  diagnostico_inicial?: string | null;
+}
+
 export interface ApiAtendimento {
   data_chegada?: string | null;
   numero_atendimento?: string | null;
   tipo_atendimento?: string | null;
   classificacao_risco?: string | null;
+  possui_aih?: boolean;
+  aih_detalhes?: ApiAihDetalhes | null;
   unidade?: ApiUnidade | null;
   profissional?: ApiProfissional | null;
   registros: ApiRegistro[];
 }
-
 export interface ApiProntuarioResponse {
   paciente: ApiPaciente;
   atendimentos: ApiAtendimento[];
