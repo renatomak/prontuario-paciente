@@ -71,11 +71,16 @@ function decodeEntities(text: string): string {
 export function limparHtml(texto?: string | null): string {
   if (!texto || !texto.trim()) return "";
 
-  // 1. Preservar quebras de linha básicas
-  let preparoTexto = texto
+  // 0. Normalizar quebras de linha (\r\n e \r isolados -> \n)
+  let preparoTexto = texto.replace(/\r\n?/g, "\n");
+
+  // 1. Preservar quebras de linha básicas das tags de bloco
+  preparoTexto = preparoTexto
     .replace(/<br\s*\/?>/gi, " ___BR___ ")
     .replace(/<\/p>/gi, " ___BR___ ")
-    .replace(/<\/div>/gi, " ___BR___ ");
+    .replace(/<\/div>/gi, " ___BR___ ")
+    .replace(/<\/li>/gi, " ___BR___ ")
+    .replace(/<\/tr>/gi, " ___BR___ ");
 
   // 2. Remover tags
   let textoLimpo = preparoTexto.replace(/<[^>]+>/g, "");
@@ -86,7 +91,11 @@ export function limparHtml(texto?: string | null): string {
   // 4. Recuperar quebras
   textoLimpo = textoLimpo.replace(/___BR___/g, "\n");
 
-  // 5. Normalização de espaços
+  // 5. Remover caracteres de controle (exceto \n) que podem virar glifos no PDF
+  // Inclui \x00-\x08, \x0B, \x0C, \x0E-\x1F, \x7F
+  textoLimpo = textoLimpo.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "");
+
+  // 6. Normalização de espaços
   return textoLimpo
     .replace(/\u00a0/g, " ")
     .replace(/^[ \t]+/gm, "")
