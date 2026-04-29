@@ -3,9 +3,9 @@ import { pdf } from "@react-pdf/renderer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Download, Loader2, FileText, MapPin, User, Calendar, Stethoscope, AlertCircle } from "lucide-react";
+import { Download, Loader2, FileText, MapPin, User, Calendar, Stethoscope, AlertCircle, Info as InfoIcon } from "lucide-react";
 import { toast } from "sonner";
-import ProntuarioPDFMock from "@/lib/ProntuarioPDFMock";
+import ProntuarioPDF from "../lib/ProntuarioPDF.tsx";
 import { getLogoBase64 } from "@/lib/logoGoiania";
 import {
   fetchProntuarioByPacienteId,
@@ -17,6 +17,8 @@ import {
 interface Props {
   pacienteId: number;
 }
+
+// ==================== FUNÇÕES UTILITÁRIAS ====================
 
 function htmlToText(html?: string | null): string {
   if (!html) return "";
@@ -48,6 +50,36 @@ function blocosConteudo(c: ApiRegistroConteudo): Bloco[] {
   return out;
 }
 
+// Formata data ISO ou com T para formato brasileiro legível
+function formatDateBR(dateStr?: string | null): string {
+  if (!dateStr) return "";
+  if (dateStr.includes("/")) return dateStr;
+
+  try {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return dateStr;
+    return date.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  } catch {
+    return dateStr;
+  }
+}
+
+const formatEndereco = (endereco: any): string => {
+  if (!endereco) return "";
+  return [
+    endereco.tipo_logradouro,
+    endereco.logradouro,
+    endereco.numero !== "00" ? endereco.numero : null,
+    endereco.complemento,
+    endereco.bairro,
+    endereco.cidade && `${endereco.cidade} - ${endereco.uf ?? ""}`,
+  ].filter(Boolean).join(", ");
+};
+
 export function ProntuarioAtendimentos({ pacienteId }: Props) {
   const [data, setData] = useState<ApiProntuarioResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -59,6 +91,7 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
     setLoading(true);
     setError(null);
     setData(null);
+
     fetchProntuarioByPacienteId(pacienteId)
       .then((r) => { if (!cancelled) setData(r); })
       .catch((err) => {
@@ -66,6 +99,7 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
         if (!cancelled) setError(err instanceof Error ? err.message : "Falha ao carregar prontuário.");
       })
       .finally(() => { if (!cancelled) setLoading(false); });
+
     return () => { cancelled = true; };
   }, [pacienteId]);
 
@@ -74,17 +108,22 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
     try {
       setDownloading(true);
       const logoBase64 = await getLogoBase64();
-      const blob = await pdf(<ProntuarioPDFMock data={data} logoBase64={logoBase64} />).toBlob();
+
+      const blob = await pdf(<ProntuarioPDF data={data} logoBase64={logoBase64} />).toBlob();
+
       const url = URL.createObjectURL(blob);
+      const cpfDigits = (data.paciente.cpf || "").replace(/\D/g, "");
+      const fileName = `prontuario_${cpfDigits || data.paciente.id}.pdf`;
+
       const a = document.createElement("a");
       a.href = url;
-      const cpfDigits = (data.paciente.cpf || "").replace(/\D/g, "");
-      a.download = `prontuario_${cpfDigits || data.paciente.id}.pdf`;
+      a.download = fileName;
       a.click();
       URL.revokeObjectURL(url);
+
       toast.success("PDF gerado com sucesso.");
     } catch (err) {
-      console.error(err);
+      console.error("Erro ao gerar PDF:", err);
       toast.error("Falha ao gerar PDF.");
     } finally {
       setDownloading(false);
@@ -116,15 +155,7 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
 
   const { paciente, atendimentos } = data;
   const totalRegistros = atendimentos.reduce((acc, a) => acc + (a.registros?.length ?? 0), 0);
-  const enderecoStr = paciente.endereco
-    ? [
-      paciente.endereco.tipo_logradouro,
-      paciente.endereco.logradouro,
-      paciente.endereco.numero,
-      paciente.endereco.bairro,
-      paciente.endereco.cidade && `${paciente.endereco.cidade} - ${paciente.endereco.uf ?? ""}`,
-    ].filter(Boolean).join(", ")
-    : "";
+  const enderecoStr = formatEndereco(paciente.endereco);
 
   return (
     <div className="space-y-4">
@@ -139,6 +170,7 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
             registro{totalRegistros === 1 ? "" : "s"}
           </p>
         </div>
+
         <Button onClick={handleDownload} disabled={downloading} className="gap-2">
           {downloading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
           Baixar PDF
@@ -166,6 +198,7 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
             Nenhum atendimento registrado.
           </p>
         )}
+
         {atendimentos.map((a, idx) => {
           const prof = a.profissional;
           return (
@@ -176,9 +209,7 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
                     <div className="flex items-center gap-2 text-sm font-medium">
                       <MapPin className="h-4 w-4 text-primary" />
                       {a.unidade?.nome}
-                      {a.unidade?.telefone && (
-                        <span className="text-xs text-muted-foreground">({a.unidade.telefone})</span>
-                      )}
+                      {a.unidade?.telefone && <span className="text-xs text-muted-foreground">({a.unidade.telefone})</span>}
                     </div>
                     {a.tipo_atendimento && (
                       <div className="text-xs text-muted-foreground">{a.tipo_atendimento}</div>
@@ -199,32 +230,49 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
                       </div>
                     )}
                   </div>
+
                   <div className="flex items-center gap-2 flex-wrap">
-                    {a.numero_atendimento && (
-                      <Badge variant="outline">Nº {a.numero_atendimento}</Badge>
-                    )}
-                    {a.classificacao_risco && (
-                      <Badge variant="outline">{a.classificacao_risco}</Badge>
-                    )}
+                    {a.possui_aih && <Badge className="bg-blue-600 hover:bg-blue-700">AIH SOLICITADA</Badge>}
+                    {a.numero_atendimento && <Badge variant="outline">Nº {a.numero_atendimento}</Badge>}
+                    {a.classificacao_risco && <Badge variant="outline">{a.classificacao_risco}</Badge>}
+
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Calendar className="h-3.5 w-3.5" />
-                      {a.data_chegada}
+                      {formatDateBR(a.data_chegada)}
                     </div>
                   </div>
                 </div>
               </CardHeader>
+
               <CardContent className="pt-0 space-y-3">
-                {(a.registros ?? []).length === 0 && (
+                {/* Bloco AIH na tela */}
+                {a.possui_aih && a.aih_detalhes && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-2 space-y-1.5">
+                    <div className="flex items-center gap-2 text-xs font-bold text-blue-800 uppercase">
+                      <InfoIcon className="h-3.5 w-3.5" /> Detalhes da Solicitação de Internação
+                    </div>
+                    <div className="text-sm grid gap-1">
+                      <p><strong>Diagnóstico Inicial:</strong> {a.aih_detalhes.diagnostico_inicial || "Não informado"}</p>
+                      <p className="text-xs text-muted-foreground italic">
+                        <strong>Sinais e Sintomas:</strong> {a.aih_detalhes.principais_sinais || "Não informado"}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {(a.registros ?? []).length === 0 && !a.possui_aih && (
                   <p className="text-xs italic text-muted-foreground">(Sem registros clínicos)</p>
                 )}
+
                 {a.registros?.map((r: ApiRegistro, ri) => {
                   const blocos = blocosConteudo(r.conteudo);
                   return (
                     <div key={ri} className="rounded-md border border-border/60 bg-card p-3 space-y-2">
                       <div className="flex items-start justify-between gap-2 flex-wrap">
                         <Badge variant="secondary">{r.tipo}</Badge>
-                        <span className="text-xs text-muted-foreground">{r.data}</span>
+                        <span className="text-xs text-muted-foreground">{formatDateBR(r.data)}</span>
                       </div>
+
                       {blocos.length > 0 ? (
                         <div className="space-y-2">
                           {blocos.map((b, bi) => (

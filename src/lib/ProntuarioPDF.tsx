@@ -15,41 +15,19 @@ import type {
 } from "@/lib/prontuarioApi";
 import { limparHtml } from "@/lib/limparHtml";
 
-function parseDate(str?: string | null) {
-  if (!str) return 0;
-  const datePart = str.split(" ")[0];
-  const [dd, mm, yyyy] = datePart.split("/");
-  if (!dd || !mm || !yyyy) return 0;
-  return new Date(`${yyyy}-${mm}-${dd}`).getTime();
+function formatDateBR(dateStr?: string | null): string {
+  if (!dateStr) return "";
+  if (dateStr.includes("/")) return dateStr;
+  
+  try {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return dateStr;
+    return date.toLocaleDateString("pt-BR");
+  } catch {
+    return dateStr;
+  }
 }
 
-function sortAtendimentos(atendimentos: MockAtendimento[] = []) {
-  return [...atendimentos].sort(
-    (a, b) => parseDate(b.data_chegada) - parseDate(a.data_chegada),
-  );
-}
-
-// Strip simples de HTML (sem DOM, pois roda no react-pdf).
-function htmlToText(html?: string | null): string {
-  if (!html) return "";
-  return html
-    .replace(/<\s*br\s*\/?\s*>/gi, "\n")
-    .replace(/<\/\s*(p|div|li|tr|h[1-6])\s*>/gi, "\n")
-    .replace(/<\s*li\s*[^>]*>/gi, "• ")
-    .replace(/<[^>]+>/g, "")
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;/gi, "'")
-    .replace(/[ \t]+\n/g, "\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .replace(/[ \t]{2,}/g, " ")
-    .trim();
-}
-
-// Para o PDF, limpar o HTML e caracteres especiais do conteúdo
 function blocosConteudo(c: MockRegistroConteudo): { label: string; texto: string }[] {
   const out: { label: string; texto: string }[] = [];
   const av = limparHtml(c.avaliacao);
@@ -77,15 +55,18 @@ interface Props {
 }
 
 const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
-  const atendimentos = sortAtendimentos(data.atendimentos);
+  const atendimentos = [...(data.atendimentos || [])].sort(
+    (a, b) => new Date(b.data_chegada || "").getTime() - new Date(a.data_chegada || "").getTime()
+  );
+
   const { paciente } = data;
-  const documento = documentoPadrao;
 
   const enderecoStr = paciente.endereco
     ? [
         paciente.endereco.tipo_logradouro,
         paciente.endereco.logradouro,
-        paciente.endereco.numero,
+        paciente.endereco.numero !== "00" ? paciente.endereco.numero : null,
+        paciente.endereco.complemento,
         paciente.endereco.bairro,
         paciente.endereco.cidade && `${paciente.endereco.cidade} - ${paciente.endereco.uf ?? ""}`,
       ]
@@ -96,23 +77,25 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
   return (
     <Document>
       <Page size="A4" style={styles.page} wrap>
+        {/* Header */}
         <View style={styles.headerContainer} fixed>
           <View style={styles.headerRow}>
             {logoBase64 ? <Image src={logoBase64} style={styles.logo} /> : <View style={styles.logo} />}
             <View style={styles.headerTextBlock}>
-              <Text style={styles.headerLine1}>{documento.prefeitura}</Text>
-              <Text style={styles.headerLine2}>{documento.sistema}</Text>
-              <Text style={styles.headerLine3}>{documento.orgao}</Text>
+              <Text style={styles.headerLine1}>{documentoPadrao.prefeitura}</Text>
+              <Text style={styles.headerLine2}>{documentoPadrao.sistema}</Text>
+              <Text style={styles.headerLine3}>{documentoPadrao.orgao}</Text>
             </View>
           </View>
           <View style={styles.headerDivider} />
-          <Text style={styles.title}>{documento.titulo}</Text>
+          <Text style={styles.title}>{documentoPadrao.titulo}</Text>
         </View>
 
+        {/* Dados do Paciente */}
         <View style={styles.box}>
           <Text style={styles.boxTitle}>Dados do Paciente</Text>
           <View style={styles.row}>
-            <Field label="Nome" value={`( ${paciente.id} ) ${paciente.nome}`} flex={2} />
+            <Field label="Nome" value={`( ${paciente.id} ) ${paciente.nome || ""}`} flex={2} />
             <Field label="Sexo" value={paciente.sexo ?? ""} flex={1} />
           </View>
           <View style={styles.row}>
@@ -131,84 +114,92 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
         {atendimentos.length === 0 ? (
           <Text style={styles.emptyText}>Nenhum atendimento registrado.</Text>
         ) : (
-          atendimentos.map((a, idx) => {
-            const prof = a.profissional;
-            const profStr = prof
-              ? [
-                  prof.nome,
-                  prof.tipo_conselho && prof.registro
-                    ? `${prof.tipo_conselho}: ${prof.registro}`
-                    : null,
-                  prof.cbo
-                    ? `CBO: (${prof.cbo})${prof.cbo_descricao ? " " + prof.cbo_descricao : ""}`
-                    : null,
-                ]
-                  .filter(Boolean)
-                  .join("   ")
-              : "";
-            return (
-              <View key={idx} style={styles.atendimento}>
-                <View style={styles.atendimentoHeader}>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.atendimentoTitle}>
-                      {a.unidade?.nome}
-                      {a.unidade?.telefone ? ` (${a.unidade.telefone})` : ""}
+          atendimentos.map((a, idx) => (
+            <View key={idx} style={styles.atendimento}>
+              {/* Cabeçalho */}
+              <View style={styles.atendimentoHeader}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.atendimentoTitle}>
+                    {a.unidade?.nome || "Unidade não informada"}
+                  </Text>
+                  {a.tipo_atendimento && <Text style={styles.atendimentoSub}>{a.tipo_atendimento}</Text>}
+                  {a.profissional?.nome && (
+                    <Text style={styles.atendimentoSub}>
+                      {a.profissional.nome} 
+                      {a.profissional.tipo_conselho && a.profissional.registro 
+                        ? ` (${a.profissional.tipo_conselho}: ${a.profissional.registro})` 
+                        : ""}
                     </Text>
-                    {a.tipo_atendimento && (
-                      <Text style={styles.atendimentoSub}>{a.tipo_atendimento}</Text>
-                    )}
-                    {profStr ? <Text style={styles.atendimentoSub}>{profStr}</Text> : null}
-                  </View>
-                  <View style={{ alignItems: "flex-end" }}>
-                    <Text style={styles.atendimentoDate}>Chegada: {a.data_chegada}</Text>
-                    {a.numero_atendimento && (
-                      <Text style={styles.atendimentoDate}>Nº {a.numero_atendimento}</Text>
-                    )}
-                    {a.classificacao_risco && (
-                      <Text style={styles.atendimentoDate}>Risco: {a.classificacao_risco}</Text>
-                    )}
-                  </View>
+                  )}
                 </View>
 
-                {(a.registros ?? []).length === 0 && (
-                  <Text style={[styles.conteudo, { fontStyle: "italic", padding: 6 }]}>
-                    (Sem registros clínicos)
+                <View style={{ alignItems: "flex-end" }}>
+                  <Text style={styles.atendimentoDate}>
+                    Chegada: {formatDateBR(a.data_chegada)}
                   </Text>
-                )}
+                  {a.numero_atendimento && <Text style={styles.atendimentoDate}>Nº {a.numero_atendimento}</Text>}
+                  {a.classificacao_risco && <Text style={styles.atendimentoDate}>Risco: {a.classificacao_risco}</Text>}
+                  {a.possui_aih && <Text style={styles.aihBadge}>AIH SOLICITADA</Text>}
+                </View>
+              </View>
 
-                {a.registros?.map((r: MockRegistro, ri) => {
+              {/* Bloco AIH */}
+              {a.possui_aih && a.aih_detalhes && (
+                <View style={styles.aihBox}>
+                  <Text style={styles.aihTitle}>DETALHES DA SOLICITAÇÃO DE INTERNAÇÃO</Text>
+                  <Text style={styles.conteudo}>
+                    <Text style={styles.metaLabel}>Diagnóstico Inicial: </Text>
+                    {a.aih_detalhes.diagnostico_inicial || "Não informado"}
+                  </Text>
+                  <Text style={styles.conteudo}>
+                    <Text style={styles.metaLabel}>Sinais e Sintomas: </Text>
+                    {a.aih_detalhes.principais_sinais || "Não informado"}
+                  </Text>
+                </View>
+              )}
+
+              {/* Registros */}
+              {a.registros && a.registros.length > 0 ? (
+                a.registros.map((r, ri) => {
                   const blocos = blocosConteudo(r.conteudo);
                   return (
-                    <View key={ri} style={styles.registro} wrap={false}>
+                    <View key={ri} style={styles.registro}>
                       <View style={styles.registroHeader}>
                         <Text style={styles.registroProf}>
                           <Text style={styles.metaLabel}>Tipo: </Text>
                           {r.tipo || "—"}
                         </Text>
-                        <Text style={styles.registroDate}>{r.data}</Text>
+                        <Text style={styles.registroDate}>{formatDateBR(r.data)}</Text>
                       </View>
-                      {blocos.length === 0 && (
+
+                      {blocos.length === 0 ? (
                         <Text style={styles.conteudo}>(Sem conteúdo)</Text>
+                      ) : (
+                        blocos.map((b, bi) => (
+                          <Text key={bi} style={styles.conteudo}>
+                            <Text style={styles.metaLabel}>{b.label}: </Text>
+                            {b.texto}
+                          </Text>
+                        ))
                       )}
-                      {blocos.map((b, bi) => (
-                        <Text key={bi} style={styles.conteudo}>
-                          <Text style={styles.metaLabel}>{b.label}: </Text>
-                          {b.texto}
-                        </Text>
-                      ))}
                     </View>
                   );
-                })}
-              </View>
-            );
-          })
+                })
+              ) : !a.possui_aih ? (
+                <Text style={[styles.conteudo, { fontStyle: "italic" }]}>
+                  (Sem registros clínicos)
+                </Text>
+              ) : null}
+            </View>
+          ))
         )}
 
+        {/* Footer */}
         <View style={styles.footer} fixed>
           <View style={styles.footerDivider} />
-          <Text style={styles.footerText}>{documento.enderecoUnidade}</Text>
+          <Text style={styles.footerText}>{documentoPadrao.enderecoUnidade}</Text>
           <Text style={styles.footerTextBold}>
-            {documento.cidadeUnidade} | {documento.telefoneUnidade}
+            {documentoPadrao.cidadeUnidade} | {documentoPadrao.telefoneUnidade}
           </Text>
           <Text
             style={styles.pageNumber}
@@ -220,6 +211,7 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
   );
 };
 
+// Componente Field (mantido igual)
 const Field = ({ label, value, flex = 1 }: { label: string; value: string; flex?: number }) => (
   <View style={[styles.field, { flex }]}>
     <Text style={styles.fieldLabel}>{label}:</Text>
@@ -228,14 +220,7 @@ const Field = ({ label, value, flex = 1 }: { label: string; value: string; flex?
 );
 
 const styles = StyleSheet.create({
-  page: {
-    paddingTop: 90,
-    paddingBottom: 60,
-    paddingHorizontal: 32,
-    fontSize: 9,
-    fontFamily: "Helvetica",
-    color: "#111",
-  },
+  page: { paddingTop: 90, paddingBottom: 75, paddingHorizontal: 32, fontSize: 9, fontFamily: "Helvetica", color: "#111" },
   headerContainer: { position: "absolute", top: 16, left: 32, right: 32 },
   headerRow: { flexDirection: "row", alignItems: "center" },
   logo: { width: 60, height: 24, objectFit: "contain" },
@@ -245,46 +230,33 @@ const styles = StyleSheet.create({
   headerLine3: { fontSize: 9 },
   headerDivider: { marginTop: 4, borderBottomWidth: 0.5, borderBottomColor: "#999" },
   title: { marginTop: 6, fontSize: 12, fontFamily: "Helvetica-Bold", textAlign: "center" },
-  box: {
-    borderWidth: 0.5,
-    borderColor: "#aaa",
-    backgroundColor: "#f5f7fa",
-    borderRadius: 3,
-    padding: 8,
-    marginBottom: 10,
-  },
+
+  box: { borderWidth: 0.5, borderColor: "#aaa", backgroundColor: "#f5f7fa", borderRadius: 3, padding: 9, marginBottom: 12 },
   boxTitle: { fontFamily: "Helvetica-Bold", fontSize: 10, marginBottom: 6 },
-  row: { flexDirection: "row", marginBottom: 4, gap: 6 },
+  row: { flexDirection: "row", marginBottom: 4, gap: 8 },
   field: { flexDirection: "row", paddingRight: 6 },
-  fieldLabel: { fontFamily: "Helvetica-Bold", marginRight: 3 },
+  fieldLabel: { fontFamily: "Helvetica-Bold", marginRight: 4 },
   fieldValue: { flexShrink: 1 },
+
   atendimento: { borderWidth: 0.5, borderColor: "#bbb", borderRadius: 3, marginBottom: 10 },
-  atendimentoHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    backgroundColor: "#dde6f0",
-    paddingHorizontal: 6,
-    paddingVertical: 4,
-  },
+  atendimentoHeader: { flexDirection: "row", justifyContent: "space-between", backgroundColor: "#dde6f0", padding: 8 },
   atendimentoTitle: { fontFamily: "Helvetica-Bold", fontSize: 9.5 },
-  atendimentoSub: { fontSize: 8, color: "#444", marginTop: 1 },
-  atendimentoDate: { fontSize: 8 },
-  registro: {
-    paddingHorizontal: 6,
-    paddingVertical: 5,
-    borderTopWidth: 0.4,
-    borderTopColor: "#ddd",
-  },
-  registroHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 2,
-  },
-  registroProf: { fontSize: 8.5, fontFamily: "Helvetica-Bold", flex: 1, paddingRight: 6 },
+  atendimentoSub: { fontSize: 8, color: "#444", marginTop: 2 },
+  atendimentoDate: { fontSize: 8, textAlign: "right" },
+
+  aihBadge: { fontSize: 7.5, fontFamily: "Helvetica-Bold", color: "#1e40af", backgroundColor: "#dbeafe", padding: "2 6", borderRadius: 2 },
+  aihBox: { backgroundColor: "#eff6ff", borderWidth: 1, borderColor: "#93c5fd", borderRadius: 3, padding: 8, marginVertical: 6, marginHorizontal: 6 },
+  aihTitle: { fontFamily: "Helvetica-Bold", fontSize: 9.5, color: "#1e40af", marginBottom: 5 },
+
+  registro: { padding: 8, borderTopWidth: 0.4, borderTopColor: "#ddd" },
+  registroHeader: { flexDirection: "row", justifyContent: "space-between", marginBottom: 4 },
+  registroProf: { fontSize: 8.5, fontFamily: "Helvetica-Bold", flex: 1 },
   registroDate: { fontSize: 8 },
+
   metaLabel: { fontFamily: "Helvetica-Bold" },
-  conteudo: { fontSize: 8.5, lineHeight: 1.4, textAlign: "justify", marginTop: 2 },
+  conteudo: { fontSize: 8.5, lineHeight: 1.45, marginTop: 2 },
   emptyText: { fontSize: 9, fontStyle: "italic", textAlign: "center", marginTop: 20 },
+
   footer: { position: "absolute", bottom: 16, left: 32, right: 32 },
   footerDivider: { borderTopWidth: 0.5, borderTopColor: "#999", marginBottom: 4 },
   footerText: { fontSize: 7, color: "#666", textAlign: "center" },
