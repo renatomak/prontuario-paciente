@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { pdf } from "@react-pdf/renderer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Download, Loader2, FileText, MapPin, User, Calendar, Stethoscope, AlertCircle, Info as InfoIcon } from "lucide-react";
 import { toast } from "sonner";
-import ProntuarioPDF from "../lib/ProntuarioPDF.tsx";
 import { getLogoBase64 } from "@/lib/logoGoiania";
+import { gerarProntuarioPdfJs } from "@/lib/ProntuarioPdfJs";
 import {
   fetchProntuarioByPacienteId,
   type ApiProntuarioResponse,
@@ -108,21 +107,9 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
     try {
       setDownloading(true);
       const logoBase64 = await getLogoBase64();
-
-      const blob = await pdf(<ProntuarioPDF data={data} logoBase64={logoBase64} />).toBlob();
+      const { blob, fileName } = gerarProntuarioPdfJs(data, logoBase64);
 
       const url = URL.createObjectURL(blob);
-      const cpfDigits = (data.paciente.cpf || "").replace(/\D/g, "");
-      const cdUsu = (data.paciente as any).cd_usu_cadsus ?? data.paciente.id;
-      const nomeSan = (data.paciente.nome || "PACIENTE")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") // remove acentos
-        .replace(/[^a-zA-Z0-9\s]/g, "") // remove caracteres especiais
-        .trim()
-        .replace(/\s+/g, "_")
-        .toUpperCase();
-      const fileName = `PRONTUARIO_${cdUsu}_${cpfDigits || data.paciente.id}_${nomeSan}.pdf`;
-
       const a = document.createElement("a");
       a.href = url;
       a.download = fileName;
