@@ -305,7 +305,16 @@ const styles = StyleSheet.create({
   registroDate: { fontSize: 8 },
 
   metaLabel: { fontFamily: "Helvetica-Bold" },
-  conteudo: { fontSize: 8.5, lineHeight: 1.45, marginTop: 2 },
+  conteudo: {
+    fontSize: 8.5,
+    lineHeight: 1.45,
+    marginTop: 2,
+    // Garante quebra de palavras longas (URLs, sequências sem espaços) dentro do container
+    // @ts-expect-error react-pdf aceita estas propriedades CSS para layout de texto
+    wordBreak: "break-word",
+    // @ts-expect-error
+    overflowWrap: "break-word",
+  },
   emptyText: { fontSize: 9, fontStyle: "italic", textAlign: "center", marginTop: 20 },
 
   footer: { position: "absolute", bottom: 16, left: 32, right: 32 },
