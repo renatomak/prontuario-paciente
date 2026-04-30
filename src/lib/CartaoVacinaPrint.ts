@@ -49,7 +49,7 @@ function formatEnderecoLogradouro(p: Paciente): string {
   return [e.tipoLogradouro, e.logradouro].filter(Boolean).join(" ") || "—";
 }
 
-function nomeArquivo(p: Paciente): string {
+export function nomeArquivoCartaoVacinacao(p: Paciente): string {
   const cpfDigits = (p.cpf || "").replace(/\D/g, "");
   const nomeSan = (p.nome || "PACIENTE")
     .normalize("NFD")
