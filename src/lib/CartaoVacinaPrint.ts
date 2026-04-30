@@ -202,7 +202,7 @@ function renderHtml(paciente: Paciente, vacinas: VacinaResumo[], logoBase64?: st
 <style>
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: #f3f4f6; color: #202020; font-family: Arial, Helvetica, sans-serif; }
-  #cartao-vacinacao { max-width: 210mm; margin: 0 auto; background: #fff; font-size: 11px; line-height: 1.35; }
+  #cartao-vacinacao { max-width: 297mm; margin: 0 auto; background: #fff; font-size: 11px; line-height: 1.35; }
 
   /* Shell de tabela para repetir cabeçalho/rodapé em cada página impressa */
   .page-shell { width: 100%; border-collapse: collapse; }
@@ -258,7 +258,7 @@ function renderHtml(paciente: Paciente, vacinas: VacinaResumo[], logoBase64?: st
 
   /* Tabela de vacinas */
   .vacinas-table { width: 100%; border-collapse: collapse; font-size: 10px; table-layout: fixed; }
-  .vacinas-table thead th { background: #ffffff; color: #111; text-align: center; padding: 6px 6px; font-weight: 700; border: 1px solid #4b5563; }
+  .vacinas-table thead th { background: #0f3a8a; color: #ffffff; text-align: center; padding: 6px 6px; font-weight: 700; border: 1px solid #0f3a8a; }
   .vacinas-table tbody td { padding: 6px 8px; border: 1px solid #4b5563; vertical-align: middle; overflow-wrap: anywhere; word-break: break-word; }
   .vacinas-table tbody tr:nth-child(even) td { background: #ffffff; }
   .vacinas-table td.data { white-space: nowrap; text-align: center; }
@@ -277,8 +277,8 @@ function renderHtml(paciente: Paciente, vacinas: VacinaResumo[], logoBase64?: st
 
   @media print {
     @page {
-      size: A4 portrait;
-      margin: 14mm 14mm 20mm;
+      size: A4 landscape;
+      margin: 12mm 12mm 18mm;
       @top-left { content: ""; }
       @top-center { content: ""; }
       @top-right { content: ""; }
