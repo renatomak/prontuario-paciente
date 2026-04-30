@@ -194,7 +194,8 @@ function renderTabelaVacinas(vacinas: VacinaResumo[]): string {
 }
 
 function renderHtml(paciente: Paciente, vacinas: VacinaResumo[], logoBase64?: string): string {
-  void paciente;
+  void paciente; // header/footer não usam dados do paciente; mantém assinatura por simetria
+
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
