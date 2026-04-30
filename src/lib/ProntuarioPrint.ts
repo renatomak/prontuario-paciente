@@ -192,6 +192,10 @@ function renderHtml(data: ApiProntuarioResponse, logoBase64?: string): string {
           #prontuario-impressao, #prontuario-impressao * { box-sizing: border-box; }
           body { margin: 0; background: #ffffff; color: #202020; font-family: Arial, Helvetica, sans-serif; }
           #prontuario-impressao { width: 100%; font-size: 11px; line-height: 1.35; }
+          #prontuario-impressao .print-shell { width: 100%; border-collapse: collapse; }
+          #prontuario-impressao .print-shell thead { display: table-header-group; }
+          #prontuario-impressao .print-shell tfoot { display: table-footer-group; }
+          #prontuario-impressao .print-shell td { padding: 0; vertical-align: top; }
           #prontuario-impressao .print-header {
             display: grid;
             grid-template-columns: 34mm 1fr 34mm;
@@ -249,8 +253,8 @@ function renderHtml(data: ApiProntuarioResponse, logoBase64?: string): string {
           #prontuario-impressao .registro-header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 12px; }
           #prontuario-impressao .content-block { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding-bottom: 4px; }
           #prontuario-impressao .content-label { font-weight: 700; color: #202020; }
-          #prontuario-impressao .content-value { min-width: 0; overflow-wrap: break-word; word-break: break-word; white-space: pre-wrap; }
-          #prontuario-impressao .long-text { overflow-wrap: break-word; word-break: break-word; white-space: pre-wrap; }
+          #prontuario-impressao .content-value { min-width: 0; overflow-wrap: anywhere; word-break: break-word; white-space: pre-wrap; }
+          #prontuario-impressao .long-text { overflow-wrap: anywhere; word-break: break-word; white-space: pre-wrap; }
           #prontuario-impressao .evolucao-block { padding-bottom: 4px; }
           #prontuario-impressao .empty-text { color: #666666; font-style: italic; padding: 0 4px 4px; }
           #prontuario-impressao .sem-registro { margin-top: -2px; }
@@ -269,24 +273,38 @@ function renderHtml(data: ApiProntuarioResponse, logoBase64?: string): string {
       </head>
       <body>
         <main id="prontuario-impressao">
-          <header class="print-header">
-            <div>${logoBase64 ? `<img class="logo" src="${logoBase64}" alt="Prefeitura de Goiânia" />` : ""}</div>
-            <div class="header-text">
-              <div class="prefeitura">${documentoPadrao.prefeitura}</div>
-              <div class="sistema">${documentoPadrao.sistema}</div>
-              <div class="orgao">${documentoPadrao.orgao}</div>
-              <h1>${documentoPadrao.titulo}</h1>
-            </div>
-            <div></div>
-          </header>
-          <div class="print-body">
-            ${renderPaciente(data)}
-            ${atendimentos.length > 0 ? atendimentos.map(renderAtendimento).join("") : `<p class="empty-text">Nenhum atendimento registrado.</p>`}
-          </div>
-          <footer class="print-footer">
-            <div>${documentoPadrao.enderecoUnidade}</div>
-            <strong>${documentoPadrao.cidadeUnidade} | ${documentoPadrao.telefoneUnidade}</strong>
-          </footer>
+          <table class="print-shell">
+            <thead>
+              <tr><td>
+                <header class="print-header">
+                  <div>${logoBase64 ? `<img class="logo" src="${logoBase64}" alt="Prefeitura de Goiânia" />` : ""}</div>
+                  <div class="header-text">
+                    <div class="prefeitura">${documentoPadrao.prefeitura}</div>
+                    <div class="sistema">${documentoPadrao.sistema}</div>
+                    <div class="orgao">${documentoPadrao.orgao}</div>
+                    <h1>${documentoPadrao.titulo}</h1>
+                  </div>
+                  <div></div>
+                </header>
+              </td></tr>
+            </thead>
+            <tbody>
+              <tr><td>
+                <div class="print-body">
+                  ${renderPaciente(data)}
+                  ${atendimentos.length > 0 ? atendimentos.map(renderAtendimento).join("") : `<p class="empty-text">Nenhum atendimento registrado.</p>`}
+                </div>
+              </td></tr>
+            </tbody>
+            <tfoot>
+              <tr><td>
+                <footer class="print-footer">
+                  <div>${documentoPadrao.enderecoUnidade}</div>
+                  <strong>${documentoPadrao.cidadeUnidade} | ${documentoPadrao.telefoneUnidade}</strong>
+                </footer>
+              </td></tr>
+            </tfoot>
+          </table>
         </main>
         <script>
           window.addEventListener('load', () => setTimeout(() => window.print(), 250));
@@ -296,7 +314,7 @@ function renderHtml(data: ApiProntuarioResponse, logoBase64?: string): string {
 }
 
 export function imprimirProntuario(data: ApiProntuarioResponse, logoBase64?: string): void {
-  const printWindow = window.open("", "_blank", "noopener,noreferrer,width=1024,height=768");
+  const printWindow = window.open("", "_blank", "width=1024,height=768");
   if (!printWindow) throw new Error("Não foi possível abrir a janela de impressão.");
   printWindow.document.open();
   printWindow.document.write(renderHtml(data, logoBase64));
