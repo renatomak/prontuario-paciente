@@ -121,6 +121,7 @@ function mapResumo(r: RawVacinaResumo): VacinaResumo {
     laboratorio: r.laboratorio ?? null,
     estabelecimento: r.estabelecimento ?? null,
     profissional: r.profissional ?? null,
+    lote: r.lote ?? null,
   };
 }
 
