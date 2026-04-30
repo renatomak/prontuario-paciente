@@ -139,6 +139,7 @@ const Index = () => {
                   vacinas={vacinas.data || []}
                   selectedId={selectedVacina ?? undefined}
                   onSelect={(id) => { setSelectedVacina(id); setSheetOpen(true); }}
+                  paciente={paciente.data}
                 />
               </TabsContent>
               <TabsContent value="prontuarios">
