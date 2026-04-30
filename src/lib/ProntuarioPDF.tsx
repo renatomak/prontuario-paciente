@@ -270,7 +270,7 @@ const Field = ({ label, value, flex = 1 }: { label: string; value: string; flex?
 );
 
 const styles = StyleSheet.create({
-  page: { paddingTop: 90, paddingBottom: 75, paddingHorizontal: 32, fontSize: 9, fontFamily: "Helvetica", color: "#111" },
+  page: { paddingTop: 90, paddingBottom: 90, paddingHorizontal: 32, fontSize: 9, fontFamily: "Helvetica", color: "#111" },
   headerContainer: { position: "absolute", top: 16, left: 32, right: 32 },
   headerRow: { flexDirection: "row", alignItems: "center" },
   logo: { width: 60, height: 24, objectFit: "contain" },
