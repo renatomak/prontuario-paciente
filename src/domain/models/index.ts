@@ -30,6 +30,16 @@ export interface Paciente {
   idade: string;
   endereco: Endereco | null;
   cd_usu_cadsus?: number | string | null;
+  cartaoSus?: string | null;
+  nomeSocial?: string | null;
+  paisNascimento?: string | null;
+  ufNascimento?: string | null;
+  municipioNascimento?: string | null;
+  raca?: string | null;
+  etnia?: string | null;
+  telefoneContato?: string | null;
+  email?: string | null;
+  paisEndereco?: string | null;
 }
 
 export interface VacinaResumo {
