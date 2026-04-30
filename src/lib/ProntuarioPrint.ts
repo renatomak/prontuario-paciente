@@ -206,7 +206,13 @@ function renderHtml(data: ApiProntuarioResponse, logoBase64?: string): string {
             padding-bottom: 8px;
             margin-bottom: 14px;
           }
-          #prontuario-impressao .logo { width: 30mm; max-height: 16mm; object-fit: contain; }
+          #prontuario-impressao .logo {
+            width: 54mm;
+            max-height: 28mm;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+          }
           #prontuario-impressao .header-text { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
           #prontuario-impressao h1, #prontuario-impressao h2, #prontuario-impressao h3, #prontuario-impressao h4, #prontuario-impressao p { margin: 0; }
           #prontuario-impressao h1 { margin-top: 4px; font-size: 14px; font-weight: 700; }
@@ -227,7 +233,14 @@ function renderHtml(data: ApiProntuarioResponse, logoBase64?: string): string {
           #prontuario-impressao .patient-section h2 { font-size: 12px; font-weight: 700; }
           #prontuario-impressao .patient-grid { display: grid; grid-template-columns: 1fr 0.55fr; column-gap: 16px; row-gap: 6px; }
           #prontuario-impressao .patient-address, #prontuario-impressao .patient-name { grid-column: span 1; }
-          #prontuario-impressao .pdf-field { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; min-width: 0; }
+          #prontuario-impressao .pdf-field {
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            gap: 0 8px;
+            min-width: 0;
+            flex-wrap: nowrap;
+          }
           #prontuario-impressao .pdf-label { flex: 0 0 auto; font-weight: 700; color: #4f4f4f; }
           #prontuario-impressao .pdf-value { flex: 1 1 70px; min-width: 0; overflow-wrap: break-word; word-break: break-word; }
           #prontuario-impressao .atendimento-section { display: flex; flex-direction: column; gap: 12px; }
