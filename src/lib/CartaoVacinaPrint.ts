@@ -202,7 +202,7 @@ function renderHtml(paciente: Paciente, vacinas: VacinaResumo[], logoBase64?: st
 <style>
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: #f3f4f6; color: #202020; font-family: Arial, Helvetica, sans-serif; }
-  #cartao-vacinacao { max-width: 210mm; margin: 0 auto; background: #fff; font-size: 11px; line-height: 1.35; }
+  #cartao-vacinacao { max-width: 297mm; margin: 0 auto; background: #fff; font-size: 11px; line-height: 1.35; }
 
   /* Shell de tabela para repetir cabeçalho/rodapé em cada página impressa */
   .page-shell { width: 100%; border-collapse: collapse; }
