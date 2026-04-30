@@ -359,6 +359,7 @@ function renderHtml(data: ApiProntuarioResponse, logoBase64?: string): string {
                 <footer class="print-footer">
                   <div>${documentoPadrao.enderecoUnidade}</div>
                   <strong>${documentoPadrao.cidadeUnidade} | ${documentoPadrao.telefoneUnidade}</strong>
+                  <div class="print-timestamp">Emitido em ${new Date().toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })}</div>
                 </footer>
               </td></tr>
             </tfoot>
