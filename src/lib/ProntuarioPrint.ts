@@ -119,6 +119,7 @@ function renderAtendimentoHeader(a: ApiAtendimento): string {
         ${a.profissional?.nome ? campo("Profissional", `${a.profissional.nome}${conselho}`) : ""}
       </div>
       <div class="atendimento-meta">
+        ${a.possui_aih ? `<span class="aih-badge">AIH SOLICITADA</span>` : ""}
         ${campo("Data Registro", formatDateBR(a.data_chegada))}
         ${a.numero_atendimento ? campo("Nº", a.numero_atendimento) : ""}
         ${a.classificacao_risco ? campo("Risco", a.classificacao_risco) : ""}
