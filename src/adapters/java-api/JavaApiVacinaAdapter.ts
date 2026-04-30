@@ -17,6 +17,7 @@ interface RawVacinaResumo {
   laboratorio?: string | null;
   estabelecimento?: string | null;
   profissional?: string | null;
+  lote?: string | null;
 }
 
 interface RawVacinaDetalhe {
