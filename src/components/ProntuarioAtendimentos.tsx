@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Download, Loader2, FileText, MapPin, User, Calendar, Stethoscope, AlertCircle, Info as InfoIcon } from "lucide-react";
 import { toast } from "sonner";
 import { getLogoBase64 } from "@/lib/logoGoiania";
-import { gerarProntuarioPdfJs } from "@/lib/ProntuarioPdfJs";
+import { imprimirProntuario } from "@/lib/ProntuarioPrint";
 import {
   fetchProntuarioByPacienteId,
   type ApiProntuarioResponse,
@@ -108,19 +108,12 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
     try {
       setDownloading(true);
       const logoBase64 = await getLogoBase64();
-      const { blob, fileName } = gerarProntuarioPdfJs(data, logoBase64);
+      imprimirProntuario(data, logoBase64);
 
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      URL.revokeObjectURL(url);
-
-      toast.success("PDF gerado com sucesso.");
+      toast.success("Janela de impressão aberta. Use 'Salvar como PDF' para baixar.");
     } catch (err) {
       console.error("Erro ao gerar PDF:", err);
-      toast.error("Falha ao gerar PDF.");
+      toast.error("Falha ao abrir impressão do prontuário.");
     } finally {
       setDownloading(false);
     }
