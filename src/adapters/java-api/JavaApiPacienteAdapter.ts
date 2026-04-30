@@ -29,6 +29,16 @@ interface RawPaciente {
   idade?: string;
   endereco?: RawEndereco | null;
   cd_usu_cadsus?: number | string | null;
+  cartao_sus?: string | null;
+  nome_social?: string | null;
+  pais_nascimento?: string | null;
+  uf_nascimento?: string | null;
+  municipio_nascimento?: string | null;
+  raca?: string | null;
+  etnia?: string | null;
+  telefone_contato?: string | null;
+  email?: string | null;
+  pais_endereco?: string | null;
 }
 
 function parseDataNascimento(dataNascimento: string | null | undefined): Date | null {
@@ -88,7 +98,17 @@ function mapPaciente(p: RawPaciente): Paciente {
     telefone: p.telefone ?? null,
     idade: p.idade ?? calcIdade(p.data_nascimento),
     endereco: mapEndereco(p.endereco),
-    cd_usu_cadsus: p.cd_usu_cadsus ?? null,
+    cd_usu_cadsus: p.cd_usu_cadsus ?? p.cartao_sus ?? null,
+    cartaoSus: p.cartao_sus ?? null,
+    nomeSocial: p.nome_social ?? null,
+    paisNascimento: p.pais_nascimento ?? null,
+    ufNascimento: p.uf_nascimento ?? null,
+    municipioNascimento: p.municipio_nascimento ?? null,
+    raca: p.raca ?? null,
+    etnia: p.etnia ?? null,
+    telefoneContato: p.telefone_contato ?? null,
+    email: p.email ?? null,
+    paisEndereco: p.pais_endereco ?? null,
   };
 }
 
