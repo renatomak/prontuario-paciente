@@ -49,6 +49,9 @@ export interface VacinaResumo {
   dose: string;
   estrategia: string | null;
   status: string;
+  laboratorio?: string | null;
+  estabelecimento?: string | null;
+  profissional?: string | null;
 }
 
 export interface VacinaDetalhe {

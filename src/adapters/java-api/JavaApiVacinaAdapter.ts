@@ -8,11 +8,15 @@ interface RawVacinaResumo {
   idAplicacao?: number;
   data_aplicacao?: string | null;
   dataAplicacao?: string | null;
+  vacina?: string | null;
   nome_vacina?: string | null;
   nomeVacina?: string | null;
   dose?: string | null;
   estrategia?: string | null;
-  status?: string | null;
+  status?: string | number | null;
+  laboratorio?: string | null;
+  estabelecimento?: string | null;
+  profissional?: string | null;
 }
 
 interface RawVacinaDetalhe {
@@ -93,14 +97,29 @@ function asBool(v: unknown): boolean {
   return false;
 }
 
+function mapStatusVacina(s: unknown): string {
+  if (s === null || s === undefined || s === "") return "Aplicada";
+  if (typeof s === "number") return s === 1 ? "Aprazada" : "Aplicada";
+  if (typeof s === "string") {
+    const t = s.trim();
+    if (t === "0") return "Aplicada";
+    if (t === "1") return "Aprazada";
+    return t;
+  }
+  return String(s);
+}
+
 function mapResumo(r: RawVacinaResumo): VacinaResumo {
   return {
     idAplicacao: (r.id_aplicacao ?? r.idAplicacao ?? 0) as number,
     dataAplicacao: (pick(r.data_aplicacao, r.dataAplicacao) ?? "") as string,
-    nomeVacina: (pick(r.nome_vacina, r.nomeVacina) ?? "") as string,
+    nomeVacina: (pick(r.vacina, r.nome_vacina, r.nomeVacina) ?? "") as string,
     dose: (r.dose ?? "") as string,
     estrategia: (r.estrategia ?? null) as string | null,
-    status: (r.status ?? "") as string,
+    status: mapStatusVacina(r.status),
+    laboratorio: r.laboratorio ?? null,
+    estabelecimento: r.estabelecimento ?? null,
+    profissional: r.profissional ?? null,
   };
 }
 
