@@ -17,6 +17,7 @@ interface RawVacinaResumo {
   laboratorio?: string | null;
   estabelecimento?: string | null;
   profissional?: string | null;
+  lote?: string | null;
 }
 
 interface RawVacinaDetalhe {
@@ -120,6 +121,7 @@ function mapResumo(r: RawVacinaResumo): VacinaResumo {
     laboratorio: r.laboratorio ?? null,
     estabelecimento: r.estabelecimento ?? null,
     profissional: r.profissional ?? null,
+    lote: r.lote ?? null,
   };
 }
 

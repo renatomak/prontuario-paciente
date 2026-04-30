@@ -162,13 +162,12 @@ function renderTabelaVacinas(vacinas: VacinaResumo[]): string {
       (v) => `
       <tr>
         <td class="data">${escapeHtml(formatDateBR(v.dataAplicacao))}</td>
+        <td>${escapeHtml(v.estrategia ?? "--")}</td>
         <td>${escapeHtml(v.nomeVacina ?? "--")}</td>
         <td class="dose">${escapeHtml(v.dose ?? "--")}</td>
-        <td>${escapeHtml(v.estrategia ?? "--")}</td>
-        <td>${escapeHtml(v.laboratorio ?? "--")}</td>
+        <td>${escapeHtml(v.laboratorio ?? "NI")}</td>
+        <td>${escapeHtml(v.lote ?? "--")}</td>
         <td>${escapeHtml(v.estabelecimento ?? "--")}</td>
-        <td>${escapeHtml(v.profissional ?? "--")}</td>
-        <td>${escapeHtml(v.status ?? "--")}</td>
       </tr>
     `,
     )
@@ -178,14 +177,13 @@ function renderTabelaVacinas(vacinas: VacinaResumo[]): string {
     <table class="vacinas-table">
       <thead>
         <tr>
-          <th>Aplicação</th>
-          <th>Imunobiológico</th>
-          <th>Dose</th>
-          <th>Estratégia</th>
-          <th>Laboratório</th>
-          <th>Estab. de Saúde</th>
-          <th>Profissional</th>
-          <th>Status</th>
+          <th class="col-aplic">Aplicação</th>
+          <th class="col-estrat">Estratégia</th>
+          <th class="col-imuno">Imunobiológico</th>
+          <th class="col-dose">Dose</th>
+          <th class="col-lab">Laboratório</th>
+          <th class="col-lote">Lote</th>
+          <th class="col-estab">Estab. de Saúde</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
@@ -259,13 +257,21 @@ function renderHtml(paciente: Paciente, vacinas: VacinaResumo[], logoBase64?: st
   .endereco-divider { height: 1px; background: #e5e7eb; margin: 4px 0; }
 
   /* Tabela de vacinas */
-  .vacinas-table { width: 100%; border-collapse: collapse; font-size: 10px; table-layout: auto; }
-  .vacinas-table thead th { background: #0f3a8a; color: #fff; text-align: left; padding: 6px 6px; font-weight: 700; border: 1px solid #0f3a8a; }
-  .vacinas-table tbody td { padding: 5px 6px; border: 1px solid #d1d5db; vertical-align: top; overflow-wrap: anywhere; word-break: break-word; }
-  .vacinas-table tbody tr:nth-child(even) td { background: #f9fafb; }
-  .vacinas-table td.data { white-space: nowrap; }
-  .vacinas-table td.dose { white-space: nowrap; }
+  .vacinas-table { width: 100%; border-collapse: collapse; font-size: 10px; table-layout: fixed; }
+  .vacinas-table thead th { background: #ffffff; color: #111; text-align: center; padding: 6px 6px; font-weight: 700; border: 1px solid #4b5563; }
+  .vacinas-table tbody td { padding: 6px 8px; border: 1px solid #4b5563; vertical-align: middle; overflow-wrap: anywhere; word-break: break-word; }
+  .vacinas-table tbody tr:nth-child(even) td { background: #ffffff; }
+  .vacinas-table td.data { white-space: nowrap; text-align: center; }
+  .vacinas-table td.dose { white-space: nowrap; text-align: center; }
   .vacinas-table td.muted { color: #9ca3af; text-align: center; font-style: italic; }
+  /* Larguras pensadas para A4 retrato (~182mm úteis) */
+  .vacinas-table .col-aplic { width: 9%; }
+  .vacinas-table .col-estrat { width: 9%; }
+  .vacinas-table .col-imuno { width: 22%; }
+  .vacinas-table .col-dose { width: 8%; }
+  .vacinas-table .col-lab { width: 14%; }
+  .vacinas-table .col-lote { width: 12%; }
+  .vacinas-table .col-estab { width: 26%; }
 
   .vazio { text-align: center; padding: 24px 12px; color: #6b7280; font-size: 12px; border: 1px dashed #d1d5db; border-radius: 4px; }
 

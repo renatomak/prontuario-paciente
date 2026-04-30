@@ -52,6 +52,7 @@ export interface VacinaResumo {
   laboratorio?: string | null;
   estabelecimento?: string | null;
   profissional?: string | null;
+  lote?: string | null;
 }
 
 export interface VacinaDetalhe {
