@@ -24,6 +24,7 @@ export interface ApiPaciente {
   data_nascimento?: string | null;
   telefone?: string | null;
   endereco?: ApiEndereco | null;
+  cd_usu_cadsus?: number | string | null;
 }
 
 export interface ApiUnidade {
