@@ -309,12 +309,10 @@ const styles = StyleSheet.create({
     fontSize: 8.5,
     lineHeight: 1.45,
     marginTop: 2,
-    // Garante quebra de palavras longas (URLs, sequências sem espaços) dentro do container
-    // @ts-expect-error react-pdf aceita estas propriedades CSS para layout de texto
+    // Garante quebra de palavras longas dentro do container, evitando estouro lateral
     wordBreak: "break-word",
-    // @ts-expect-error
     overflowWrap: "break-word",
-  },
+  } as never,
   emptyText: { fontSize: 9, fontStyle: "italic", textAlign: "center", marginTop: 20 },
 
   footer: { position: "absolute", bottom: 16, left: 32, right: 32 },
