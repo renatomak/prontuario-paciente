@@ -39,6 +39,39 @@ function blocosConteudo(c: MockRegistroConteudo): { label: string; texto: string
   return out;
 }
 
+const MAX_PDF_LINE_CHARS = 95;
+const MAX_PDF_PARAGRAPH_CHARS = 520;
+
+function quebrarTokenLongo(token: string): string {
+  if (token.length <= MAX_PDF_LINE_CHARS) return token;
+  return token.match(new RegExp(`.{1,${MAX_PDF_LINE_CHARS}}`, "g"))?.join("\u200B") ?? token;
+}
+
+function fatiarParagrafo(texto: string): string[] {
+  const partes: string[] = [];
+  let restante = texto.trim();
+
+  while (restante.length > MAX_PDF_PARAGRAPH_CHARS) {
+    const corteIdeal = restante.lastIndexOf(" ", MAX_PDF_PARAGRAPH_CHARS);
+    const corte = corteIdeal > MAX_PDF_PARAGRAPH_CHARS * 0.65 ? corteIdeal : MAX_PDF_PARAGRAPH_CHARS;
+    partes.push(restante.slice(0, corte).trim());
+    restante = restante.slice(corte).trim();
+  }
+
+  if (restante) partes.push(restante);
+  return partes;
+}
+
+function prepararConteudoPdf(texto: string): string[] {
+  return texto
+    .replace(/\r\n?/g, "\n")
+    .split(/\n+/)
+    .flatMap((linha) => {
+      const segura = linha.replace(/\S{96,}/g, quebrarTokenLongo).trim();
+      return segura ? fatiarParagrafo(segura) : [];
+    });
+}
+
 const documentoPadrao = {
   titulo: "PRONTUÁRIO DE ATENDIMENTOS",
   prefeitura: "Prefeitura Municipal de Goiânia - GO",
@@ -172,10 +205,10 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
                     </View>
                   )}
 
-                  {/* Primeiro registro: cabeçalho + 1º bloco grudados ao header do card */}
+                  {/* Primeiro registro: mantém apenas os cabeçalhos sem quebra; conteúdo grande quebra livremente */}
                   {primeiroRegistro ? (
                     <View style={styles.registro}>
-                      <View style={styles.registroHeader}>
+                      <View style={styles.registroHeader} wrap={false} minPresenceAhead={36}>
                         <Text style={styles.registroProf}>
                           <Text style={styles.metaLabel}>Tipo: </Text>
                           {primeiroRegistro.tipo || "—"}
@@ -185,10 +218,7 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
                       {primeiroBlocos.length === 0 ? (
                         <Text style={styles.conteudo}>(Sem conteúdo)</Text>
                       ) : (
-                        <Text style={styles.conteudo}>
-                          <Text style={styles.metaLabel}>{primeiroBlocos[0].label}: </Text>
-                          {primeiroBlocos[0].texto}
-                        </Text>
+                        <ConteudoPdf label={primeiroBlocos[0].label} texto={primeiroBlocos[0].texto} />
                       )}
                     </View>
                   ) : !a.possui_aih ? (
@@ -201,10 +231,7 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
                 {/* Blocos restantes do primeiro registro (podem quebrar livremente) */}
                 {primeiroRegistro && primeiroBlocos.slice(1).map((b, bi) => (
                   <View key={`p-${bi}`} style={styles.registroExtra} wrap>
-                    <Text style={styles.conteudo}>
-                      <Text style={styles.metaLabel}>{b.label}: </Text>
-                      {b.texto}
-                    </Text>
+                    <ConteudoPdf label={b.label} texto={b.texto} />
                   </View>
                 ))}
 
@@ -214,7 +241,7 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
                   return (
                     <View key={ri} style={styles.registro} wrap>
                       <View wrap={false}>
-                        <View style={styles.registroHeader}>
+                        <View style={styles.registroHeader} wrap={false} minPresenceAhead={36}>
                           <Text style={styles.registroProf}>
                             <Text style={styles.metaLabel}>Tipo: </Text>
                             {r.tipo || "—"}
@@ -224,17 +251,11 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
                         {blocos.length === 0 ? (
                           <Text style={styles.conteudo}>(Sem conteúdo)</Text>
                         ) : (
-                          <Text style={styles.conteudo}>
-                            <Text style={styles.metaLabel}>{blocos[0].label}: </Text>
-                            {blocos[0].texto}
-                          </Text>
+                          <ConteudoPdf label={blocos[0].label} texto={blocos[0].texto} />
                         )}
                       </View>
                       {blocos.slice(1).map((b, bi) => (
-                        <Text key={bi} style={styles.conteudo}>
-                          <Text style={styles.metaLabel}>{b.label}: </Text>
-                          {b.texto}
-                        </Text>
+                        <ConteudoPdf key={bi} label={b.label} texto={b.texto} />
                       ))}
                     </View>
                   );
