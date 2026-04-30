@@ -327,6 +327,12 @@ function renderHtml(data: ApiProntuarioResponse, logoBase64?: string): string {
             color: #666666;
             font-size: 9px;
           }
+          #prontuario-impressao .print-timestamp {
+            color: #b8b8b8;
+            font-size: 8px;
+            font-style: italic;
+            margin-top: 2px;
+          }
         </style>
       </head>
       <body>
