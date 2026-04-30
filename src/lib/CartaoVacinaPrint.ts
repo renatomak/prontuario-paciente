@@ -258,7 +258,7 @@ function renderHtml(paciente: Paciente, vacinas: VacinaResumo[], logoBase64?: st
 
   /* Tabela de vacinas */
   .vacinas-table { width: 100%; border-collapse: collapse; font-size: 10px; table-layout: fixed; }
-  .vacinas-table thead th { background: #ffffff; color: #111; text-align: center; padding: 6px 6px; font-weight: 700; border: 1px solid #4b5563; }
+  .vacinas-table thead th { background: #0f3a8a; color: #ffffff; text-align: center; padding: 6px 6px; font-weight: 700; border: 1px solid #0f3a8a; }
   .vacinas-table tbody td { padding: 6px 8px; border: 1px solid #4b5563; vertical-align: middle; overflow-wrap: anywhere; word-break: break-word; }
   .vacinas-table tbody tr:nth-child(even) td { background: #ffffff; }
   .vacinas-table td.data { white-space: nowrap; text-align: center; }
