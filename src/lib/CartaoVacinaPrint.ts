@@ -192,13 +192,13 @@ function renderTabelaVacinas(vacinas: VacinaResumo[]): string {
 }
 
 function renderHtml(paciente: Paciente, vacinas: VacinaResumo[], logoBase64?: string): string {
-  void paciente; // header/footer não usam dados do paciente; mantém assinatura por simetria
+  const tituloArquivo = nomeArquivoCartaoVacinacao(paciente);
 
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<title>Cartão de Vacinação</title>
+<title>${escapeHtml(tituloArquivo)}</title>
 <style>
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: #f3f4f6; color: #202020; font-family: Arial, Helvetica, sans-serif; }
