@@ -111,6 +111,13 @@ function renderAtendimentoHeader(a: ApiAtendimento): string {
     ? ` (${a.profissional.tipo_conselho}: ${a.profissional.registro})`
     : "";
 
+  let dataRegistro = a.data_chegada;
+  if (a.possui_aih && a.aih_detalhes?.data_cadastro) {
+    dataRegistro = a.aih_detalhes.data_cadastro;
+  } else if (a.registros && a.registros.length > 0 && a.registros[0].data) {
+    dataRegistro = a.registros[0].data;
+  }
+
   return `
     <div class="atendimento-header">
       <div class="atendimento-main">
@@ -120,7 +127,7 @@ function renderAtendimentoHeader(a: ApiAtendimento): string {
       </div>
       <div class="atendimento-meta">
         ${a.possui_aih ? `<span class="aih-badge">AIH SOLICITADA</span>` : ""}
-        ${campo("Data Registro", formatDateBR(a.data_chegada))}
+        ${campo("Data Registro", formatDateBR(dataRegistro))}
         ${a.numero_atendimento ? campo("Nº", a.numero_atendimento) : ""}
         ${a.classificacao_risco ? campo("Risco", a.classificacao_risco) : ""}
       </div>
