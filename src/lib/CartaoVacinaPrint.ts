@@ -202,29 +202,48 @@ function renderHtml(paciente: Paciente, vacinas: VacinaResumo[], logoBase64?: st
 <title>${escapeHtml(titulo)}</title>
 <style>
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; background: #f3f4f6; color: #111; font-family: Arial, Helvetica, sans-serif; }
-  #cartao-vacinacao { max-width: 210mm; margin: 0 auto; background: #fff; }
+  html, body { margin: 0; padding: 0; background: #f3f4f6; color: #202020; font-family: Arial, Helvetica, sans-serif; }
+  #cartao-vacinacao { max-width: 210mm; margin: 0 auto; background: #fff; font-size: 11px; line-height: 1.35; }
 
   /* Shell de tabela para repetir cabeçalho/rodapé em cada página impressa */
   .page-shell { width: 100%; border-collapse: collapse; }
   .page-shell thead { display: table-header-group; }
   .page-shell tfoot { display: table-footer-group; }
-  .page-shell td.content-cell { padding: 14mm 14mm 6mm 14mm; vertical-align: top; }
+  .page-shell td { padding: 0; vertical-align: top; }
+  .page-shell td.content-cell { padding: 4mm 14mm 6mm 14mm; }
   .page-shell thead td { padding: 8mm 14mm 0 14mm; }
   .page-shell tfoot td { padding: 0 14mm 8mm 14mm; }
 
-  /* Header */
-  .header-wrapper { border-bottom: 2px solid #0f3a8a; padding-bottom: 6px; margin-bottom: 4px; }
-  .header-row { display: flex; align-items: center; gap: 12px; }
-  .brasao { width: 60px; height: 60px; object-fit: contain; }
-  .brasao-placeholder { width: 60px; height: 60px; background: #0f3a8a; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; border-radius: 4px; }
-  .header-text { display: flex; flex-direction: column; gap: 2px; }
-  .header-line { font-size: 11px; color: #1f2937; }
-  .header-line.bold { font-weight: 700; font-size: 12px; color: #0f3a8a; }
-  .header-title { margin-top: 6px; text-align: center; font-weight: 700; font-size: 14px; letter-spacing: 0.5px; color: #0f3a8a; text-transform: uppercase; }
+  /* Header (igual ao prontuário) */
+  .print-header {
+    display: grid;
+    grid-template-columns: 34mm 1fr 34mm;
+    align-items: start;
+    gap: 8px;
+    border-bottom: 1px solid #b8b8b8;
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+  }
+  .logo { width: 54mm; max-height: 28mm; object-fit: contain; display: block; margin: 0 auto; }
+  .header-text { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
+  .print-header h1 { margin: 4px 0 0; font-size: 14px; font-weight: 700; }
+  .print-header .prefeitura { font-size: 14px; font-weight: 700; }
+  .print-header .sistema { font-size: 12px; }
+  .print-header .orgao { font-size: 10px; }
 
-  /* Footer */
-  .footer-wrapper { border-top: 1px solid #d1d5db; padding-top: 6px; text-align: center; font-size: 10px; color: #4b5563; display: flex; flex-direction: column; gap: 2px; }
+  /* Footer (igual ao prontuário) */
+  .print-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    border-top: 1px solid #b8b8b8;
+    margin-top: 14px;
+    padding-top: 6px;
+    color: #666666;
+    font-size: 9px;
+  }
+  .print-timestamp { color: #b8b8b8; font-size: 8px; font-style: italic; margin-top: 2px; }
 
   /* Paciente */
   .paciente-box { border: 1px solid #d1d5db; border-radius: 4px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
@@ -250,9 +269,24 @@ function renderHtml(paciente: Paciente, vacinas: VacinaResumo[], logoBase64?: st
   .vazio { text-align: center; padding: 24px 12px; color: #6b7280; font-size: 12px; border: 1px dashed #d1d5db; border-radius: 4px; }
 
   @media print {
-    @page { size: A4; margin: 0; }
-    html, body { background: #fff; }
+    @page {
+      size: A4 portrait;
+      margin: 14mm 14mm 20mm;
+      @top-left { content: ""; }
+      @top-center { content: ""; }
+      @top-right { content: ""; }
+      @bottom-left { content: ""; }
+      @bottom-center {
+        content: "Página " counter(page) " de " counter(pages);
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 8pt;
+        color: #b8b8b8;
+      }
+      @bottom-right { content: ""; }
+    }
+    html, body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     #cartao-vacinacao { max-width: none; box-shadow: none; }
+    .page-shell td.content-cell, .page-shell thead td, .page-shell tfoot td { padding-left: 0; padding-right: 0; }
     .vacinas-table thead { display: table-header-group; }
     .vacinas-table tbody tr { page-break-inside: avoid; }
   }
