@@ -114,91 +114,134 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
         {atendimentos.length === 0 ? (
           <Text style={styles.emptyText}>Nenhum atendimento registrado.</Text>
         ) : (
-          atendimentos.map((a, idx) => (
-            <View key={idx} style={styles.atendimento} wrap={false}>
-              {/* Cabeçalho */}
-              <View style={styles.atendimentoHeader}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.atendimentoTitle}>
-                    {a.unidade?.nome || "Unidade não informada"}
-                  </Text>
-                  {a.tipo_atendimento && (
-                    <Text style={styles.atendimentoSub}>
-                      <Text style={styles.metaLabel}>Tipo Atend: </Text>
-                      {a.tipo_atendimento}
-                    </Text>
+          atendimentos.map((a, idx) => {
+            const registros = a.registros || [];
+            const primeiroRegistro = registros[0];
+            const primeiroBlocos = primeiroRegistro ? blocosConteudo(primeiroRegistro.conteudo) : [];
+            const restoRegistros = registros.slice(1);
+
+            return (
+              <View key={idx} style={styles.atendimento} wrap>
+                {/* Cabeçalho + primeiro registro agrupados (não podem ser separados) */}
+                <View wrap={false}>
+                  <View style={styles.atendimentoHeader}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.atendimentoTitle}>
+                        {a.unidade?.nome || "Unidade não informada"}
+                      </Text>
+                      {a.tipo_atendimento && (
+                        <Text style={styles.atendimentoSub}>
+                          <Text style={styles.metaLabel}>Tipo Atend: </Text>
+                          {a.tipo_atendimento}
+                        </Text>
+                      )}
+                      {a.profissional?.nome && (
+                        <Text style={styles.atendimentoSub}>
+                          <Text style={styles.metaLabel}>Profissional: </Text>
+                          {a.profissional.nome}
+                          {a.profissional.tipo_conselho && a.profissional.registro
+                            ? ` (${a.profissional.tipo_conselho}: ${a.profissional.registro})`
+                            : ""}
+                        </Text>
+                      )}
+                    </View>
+
+                    <View style={{ alignItems: "flex-end" }}>
+                      <Text style={styles.atendimentoDate}>
+                        <Text style={styles.metaLabel}>Data Registro: </Text>
+                        {formatDateBR(a.data_chegada)}
+                      </Text>
+                      {a.numero_atendimento && <Text style={styles.atendimentoDate}>Nº {a.numero_atendimento}</Text>}
+                      {a.classificacao_risco && <Text style={styles.atendimentoDate}>Risco: {a.classificacao_risco}</Text>}
+                      {a.possui_aih && <Text style={styles.aihBadge}>AIH SOLICITADA</Text>}
+                    </View>
+                  </View>
+
+                  {/* Bloco AIH âncora ao cabeçalho */}
+                  {a.possui_aih && a.aih_detalhes && (
+                    <View style={styles.aihBox}>
+                      <Text style={styles.aihTitle}>DETALHES DA SOLICITAÇÃO DE INTERNAÇÃO</Text>
+                      <Text style={styles.conteudo}>
+                        <Text style={styles.metaLabel}>Diagnóstico Inicial: </Text>
+                        {a.aih_detalhes.diagnostico_inicial || "Não informado"}
+                      </Text>
+                      <Text style={styles.conteudo}>
+                        <Text style={styles.metaLabel}>Sinais e Sintomas: </Text>
+                        {a.aih_detalhes.principais_sinais || "Não informado"}
+                      </Text>
+                    </View>
                   )}
-                  {a.profissional?.nome && (
-                    <Text style={styles.atendimentoSub}>
-                      <Text style={styles.metaLabel}>Profissional: </Text>
-                      {a.profissional.nome}
-                      {a.profissional.tipo_conselho && a.profissional.registro
-                        ? ` (${a.profissional.tipo_conselho}: ${a.profissional.registro})`
-                        : ""}
-                    </Text>
-                  )}
-                </View>
 
-                <View style={{ alignItems: "flex-end" }}>
-                  <Text style={styles.atendimentoDate}>
-                    <Text style={styles.metaLabel}>Data Registro: </Text>
-                    {formatDateBR(a.data_chegada)}
-                  </Text>
-                  {a.numero_atendimento && <Text style={styles.atendimentoDate}>Nº {a.numero_atendimento}</Text>}
-                  {a.classificacao_risco && <Text style={styles.atendimentoDate}>Risco: {a.classificacao_risco}</Text>}
-                  {a.possui_aih && <Text style={styles.aihBadge}>AIH SOLICITADA</Text>}
-                </View>
-              </View>
-
-              {/* Bloco AIH */}
-              {a.possui_aih && a.aih_detalhes && (
-                <View style={styles.aihBox}>
-                  <Text style={styles.aihTitle}>DETALHES DA SOLICITAÇÃO DE INTERNAÇÃO</Text>
-                  <Text style={styles.conteudo}>
-                    <Text style={styles.metaLabel}>Diagnóstico Inicial: </Text>
-                    {a.aih_detalhes.diagnostico_inicial || "Não informado"}
-                  </Text>
-                  <Text style={styles.conteudo}>
-                    <Text style={styles.metaLabel}>Sinais e Sintomas: </Text>
-                    {a.aih_detalhes.principais_sinais || "Não informado"}
-                  </Text>
-                </View>
-              )}
-
-              {/* Registros */}
-              {a.registros && a.registros.length > 0 ? (
-                a.registros.map((r, ri) => {
-                  const blocos = blocosConteudo(r.conteudo);
-                  return (
-                    <View key={ri} style={styles.registro} wrap={false}>
+                  {/* Primeiro registro: cabeçalho + 1º bloco grudados ao header do card */}
+                  {primeiroRegistro ? (
+                    <View style={styles.registro}>
                       <View style={styles.registroHeader}>
                         <Text style={styles.registroProf}>
                           <Text style={styles.metaLabel}>Tipo: </Text>
-                          {r.tipo || "—"}
+                          {primeiroRegistro.tipo || "—"}
                         </Text>
-                        <Text style={styles.registroDate}>{formatDateBR(r.data)}</Text>
+                        <Text style={styles.registroDate}>{formatDateBR(primeiroRegistro.data)}</Text>
                       </View>
-
-                      {blocos.length === 0 ? (
+                      {primeiroBlocos.length === 0 ? (
                         <Text style={styles.conteudo}>(Sem conteúdo)</Text>
                       ) : (
-                        blocos.map((b, bi) => (
-                          <Text key={bi} style={styles.conteudo}>
-                            <Text style={styles.metaLabel}>{b.label}: </Text>
-                            {b.texto}
-                          </Text>
-                        ))
+                        <Text style={styles.conteudo}>
+                          <Text style={styles.metaLabel}>{primeiroBlocos[0].label}: </Text>
+                          {primeiroBlocos[0].texto}
+                        </Text>
                       )}
                     </View>
+                  ) : !a.possui_aih ? (
+                    <Text style={[styles.conteudo, { fontStyle: "italic", padding: 8 }]}>
+                      (Sem registros clínicos)
+                    </Text>
+                  ) : null}
+                </View>
+
+                {/* Blocos restantes do primeiro registro (podem quebrar livremente) */}
+                {primeiroRegistro && primeiroBlocos.slice(1).map((b, bi) => (
+                  <View key={`p-${bi}`} style={styles.registroExtra} wrap>
+                    <Text style={styles.conteudo}>
+                      <Text style={styles.metaLabel}>{b.label}: </Text>
+                      {b.texto}
+                    </Text>
+                  </View>
+                ))}
+
+                {/* Demais registros (cada um mantém header+1ºbloco juntos) */}
+                {restoRegistros.map((r, ri) => {
+                  const blocos = blocosConteudo(r.conteudo);
+                  return (
+                    <View key={ri} style={styles.registro} wrap>
+                      <View wrap={false}>
+                        <View style={styles.registroHeader}>
+                          <Text style={styles.registroProf}>
+                            <Text style={styles.metaLabel}>Tipo: </Text>
+                            {r.tipo || "—"}
+                          </Text>
+                          <Text style={styles.registroDate}>{formatDateBR(r.data)}</Text>
+                        </View>
+                        {blocos.length === 0 ? (
+                          <Text style={styles.conteudo}>(Sem conteúdo)</Text>
+                        ) : (
+                          <Text style={styles.conteudo}>
+                            <Text style={styles.metaLabel}>{blocos[0].label}: </Text>
+                            {blocos[0].texto}
+                          </Text>
+                        )}
+                      </View>
+                      {blocos.slice(1).map((b, bi) => (
+                        <Text key={bi} style={styles.conteudo}>
+                          <Text style={styles.metaLabel}>{b.label}: </Text>
+                          {b.texto}
+                        </Text>
+                      ))}
+                    </View>
                   );
-                })
-              ) : !a.possui_aih ? (
-                <Text style={[styles.conteudo, { fontStyle: "italic" }]}>
-                  (Sem registros clínicos)
-                </Text>
-              ) : null}
-            </View>
-          ))
+                })}
+              </View>
+            );
+          })
         )}
 
         {/* Footer */}
@@ -256,6 +299,7 @@ const styles = StyleSheet.create({
   aihTitle: { fontFamily: "Helvetica-Bold", fontSize: 9.5, color: "#1e40af", marginBottom: 5 },
 
   registro: { padding: 8, borderTopWidth: 0.4, borderTopColor: "#ddd" },
+  registroExtra: { paddingHorizontal: 8, paddingBottom: 6 },
   registroHeader: { flexDirection: "row", justifyContent: "space-between", marginBottom: 4 },
   registroProf: { fontSize: 8.5, fontFamily: "Helvetica-Bold", flex: 1 },
   registroDate: { fontSize: 8 },
