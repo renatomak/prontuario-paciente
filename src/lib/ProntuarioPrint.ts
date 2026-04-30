@@ -205,9 +205,23 @@ function renderHtml(data: ApiProntuarioResponse, logoBase64?: string): string {
     <html lang="pt-BR">
       <head>
         <meta charset="utf-8" />
-        <title>${escapeHtml(nomeArquivo(data))}</title>
+        <title>Prontuário de Atendimentos</title>
         <style>
-          @page { size: A4 portrait; margin: 14mm 14mm 18mm; }
+          @page {
+            size: A4 portrait;
+            margin: 14mm 14mm 20mm;
+            @top-left { content: ""; }
+            @top-center { content: ""; }
+            @top-right { content: ""; }
+            @bottom-left { content: ""; }
+            @bottom-center {
+              content: "Página " counter(page) " de " counter(pages);
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 8pt;
+              color: #b8b8b8;
+            }
+            @bottom-right { content: ""; }
+          }
           @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
           #prontuario-impressao, #prontuario-impressao * { box-sizing: border-box; }
           body { margin: 0; background: #ffffff; color: #202020; font-family: Arial, Helvetica, sans-serif; }
