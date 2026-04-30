@@ -299,6 +299,7 @@ const styles = StyleSheet.create({
   aihTitle: { fontFamily: "Helvetica-Bold", fontSize: 9.5, color: "#1e40af", marginBottom: 5 },
 
   registro: { padding: 8, borderTopWidth: 0.4, borderTopColor: "#ddd" },
+  registroExtra: { paddingHorizontal: 8, paddingBottom: 6 },
   registroHeader: { flexDirection: "row", justifyContent: "space-between", marginBottom: 4 },
   registroProf: { fontSize: 8.5, fontFamily: "Helvetica-Bold", flex: 1 },
   registroDate: { fontSize: 8 },
