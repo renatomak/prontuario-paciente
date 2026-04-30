@@ -193,14 +193,8 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
                   {a.possui_aih && a.aih_detalhes && (
                     <View style={styles.aihBox}>
                       <Text style={styles.aihTitle}>DETALHES DA SOLICITAÇÃO DE INTERNAÇÃO</Text>
-                      <Text style={styles.conteudo}>
-                        <Text style={styles.metaLabel}>Diagnóstico Inicial: </Text>
-                        {a.aih_detalhes.diagnostico_inicial || "Não informado"}
-                      </Text>
-                      <Text style={styles.conteudo}>
-                        <Text style={styles.metaLabel}>Sinais e Sintomas: </Text>
-                        {a.aih_detalhes.principais_sinais || "Não informado"}
-                      </Text>
+                      <ConteudoPdf label="Diagnóstico Inicial" texto={a.aih_detalhes.diagnostico_inicial || "Não informado"} />
+                      <ConteudoPdf label="Sinais e Sintomas" texto={a.aih_detalhes.principais_sinais || "Não informado"} />
                     </View>
                   )}
 
@@ -298,9 +292,9 @@ const ConteudoPdf = ({ label, texto }: { label: string; texto: string }) => {
 
   return (
     <View style={styles.conteudoGrupo} wrap>
+      <Text style={styles.conteudoLabel} wrap={false} minPresenceAhead={18}>{label}:</Text>
       {partes.map((parte, idx) => (
         <Text key={idx} style={styles.conteudo} wrap>
-          {idx === 0 && <Text style={styles.metaLabel}>{label}: </Text>}
           {parte}
         </Text>
       ))}
@@ -344,6 +338,7 @@ const styles = StyleSheet.create({
   registroDate: { fontSize: 8 },
 
   metaLabel: { fontFamily: "Helvetica-Bold" },
+  conteudoLabel: { fontSize: 8.5, fontFamily: "Helvetica-Bold", marginTop: 3, marginBottom: 2 },
   conteudo: {
     fontSize: 8.5,
     lineHeight: 1.45,
