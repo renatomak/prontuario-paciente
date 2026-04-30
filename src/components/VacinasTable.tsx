@@ -1,13 +1,19 @@
 import { VacinaResumo } from "@/lib/api";
+import type { Paciente } from "@/domain/models";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Search, FileDown } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { imprimirCartaoVacinacao } from "@/lib/CartaoVacinaPrint";
+import { getLogoBase64 } from "@/lib/logoGoiania";
+import { toast } from "sonner";
 
 interface Props {
   vacinas: VacinaResumo[];
   onSelect: (idAplicacao: number) => void;
   selectedId?: number;
+  paciente?: Paciente;
 }
 
 function fmtDate(d: string) {
