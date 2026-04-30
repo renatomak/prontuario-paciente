@@ -257,7 +257,7 @@ function renderHtml(data: ApiProntuarioResponse, logoBase64?: string): string {
           #prontuario-impressao .long-text { overflow-wrap: anywhere; word-break: break-word; white-space: pre-wrap; }
           #prontuario-impressao .evolucao-block { padding-bottom: 4px; }
           #prontuario-impressao .empty-text { color: #666666; font-style: italic; padding: 0 4px 4px; }
-          #prontuario-impressao .sem-registro { margin-top: -2px; }
+          #prontuario-impressao .sem-registro { display: block; }
           #prontuario-impressao .print-footer {
             display: flex;
             flex-direction: column;
