@@ -142,12 +142,24 @@ function renderAtendimento(a: ApiAtendimento): string {
       <div class="aih-section pdf-section">
         <h4>DETALHES DA SOLICITAÇÃO DE INTERNAÇÃO</h4>
         <div class="content-block">
+          <span class="content-label">Data de Cadastro:</span>
+          <div class="content-value">${escapeHtml(formatDateBR(a.aih_detalhes.data_cadastro) || "Não informado")}</div>
+        </div>
+        <div class="content-block">
           <span class="content-label">Diagnóstico Inicial:</span>
           <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aih_detalhes.diagnostico_inicial) || "Não informado")}</div>
         </div>
         <div class="content-block">
           <span class="content-label">Sinais e Sintomas:</span>
           <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aih_detalhes.principais_sinais) || "Não informado")}</div>
+        </div>
+        <div class="content-block">
+          <span class="content-label">Condições que Justificam a Internação:</span>
+          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aih_detalhes.condicoes_internacao) || "Não informado")}</div>
+        </div>
+        <div class="content-block">
+          <span class="content-label">Principais Resultados de Provas Diagnósticas:</span>
+          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aih_detalhes.principais_resultados) || "Não informado")}</div>
         </div>
       </div>
     `
