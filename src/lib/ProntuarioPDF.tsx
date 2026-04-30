@@ -155,9 +155,8 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
 
             return (
               <View key={idx} style={styles.atendimento} wrap>
-                {/* Cabeçalho + primeiro registro agrupados (não podem ser separados) */}
-                <View wrap={false}>
-                  <View style={styles.atendimentoHeader}>
+                <View wrap>
+                  <View style={styles.atendimentoHeader} wrap={false} minPresenceAhead={48}>
                     <View style={{ flex: 1 }}>
                       <Text style={styles.atendimentoTitle}>
                         {a.unidade?.nome || "Unidade não informada"}
@@ -240,7 +239,7 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
                   const blocos = blocosConteudo(r.conteudo);
                   return (
                     <View key={ri} style={styles.registro} wrap>
-                      <View wrap={false}>
+                      <View wrap>
                         <View style={styles.registroHeader} wrap={false} minPresenceAhead={36}>
                           <Text style={styles.registroProf}>
                             <Text style={styles.metaLabel}>Tipo: </Text>
@@ -290,8 +289,27 @@ const Field = ({ label, value, flex = 1 }: { label: string; value: string; flex?
   </View>
 );
 
+const ConteudoPdf = ({ label, texto }: { label: string; texto: string }) => {
+  const partes = prepararConteudoPdf(texto);
+
+  if (partes.length === 0) {
+    return <Text style={styles.conteudo}>(Sem conteúdo)</Text>;
+  }
+
+  return (
+    <View style={styles.conteudoGrupo} wrap>
+      {partes.map((parte, idx) => (
+        <Text key={idx} style={styles.conteudo} wrap>
+          {idx === 0 && <Text style={styles.metaLabel}>{label}: </Text>}
+          {parte}
+        </Text>
+      ))}
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
-  page: { paddingTop: 90, paddingBottom: 110, paddingHorizontal: 32, fontSize: 9, fontFamily: "Helvetica", color: "#111" },
+  page: { paddingTop: 90, paddingBottom: 122, paddingHorizontal: 32, fontSize: 9, fontFamily: "Helvetica", color: "#111" },
   headerContainer: { position: "absolute", top: 16, left: 32, right: 32 },
   headerRow: { flexDirection: "row", alignItems: "center" },
   logo: { width: 60, height: 24, objectFit: "contain" },
@@ -334,6 +352,7 @@ const styles = StyleSheet.create({
     wordBreak: "break-word",
     overflowWrap: "break-word",
   } as never,
+  conteudoGrupo: { width: "100%" },
   emptyText: { fontSize: 9, fontStyle: "italic", textAlign: "center", marginTop: 20 },
 
   footer: { position: "absolute", bottom: 16, left: 32, right: 32 },
