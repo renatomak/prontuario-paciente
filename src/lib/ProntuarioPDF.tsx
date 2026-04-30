@@ -115,19 +115,25 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
           <Text style={styles.emptyText}>Nenhum atendimento registrado.</Text>
         ) : (
           atendimentos.map((a, idx) => (
-            <View key={idx} style={styles.atendimento}>
+            <View key={idx} style={styles.atendimento} wrap={false}>
               {/* Cabeçalho */}
               <View style={styles.atendimentoHeader}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.atendimentoTitle}>
                     {a.unidade?.nome || "Unidade não informada"}
                   </Text>
-                  {a.tipo_atendimento && <Text style={styles.atendimentoSub}>{a.tipo_atendimento}</Text>}
+                  {a.tipo_atendimento && (
+                    <Text style={styles.atendimentoSub}>
+                      <Text style={styles.metaLabel}>Tipo Atend: </Text>
+                      {a.tipo_atendimento}
+                    </Text>
+                  )}
                   {a.profissional?.nome && (
                     <Text style={styles.atendimentoSub}>
-                      {a.profissional.nome} 
-                      {a.profissional.tipo_conselho && a.profissional.registro 
-                        ? ` (${a.profissional.tipo_conselho}: ${a.profissional.registro})` 
+                      <Text style={styles.metaLabel}>Profissional: </Text>
+                      {a.profissional.nome}
+                      {a.profissional.tipo_conselho && a.profissional.registro
+                        ? ` (${a.profissional.tipo_conselho}: ${a.profissional.registro})`
                         : ""}
                     </Text>
                   )}
@@ -135,7 +141,8 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
 
                 <View style={{ alignItems: "flex-end" }}>
                   <Text style={styles.atendimentoDate}>
-                    Chegada: {formatDateBR(a.data_chegada)}
+                    <Text style={styles.metaLabel}>Data Registro: </Text>
+                    {formatDateBR(a.data_chegada)}
                   </Text>
                   {a.numero_atendimento && <Text style={styles.atendimentoDate}>Nº {a.numero_atendimento}</Text>}
                   {a.classificacao_risco && <Text style={styles.atendimentoDate}>Risco: {a.classificacao_risco}</Text>}
@@ -163,7 +170,7 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
                 a.registros.map((r, ri) => {
                   const blocos = blocosConteudo(r.conteudo);
                   return (
-                    <View key={ri} style={styles.registro}>
+                    <View key={ri} style={styles.registro} wrap={false}>
                       <View style={styles.registroHeader}>
                         <Text style={styles.registroProf}>
                           <Text style={styles.metaLabel}>Tipo: </Text>
