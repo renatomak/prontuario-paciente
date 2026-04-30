@@ -124,7 +124,7 @@ const ProntuarioPDF = ({ data, logoBase64 }: Props) => {
                   </Text>
                   {a.tipo_atendimento && (
                     <Text style={styles.atendimentoSub}>
-                      <Text style={styles.metaLabel}>Tipo Atend: </Text>
+                      <Text style={styles.metaLabel}>Tipo Atendimento: </Text>
                       {a.tipo_atendimento}
                     </Text>
                   )}
