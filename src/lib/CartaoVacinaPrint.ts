@@ -62,30 +62,34 @@ function nomeArquivo(p: Paciente): string {
 }
 
 function renderHeader(logoBase64?: string): string {
-  const logo = logoBase64
-    ? `<img src="${logoBase64}" alt="Brasão Goiânia" class="brasao" />`
-    : `<div class="brasao-placeholder">GYN</div>`;
   return `
-    <div class="header-wrapper">
-      <div class="header-row">
-        ${logo}
-        <div class="header-text">
-          <div class="header-line bold">${escapeHtml(documentoPadrao.prefeitura)}</div>
-          <div class="header-line">${escapeHtml(documentoPadrao.sistema)}</div>
-          <div class="header-line">${escapeHtml(documentoPadrao.orgao)}</div>
-        </div>
+    <header class="print-header">
+      <div>${logoBase64 ? `<img class="logo" src="${logoBase64}" alt="Prefeitura de Goiânia" />` : ""}</div>
+      <div class="header-text">
+        <div class="prefeitura">${escapeHtml(documentoPadrao.prefeitura)}</div>
+        <div class="sistema">${escapeHtml(documentoPadrao.sistema)}</div>
+        <div class="orgao">${escapeHtml(documentoPadrao.orgao)}</div>
+        <h1>${escapeHtml(documentoPadrao.titulo)}</h1>
       </div>
-      <div class="header-title">${escapeHtml(documentoPadrao.titulo)}</div>
-    </div>
+      <div></div>
+    </header>
   `;
 }
 
 function renderFooter(): string {
+  const ts = new Date().toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
   return `
-    <div class="footer-wrapper">
+    <footer class="print-footer">
       <div>${escapeHtml(documentoPadrao.enderecoUnidade)}</div>
-      <div>${escapeHtml(documentoPadrao.cidadeUnidade)} • ${escapeHtml(documentoPadrao.telefoneUnidade)}</div>
-    </div>
+      <strong>${escapeHtml(documentoPadrao.cidadeUnidade)} | ${escapeHtml(documentoPadrao.telefoneUnidade)}</strong>
+      <div class="print-timestamp">Emitido em ${escapeHtml(ts)}</div>
+    </footer>
   `;
 }
 
