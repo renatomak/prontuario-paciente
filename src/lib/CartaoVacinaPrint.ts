@@ -105,16 +105,16 @@ function renderPaciente(p: Paciente): string {
     <section class="paciente-box">
       <div class="paciente-title">Paciente: ${escapeHtml(p.nome)}</div>
       <div class="grid-2">
-        ${renderField("Cartão SUS", p.cd_usu_cadsus ?? null)}
+        ${renderField("Cartão SUS", p.cartaoSus ?? p.cd_usu_cadsus ?? null)}
         ${renderField("CPF", formatCpf(p.cpf))}
       </div>
       ${renderField("Nome", p.nome)}
-      ${renderField("Nome Social", null)}
+      ${renderField("Nome Social", p.nomeSocial)}
       ${renderField("Nome da Mãe", p.nomeMae)}
       <div class="grid-3">
-        ${renderField("País de Nascimento", null)}
-        ${renderField("UF de Nascimento", null)}
-        ${renderField("Município de Nascimento", null)}
+        ${renderField("País de Nascimento", p.paisNascimento)}
+        ${renderField("UF de Nascimento", p.ufNascimento)}
+        ${renderField("Município de Nascimento", p.municipioNascimento)}
       </div>
       <div class="grid-3">
         ${renderField("Nascimento", formatDateBR(p.dataNascimento))}
@@ -122,8 +122,8 @@ function renderPaciente(p: Paciente): string {
         ${renderField("Sexo", formatSexo(p.sexo))}
       </div>
       <div class="grid-2">
-        ${renderField("Raça", null)}
-        ${renderField("Etnia", null)}
+        ${renderField("Raça", p.raca)}
+        ${renderField("Etnia", p.etnia)}
       </div>
       <div class="endereco-divider"></div>
       <div class="grid-3">
@@ -138,12 +138,12 @@ function renderPaciente(p: Paciente): string {
       </div>
       <div class="grid-2">
         ${renderField("CEP", e?.cep)}
-        ${renderField("País", null)}
+        ${renderField("País", p.paisEndereco)}
       </div>
       <div class="grid-3">
         ${renderField("Telefone", p.telefone)}
-        ${renderField("Tel. de contato", null)}
-        ${renderField("E-mail", null)}
+        ${renderField("Tel. de contato", p.telefoneContato)}
+        ${renderField("E-mail", p.email)}
       </div>
     </section>
   `;
