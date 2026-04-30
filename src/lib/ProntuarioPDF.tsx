@@ -270,7 +270,7 @@ const Field = ({ label, value, flex = 1 }: { label: string; value: string; flex?
 );
 
 const styles = StyleSheet.create({
-  page: { paddingTop: 90, paddingBottom: 75, paddingHorizontal: 32, fontSize: 9, fontFamily: "Helvetica", color: "#111" },
+  page: { paddingTop: 90, paddingBottom: 90, paddingHorizontal: 32, fontSize: 9, fontFamily: "Helvetica", color: "#111" },
   headerContainer: { position: "absolute", top: 16, left: 32, right: 32 },
   headerRow: { flexDirection: "row", alignItems: "center" },
   logo: { width: 60, height: 24, objectFit: "contain" },
@@ -305,7 +305,14 @@ const styles = StyleSheet.create({
   registroDate: { fontSize: 8 },
 
   metaLabel: { fontFamily: "Helvetica-Bold" },
-  conteudo: { fontSize: 8.5, lineHeight: 1.45, marginTop: 2 },
+  conteudo: {
+    fontSize: 8.5,
+    lineHeight: 1.45,
+    marginTop: 2,
+    // Garante quebra de palavras longas dentro do container, evitando estouro lateral
+    wordBreak: "break-word",
+    overflowWrap: "break-word",
+  } as never,
   emptyText: { fontSize: 9, fontStyle: "italic", textAlign: "center", marginTop: 20 },
 
   footer: { position: "absolute", bottom: 16, left: 32, right: 32 },
