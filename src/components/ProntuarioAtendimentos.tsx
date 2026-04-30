@@ -240,10 +240,17 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
                     <div className="flex items-center gap-2 text-xs font-bold text-blue-800 uppercase">
                       <InfoIcon className="h-3.5 w-3.5" /> Detalhes da Solicitação de Internação
                     </div>
-                    <div className="text-sm grid gap-1">
+                    <div className="text-sm grid gap-1.5">
+                      <p><strong>Data de Cadastro:</strong> {formatDateBR(a.aih_detalhes.data_cadastro) || "Não informado"}</p>
                       <p><strong>Diagnóstico Inicial:</strong> {a.aih_detalhes.diagnostico_inicial || "Não informado"}</p>
-                      <p className="text-xs text-muted-foreground italic">
+                      <p className="whitespace-pre-wrap break-words">
                         <strong>Sinais e Sintomas:</strong> {a.aih_detalhes.principais_sinais || "Não informado"}
+                      </p>
+                      <p className="whitespace-pre-wrap break-words">
+                        <strong>Condições que Justificam a Internação:</strong> {a.aih_detalhes.condicoes_internacao || "Não informado"}
+                      </p>
+                      <p className="whitespace-pre-wrap break-words">
+                        <strong>Principais Resultados de Provas Diagnósticas:</strong> {a.aih_detalhes.principais_resultados || "Não informado"}
                       </p>
                     </div>
                   </div>
