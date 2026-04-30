@@ -119,6 +119,7 @@ function renderAtendimentoHeader(a: ApiAtendimento): string {
         ${a.profissional?.nome ? campo("Profissional", `${a.profissional.nome}${conselho}`) : ""}
       </div>
       <div class="atendimento-meta">
+        ${a.possui_aih ? `<span class="aih-badge">AIH SOLICITADA</span>` : ""}
         ${campo("Data Registro", formatDateBR(a.data_chegada))}
         ${a.numero_atendimento ? campo("Nº", a.numero_atendimento) : ""}
         ${a.classificacao_risco ? campo("Risco", a.classificacao_risco) : ""}
@@ -247,6 +248,17 @@ function renderHtml(data: ApiProntuarioResponse, logoBase64?: string): string {
           #prontuario-impressao .atendimento-main h3 { font-size: 13px; font-weight: 700; overflow-wrap: break-word; word-break: break-word; }
           #prontuario-impressao .atendimento-meta { text-align: right; align-items: flex-end; }
           #prontuario-impressao .atendimento-meta .pdf-field { justify-content: flex-end; }
+          #prontuario-impressao .aih-badge {
+            display: inline-block;
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+            font-weight: 700;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            letter-spacing: 0.3px;
+          }
           #prontuario-impressao .aih-section, #prontuario-impressao .registro-section { display: flex; flex-direction: column; gap: 8px; padding: 0 4px 4px; }
           #prontuario-impressao .aih-section h4 { color: #1e40af; font-size: 10px; font-weight: 700; }
           #prontuario-impressao .registro-section { border-top: 1px solid #dedede; padding-top: 8px; }

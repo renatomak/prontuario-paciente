@@ -221,7 +221,7 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
                   </div>
 
                   <div className="flex items-center gap-2 flex-wrap">
-                    {a.possui_aih && <Badge className="bg-blue-600 hover:bg-blue-700">AIH SOLICITADA</Badge>}
+                    {a.possui_aih && <Badge className="bg-green-100 text-green-800 border border-green-300 hover:bg-green-100">AIH SOLICITADA</Badge>}
                     {a.numero_atendimento && <Badge variant="outline">Nº {a.numero_atendimento}</Badge>}
                     {a.classificacao_risco && <Badge variant="outline">{a.classificacao_risco}</Badge>}
 
