@@ -194,12 +194,12 @@ function renderTabelaVacinas(vacinas: VacinaResumo[]): string {
 }
 
 function renderHtml(paciente: Paciente, vacinas: VacinaResumo[], logoBase64?: string): string {
-  const titulo = nomeArquivo(paciente);
+  void paciente;
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<title>${escapeHtml(titulo)}</title>
+<title>Cartão de Vacinação</title>
 <style>
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: #f3f4f6; color: #202020; font-family: Arial, Helvetica, sans-serif; }
