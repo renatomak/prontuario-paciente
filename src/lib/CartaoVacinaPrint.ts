@@ -277,8 +277,8 @@ function renderHtml(paciente: Paciente, vacinas: VacinaResumo[], logoBase64?: st
 
   @media print {
     @page {
-      size: A4 portrait;
-      margin: 14mm 14mm 20mm;
+      size: A4 landscape;
+      margin: 12mm 12mm 18mm;
       @top-left { content: ""; }
       @top-center { content: ""; }
       @top-right { content: ""; }
