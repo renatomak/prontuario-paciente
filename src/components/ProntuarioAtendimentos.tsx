@@ -113,7 +113,15 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
 
       const url = URL.createObjectURL(blob);
       const cpfDigits = (data.paciente.cpf || "").replace(/\D/g, "");
-      const fileName = `prontuario_${cpfDigits || data.paciente.id}.pdf`;
+      const cdUsu = (data.paciente as any).cd_usu_cadsus ?? data.paciente.id;
+      const nomeSan = (data.paciente.nome || "PACIENTE")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // remove acentos
+        .replace(/[^a-zA-Z0-9\s]/g, "") // remove caracteres especiais
+        .trim()
+        .replace(/\s+/g, "_")
+        .toUpperCase();
+      const fileName = `PRONTUARIO_${cdUsu}_${cpfDigits || data.paciente.id}_${nomeSan}.pdf`;
 
       const a = document.createElement("a");
       a.href = url;

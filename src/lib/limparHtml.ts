@@ -95,6 +95,20 @@ export function limparHtml(texto?: string | null): string {
   // Inclui \x00-\x08, \x0B, \x0C, \x0E-\x1F, \x7F
   textoLimpo = textoLimpo.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "");
 
+  // 5.1 Remover entidades HTML residuais que não foram decodificadas
+  // (ex: "&nbsp" sem ;, "&amp" sem ;, ou "&" solto seguido de espaço/fim)
+  textoLimpo = textoLimpo
+    .replace(/&nbsp;?/gi, " ")
+    .replace(/&amp;?/gi, "&")
+    .replace(/&lt;?/gi, "<")
+    .replace(/&gt;?/gi, ">")
+    .replace(/&quot;?/gi, '"')
+    .replace(/&apos;?/gi, "'")
+    // remove qualquer entidade desconhecida residual: &xxxx; ou &xxxx
+    .replace(/&[a-zA-Z]+;?/g, "")
+    // remove "&" solto (não seguido de letra/numero válido)
+    .replace(/&(?![a-zA-Z#0-9])/g, "");
+
   // 6. Normalização de espaços
   return textoLimpo
     .replace(/\u00a0/g, " ")
