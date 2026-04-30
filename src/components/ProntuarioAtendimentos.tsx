@@ -9,6 +9,7 @@ import { gerarProntuarioPdfJs } from "@/lib/ProntuarioPdfJs";
 import {
   fetchProntuarioByPacienteId,
   type ApiProntuarioResponse,
+  type ApiEndereco,
   type ApiRegistro,
   type ApiRegistroConteudo,
 } from "@/lib/prontuarioApi";
@@ -67,7 +68,7 @@ function formatDateBR(dateStr?: string | null): string {
   }
 }
 
-const formatEndereco = (endereco: any): string => {
+const formatEndereco = (endereco: ApiEndereco | null | undefined): string => {
   if (!endereco) return "";
   return [
     endereco.tipo_logradouro,
