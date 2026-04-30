@@ -162,13 +162,12 @@ function renderTabelaVacinas(vacinas: VacinaResumo[]): string {
       (v) => `
       <tr>
         <td class="data">${escapeHtml(formatDateBR(v.dataAplicacao))}</td>
+        <td>${escapeHtml(v.estrategia ?? "--")}</td>
         <td>${escapeHtml(v.nomeVacina ?? "--")}</td>
         <td class="dose">${escapeHtml(v.dose ?? "--")}</td>
-        <td>${escapeHtml(v.estrategia ?? "--")}</td>
-        <td>${escapeHtml(v.laboratorio ?? "--")}</td>
+        <td>${escapeHtml(v.laboratorio ?? "NI")}</td>
+        <td>${escapeHtml(v.lote ?? "--")}</td>
         <td>${escapeHtml(v.estabelecimento ?? "--")}</td>
-        <td>${escapeHtml(v.profissional ?? "--")}</td>
-        <td>${escapeHtml(v.status ?? "--")}</td>
       </tr>
     `,
     )
@@ -178,14 +177,13 @@ function renderTabelaVacinas(vacinas: VacinaResumo[]): string {
     <table class="vacinas-table">
       <thead>
         <tr>
-          <th>Aplicação</th>
-          <th>Imunobiológico</th>
-          <th>Dose</th>
-          <th>Estratégia</th>
-          <th>Laboratório</th>
-          <th>Estab. de Saúde</th>
-          <th>Profissional</th>
-          <th>Status</th>
+          <th class="col-aplic">Aplicação</th>
+          <th class="col-estrat">Estratégia</th>
+          <th class="col-imuno">Imunobiológico</th>
+          <th class="col-dose">Dose</th>
+          <th class="col-lab">Laboratório</th>
+          <th class="col-lote">Lote</th>
+          <th class="col-estab">Estab. de Saúde</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
