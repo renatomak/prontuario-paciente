@@ -131,6 +131,7 @@ const Index = () => {
                 <TabsTrigger value="dados">Dados do Paciente</TabsTrigger>
                 <TabsTrigger value="vacinas">Vacinas ({vacinas.data?.length ?? 0})</TabsTrigger>
                 <TabsTrigger value="prontuarios">Prontuários de Atendimentos</TabsTrigger>
+                <TabsTrigger value="raas">Gerar Arquivo do RAAS</TabsTrigger>
               </TabsList>
               <TabsContent value="dados">
                 <PacienteDados paciente={paciente.data} />
@@ -145,6 +146,9 @@ const Index = () => {
               </TabsContent>
               <TabsContent value="prontuarios">
                 <ProntuarioAtendimentos pacienteId={paciente.data.id} />
+              </TabsContent>
+              <TabsContent value="raas">
+                <RaasArquivos />
               </TabsContent>
             </Tabs>
           </div>
