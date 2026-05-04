@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PacienteDados } from "@/components/PacienteDados";
 import { PacienteHeaderCard } from "@/components/PacienteHeaderCard";
 import { ProntuarioAtendimentos } from "@/components/ProntuarioAtendimentos";
+import { RaasArquivos } from "@/components/RaasArquivos";
 import { VacinasTable } from "@/components/VacinasTable";
 import { VacinaDetalheSheet } from "@/components/VacinaDetalheSheet";
 import { PacientesPickerDialog } from "@/components/PacientesPickerDialog";
@@ -130,6 +131,7 @@ const Index = () => {
                 <TabsTrigger value="dados">Dados do Paciente</TabsTrigger>
                 <TabsTrigger value="vacinas">Vacinas ({vacinas.data?.length ?? 0})</TabsTrigger>
                 <TabsTrigger value="prontuarios">Prontuários de Atendimentos</TabsTrigger>
+                <TabsTrigger value="raas">Gerar Arquivo do RAAS</TabsTrigger>
               </TabsList>
               <TabsContent value="dados">
                 <PacienteDados paciente={paciente.data} />
@@ -144,6 +146,9 @@ const Index = () => {
               </TabsContent>
               <TabsContent value="prontuarios">
                 <ProntuarioAtendimentos pacienteId={paciente.data.id} />
+              </TabsContent>
+              <TabsContent value="raas">
+                <RaasArquivos />
               </TabsContent>
             </Tabs>
           </div>
