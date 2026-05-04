@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PacienteDados } from "@/components/PacienteDados";
 import { PacienteHeaderCard } from "@/components/PacienteHeaderCard";
 import { ProntuarioAtendimentos } from "@/components/ProntuarioAtendimentos";
+import { RaasArquivos } from "@/components/RaasArquivos";
 import { VacinasTable } from "@/components/VacinasTable";
 import { VacinaDetalheSheet } from "@/components/VacinaDetalheSheet";
 import { PacientesPickerDialog } from "@/components/PacientesPickerDialog";
