@@ -90,69 +90,75 @@ const Index = () => {
             <Syringe className="h-5 w-5" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-foreground">Prontuário do Paciente</h1>
-            <p className="text-xs text-muted-foreground">Consulta de pacientes e histórico vacinal</p>
+            <h1 className="text-lg font-bold text-foreground">POC Saúde Goiânia</h1>
+            <p className="text-xs text-muted-foreground">Gerenciamento de pacientes da rede publica</p>
           </div>
         </div>
       </header>
 
+
       <main className="container py-8 space-y-6">
-        <form onSubmit={handleSearch} className="flex gap-2 max-w-3xl flex-wrap">
-          <div className="relative flex-1 min-w-[240px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              value={query}
-              onChange={(e) => handleQueryChange(e.target.value)}
-              placeholder="Buscar por Nome ou CPF (000.000.000-00)..."
-              inputMode="text"
-              maxLength={120}
-              className="pl-10 h-11"
-            />
-          </div>
-          <Button type="submit" disabled={pacienteSearch.isPending} className="h-11 px-6">
-            {pacienteSearch.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Buscar"}
-          </Button>
-          {/* Botão Gerar Prontuário removido */}
-        </form>
-
-        {!pacienteId && !pacienteSearch.isPending && (
-          <div className="text-center py-20 text-muted-foreground">
-            <Syringe className="h-12 w-12 mx-auto mb-4 opacity-30" />
-            <p>Digite um nome ou CPF para iniciar a consulta.</p>
-            <p className="text-xs mt-2">Ex.: <code className="bg-muted px-2 py-0.5 rounded">ALEXANDRE</code> ou <code className="bg-muted px-2 py-0.5 rounded">12345678901</code></p>
-          </div>
-        )}
-
-        {paciente.data && (
-          <div className="space-y-4">
-            <PacienteHeaderCard paciente={paciente.data} />
-            <Tabs defaultValue="dados" className="space-y-4">
-              <TabsList>
-                <TabsTrigger value="dados">Dados do Paciente</TabsTrigger>
-                <TabsTrigger value="vacinas">Vacinas ({vacinas.data?.length ?? 0})</TabsTrigger>
-                <TabsTrigger value="prontuarios">Prontuários de Atendimentos</TabsTrigger>
-                <TabsTrigger value="raas">Gerar Arquivo do RAAS</TabsTrigger>
-              </TabsList>
-              <TabsContent value="dados">
-                <PacienteDados paciente={paciente.data} />
-              </TabsContent>
-              <TabsContent value="vacinas">
-                <VacinasTable
-                  vacinas={vacinas.data || []}
-                  selectedId={selectedVacina ?? undefined}
-                  onSelect={(id) => { setSelectedVacina(id); setSheetOpen(true); }}
-                  paciente={paciente.data}
+        <Tabs defaultValue="paciente" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="paciente">Paciente</TabsTrigger>
+            <TabsTrigger value="raas">Gerar Arquivo do RAAS</TabsTrigger>
+          </TabsList>
+          <TabsContent value="paciente">
+            {/* Conteúdo da aba Paciente: pode incluir busca, dados, etc. */}
+            <form onSubmit={handleSearch} className="flex gap-2 max-w-3xl flex-wrap">
+              <div className="relative flex-1 min-w-[240px]">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  value={query}
+                  onChange={(e) => handleQueryChange(e.target.value)}
+                  placeholder="Buscar por Nome ou CPF (000.000.000-00)..."
+                  inputMode="text"
+                  maxLength={120}
+                  className="pl-10 h-11"
                 />
-              </TabsContent>
-              <TabsContent value="prontuarios">
-                <ProntuarioAtendimentos pacienteId={paciente.data.id} />
-              </TabsContent>
-              <TabsContent value="raas">
-                <RaasArquivos />
-              </TabsContent>
-            </Tabs>
-          </div>
-        )}
+              </div>
+              <Button type="submit" disabled={pacienteSearch.isPending} className="h-11 px-6">
+                {pacienteSearch.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Buscar"}
+              </Button>
+            </form>
+            {!pacienteId && !pacienteSearch.isPending && (
+              <div className="text-center py-20 text-muted-foreground">
+                <Syringe className="h-12 w-12 mx-auto mb-4 opacity-30" />
+                <p>Digite um nome ou CPF para iniciar a consulta.</p>
+                <p className="text-xs mt-2">Ex.: <code className="bg-muted px-2 py-0.5 rounded">ALEXANDRE</code> ou <code className="bg-muted px-2 py-0.5 rounded">12345678901</code></p>
+              </div>
+            )}
+            {paciente.data && (
+              <div className="space-y-4">
+                <PacienteHeaderCard paciente={paciente.data} />
+                <Tabs defaultValue="dados" className="space-y-4">
+                  <TabsList>
+                    <TabsTrigger value="dados">Dados do Paciente</TabsTrigger>
+                    <TabsTrigger value="vacinas">Vacinas ({vacinas.data?.length ?? 0})</TabsTrigger>
+                    <TabsTrigger value="prontuarios">Prontuários de Atendimentos</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="dados">
+                    <PacienteDados paciente={paciente.data} />
+                  </TabsContent>
+                  <TabsContent value="vacinas">
+                    <VacinasTable
+                      vacinas={vacinas.data || []}
+                      selectedId={selectedVacina ?? undefined}
+                      onSelect={(id) => { setSelectedVacina(id); setSheetOpen(true); }}
+                      paciente={paciente.data}
+                    />
+                  </TabsContent>
+                  <TabsContent value="prontuarios">
+                    <ProntuarioAtendimentos pacienteId={paciente.data.id} />
+                  </TabsContent>
+                </Tabs>
+              </div>
+            )}
+          </TabsContent>
+          <TabsContent value="raas">
+            <RaasArquivos />
+          </TabsContent>
+        </Tabs>
       </main>
 
       {picker && (
