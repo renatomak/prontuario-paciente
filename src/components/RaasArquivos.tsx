@@ -37,32 +37,26 @@ import { httpClient } from "@/shared/http";
 
 interface RaasArquivo {
   id: number;
-  mes: string;
+  mes: number;
   ano: number;
   dataGeracao: string;
-  unidade: string | null;
-  situacao: string;
-  folhas: number;
+  codigoEmpresa: string | null;
+  nomeEmpresa: string | null;
+  path: string;
+  status: string;
+  totalFolha: number;
 }
 
-// Resposta esperada (paginada estilo Spring Page)
+// Resposta esperada do novo endpoint
 interface RaasArquivoApi {
-  id?: number;
-  mes?: string | number;
-  ano?: number;
-  dataGeracao?: string;
-  data_geracao?: string;
-  unidade?: string | null;
-  situacao?: string;
-  folhas?: number;
-  paginas?: number;
-}
-interface PageResponse<T> {
-  content?: T[];
-  totalElements?: number;
-  totalPages?: number;
-  number?: number;
-  size?: number;
+  mes: number;
+  ano: number;
+  data_geracao: string;
+  codigo_empresa: string | null;
+  nome_empresa: string | null;
+  path: string;
+  status: string;
+  total_folha: number;
 }
 
 const MESES = [
@@ -111,33 +105,24 @@ export function RaasArquivos() {
   async function carregar() {
     setLoading(true);
     try {
-      const base = getApiBaseUrl();
-      const url = new URL(`${base}/api/raas-psi/arquivos`);
-      url.searchParams.set("competencia", competencia);
-      url.searchParams.set("unidade", unidade);
-      url.searchParams.set("situacao", situacao);
-      url.searchParams.set("page", "0");
-      url.searchParams.set("size", "1000");
+      // Endpoint fixo para testes
+      const url = "http://localhost:8081/api/v1/raas";
+      const resp = await httpClient<RaasArquivoApi[]>(url, { method: "GET" });
 
-      const resp = await httpClient<PageResponse<RaasArquivoApi> | RaasArquivoApi[]>(url.toString(), {
-        method: "GET",
-      });
-
-      const list: RaasArquivoApi[] = Array.isArray(resp) ? resp : (resp.content ?? []);
-      const total = Array.isArray(resp) ? list.length : (resp.totalElements ?? list.length);
-
-      const mapped: RaasArquivo[] = list.map((r, i) => ({
-        id: r.id ?? i,
-        mes: nomeMes(r.mes),
-        ano: Number(r.ano ?? 0),
-        dataGeracao: String(r.dataGeracao ?? r.data_geracao ?? ""),
-        unidade: r.unidade ?? null,
-        situacao: String(r.situacao ?? ""),
-        folhas: Number(r.folhas ?? r.paginas ?? 0),
+      const mapped: RaasArquivo[] = resp.map((r, i) => ({
+        id: i,
+        mes: r.mes,
+        ano: r.ano,
+        dataGeracao: r.data_geracao,
+        codigoEmpresa: r.codigo_empresa,
+        nomeEmpresa: r.nome_empresa,
+        path: r.path,
+        status: r.status,
+        totalFolha: r.total_folha,
       }));
 
       setArquivos(mapped);
-      setTotalElements(total);
+      setTotalElements(mapped.length);
       setPage(0);
       setCarregado(true);
     } catch (err) {
@@ -262,12 +247,12 @@ export function RaasArquivos() {
                         </Button>
                       </div>
                     </TableCell>
-                    <TableCell className="font-medium">{a.mes}</TableCell>
+                    <TableCell className="font-medium">{nomeMes(a.mes)}</TableCell>
                     <TableCell>{a.ano}</TableCell>
                     <TableCell>{a.dataGeracao}</TableCell>
-                    <TableCell className="text-muted-foreground">{a.unidade ?? "—"}</TableCell>
-                    <TableCell>{situacaoBadge(a.situacao)}</TableCell>
-                    <TableCell className="text-right tabular-nums">{a.folhas.toLocaleString("pt-BR")}</TableCell>
+                    <TableCell className="text-muted-foreground">{a.nomeEmpresa ?? "—"}</TableCell>
+                    <TableCell>{a.status}</TableCell>
+                    <TableCell className="text-right tabular-nums">{a.totalFolha.toLocaleString("pt-BR")}</TableCell>
                   </TableRow>
                 ))}
             </TableBody>
