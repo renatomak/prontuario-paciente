@@ -2,7 +2,7 @@ import type { VacinaResumo } from "@/features/vacina/domain/schemas";
 import type { Paciente } from "@/features/paciente/domain/schemas";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
 import { Search, FileDown, Syringe, RefreshCw, Calendar, Building2, User, FlaskConical } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { imprimirCartaoVacinacao } from "@/lib/CartaoVacinaPrint";

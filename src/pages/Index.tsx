@@ -3,7 +3,7 @@ import type { PacienteResumo } from "@/features/paciente/domain/schemas";
 import { useBuscarPaciente } from "@/features/paciente/hooks/useBuscarPaciente";
 import { useCarregarPaciente } from "@/features/paciente/hooks/useCarregarPaciente";
 import { useListarVacinas } from "@/features/vacina/hooks/useListarVacinas";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PacienteDados } from "@/features/paciente/components/PacienteDados";

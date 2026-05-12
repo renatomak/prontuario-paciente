@@ -11,7 +11,4 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
-// Exportar como default e nomeado para compatibilidade
 export default Button;
-export { Button, buttonVariants };
-export type { ButtonProps };
