@@ -1,22 +1,19 @@
 import { useState } from "react";
-import { Paciente, PacienteResumo } from "@/domain/models";
-import { usePacienteSearch } from "../ui/hooks/usePacienteSearch";
-import { usePaciente } from "../ui/hooks/usePaciente";
-import { useVacinas } from "../ui/hooks/useVacinas";
-import { useProntuario } from "../ui/hooks/useProntuario";
-// import { gerarProntuarioPdf } from "@/lib/prontuarioPdf";
-// import { fetchProntuarioByPacienteId } from "@/lib/prontuarioApi";
+import type { PacienteResumo } from "@/features/paciente/domain/schemas";
+import { useBuscarPaciente } from "@/features/paciente/hooks/useBuscarPaciente";
+import { useCarregarPaciente } from "@/features/paciente/hooks/useCarregarPaciente";
+import { useListarVacinas } from "@/features/vacina/hooks/useListarVacinas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PacienteDados } from "@/components/PacienteDados";
-import { PacienteHeaderCard } from "@/components/PacienteHeaderCard";
-import { ProntuarioAtendimentos } from "@/components/ProntuarioAtendimentos";
+import { PacienteDados } from "@/features/paciente/components/PacienteDados";
+import { PacienteHeaderCard } from "@/features/paciente/components/PacienteHeaderCard";
+import { PacientesPickerDialog } from "@/features/paciente/components/PacientesPickerDialog";
+import { ProntuarioAtendimentos } from "@/features/prontuario/components/ProntuarioAtendimentos";
 import { RaasArquivos } from "@/features/raas/components/RaasArquivos";
-import { VacinasTable } from "@/components/VacinasTable";
-import { VacinaDetalheSheet } from "@/components/VacinaDetalheSheet";
-import { PacientesPickerDialog } from "@/components/PacientesPickerDialog";
-import { Search, Loader2, Syringe, FileDown } from "lucide-react";
+import { VacinasTable } from "@/features/vacina/components/VacinasTable";
+import { VacinaDetalheSheet } from "@/features/vacina/components/VacinaDetalheSheet";
+import { Search, Loader2, Syringe } from "lucide-react";
 import { toast } from "sonner";
 
 const Index = () => {
@@ -27,10 +24,9 @@ const Index = () => {
   const [selectedVacina, setSelectedVacina] = useState<number | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  const pacienteSearch = usePacienteSearch();
-  const paciente = usePaciente(pacienteId ?? 0, !!pacienteId && !picker);
-  const vacinas = useVacinas(pacienteId ?? 0, !!pacienteId && !picker);
-  const prontuario = useProntuario();
+  const pacienteSearch = useBuscarPaciente();
+  const paciente = useCarregarPaciente(pacienteId ?? 0, !!pacienteId && !picker);
+  const vacinas = useListarVacinas(pacienteId ?? 0, !!pacienteId && !picker);
 
   // Removido: função htmlToText usada apenas para PDF
 

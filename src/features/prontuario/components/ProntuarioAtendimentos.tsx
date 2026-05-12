@@ -1,0 +1,292 @@
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Download, Loader2, FileText, MapPin, User, Calendar, Stethoscope, AlertCircle, Info as InfoIcon } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { getLogoBase64 } from "@/lib/logoGoiania";
+import { imprimirProntuario } from "@/lib/ProntuarioPrint";
+import { useObterProntuario } from "@/features/prontuario/hooks/useObterProntuario";
+import type {
+  ApiProntuarioResponse,
+  ApiEndereco,
+  ApiRegistro,
+  ApiRegistroConteudo,
+} from "@/lib/prontuarioApi";
+
+interface Props {
+  pacienteId: number;
+}
+
+// ==================== FUNÇÕES UTILITÁRIAS ====================
+
+function htmlToText(html?: string | null): string {
+  if (!html) return "";
+  const withBreaks = html
+    .replace(/<\s*br\s*\/?\s*>/gi, "\n")
+    .replace(/<\/\s*(p|div|li|tr|h[1-6])\s*>/gi, "\n")
+    .replace(/<\s*li\s*[^>]*>/gi, "• ");
+  const tmp = document.createElement("div");
+  tmp.innerHTML = withBreaks;
+  const text = tmp.textContent || tmp.innerText || "";
+  return text
+    .replace(/\u00a0/g, " ")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .replace(/[ \t]{2,}/g, " ")
+    .trim();
+}
+
+interface Bloco { label: string; texto: string; }
+
+function blocosConteudo(c: ApiRegistroConteudo): Bloco[] {
+  const out: Bloco[] = [];
+  const av = htmlToText(c.avaliacao);
+  const ev = htmlToText(c.evolucao);
+  const ex = htmlToText(c.exame);
+  if (av) out.push({ label: "Avaliação", texto: av });
+  if (ev) out.push({ label: "Evolução", texto: ev });
+  if (ex) out.push({ label: "Exame", texto: ex });
+  return out;
+}
+
+// Formata data ISO ou com T para formato brasileiro legível
+function formatDateBR(dateStr?: string | null): string {
+  if (!dateStr) return "";
+  if (dateStr.includes("/")) return dateStr;
+
+  try {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return dateStr;
+    return date.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  } catch {
+    return dateStr;
+  }
+}
+
+const formatEndereco = (endereco: ApiEndereco | null | undefined): string => {
+  if (!endereco) return "";
+  return [
+    endereco.tipo_logradouro,
+    endereco.logradouro,
+    endereco.numero !== "00" ? endereco.numero : null,
+    endereco.complemento,
+    endereco.bairro,
+    endereco.cidade && `${endereco.cidade} - ${endereco.uf ?? ""}`,
+  ].filter(Boolean).join(", ");
+};
+
+export function ProntuarioAtendimentos({ pacienteId }: Props) {
+  const query = useObterProntuario(pacienteId);
+  const data = (query.data ?? null) as ApiProntuarioResponse | null;
+  const loading = query.isLoading;
+  const error = query.error
+    ? query.error instanceof Error
+      ? query.error.message
+      : "Falha ao carregar prontuário."
+    : null;
+  const [downloading, setDownloading] = useState(false);
+  async function handleDownload() {
+    if (!data) return;
+    try {
+      setDownloading(true);
+      const logoBase64 = await getLogoBase64();
+      imprimirProntuario(data, logoBase64);
+
+      toast.success("Janela de impressão aberta. Use 'Salvar como PDF' para baixar.");
+    } catch (err) {
+      console.error("Erro ao gerar PDF:", err);
+      toast.error("Falha ao abrir impressão do prontuário.");
+    } finally {
+      setDownloading(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16 text-muted-foreground gap-2">
+        <Loader2 className="h-5 w-5 animate-spin" />
+        Carregando prontuário...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-start gap-3 rounded-md border border-destructive/40 bg-destructive/5 p-4 text-sm">
+        <AlertCircle className="h-4 w-4 mt-0.5 text-destructive" />
+        <div>
+          <p className="font-medium text-destructive">Não foi possível carregar o prontuário</p>
+          <p className="text-muted-foreground">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) return null;
+
+  const { paciente, atendimentos } = data;
+  const totalRegistros = atendimentos.reduce((acc, a) => acc + (a.registros?.length ?? 0), 0);
+  const enderecoStr = formatEndereco(paciente.endereco);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div>
+          <h2 className="text-lg font-semibold flex items-center gap-2">
+            <FileText className="h-5 w-5 text-primary" />
+            Prontuário de Atendimentos
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            {atendimentos.length} atendimento{atendimentos.length === 1 ? "" : "s"} • {totalRegistros}{" "}
+            registro{totalRegistros === 1 ? "" : "s"}
+          </p>
+        </div>
+
+        <Button onClick={handleDownload} disabled={downloading} className="gap-2">
+          {downloading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+          Baixar PDF
+        </Button>
+      </div>
+
+      <Card className="bg-muted/30">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm">Paciente</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-2 text-sm sm:grid-cols-2">
+          <Info label="Nome" value={paciente.nome} />
+          <Info label="CPF" value={paciente.cpf ?? ""} />
+          <Info label="Dt. Nascimento" value={paciente.data_nascimento ?? ""} />
+          <Info label="Sexo" value={paciente.sexo ?? ""} />
+          <Info label="Mãe" value={paciente.nome_mae ?? ""} />
+          <Info label="Telefone" value={paciente.telefone ?? ""} />
+          <Info label="Endereço" value={enderecoStr} />
+        </CardContent>
+      </Card>
+
+      <div className="space-y-3">
+        {atendimentos.length === 0 && (
+          <p className="text-sm text-muted-foreground italic text-center py-8">
+            Nenhum atendimento registrado.
+          </p>
+        )}
+
+        {atendimentos.map((a, idx) => {
+          const prof = a.profissional;
+          return (
+            <Card key={idx}>
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between gap-3 flex-wrap">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 text-sm font-medium">
+                      <MapPin className="h-4 w-4 text-primary" />
+                      {a.unidade?.nome}
+                      {a.unidade?.telefone && <span className="text-xs text-muted-foreground">({a.unidade.telefone})</span>}
+                    </div>
+                    {a.tipo_atendimento && (
+                      <div className="text-xs text-muted-foreground">{a.tipo_atendimento}</div>
+                    )}
+                    {prof?.nome && (
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
+                        <User className="h-3.5 w-3.5" />
+                        <span className="font-medium">{prof.nome}</span>
+                        {prof.tipo_conselho && prof.registro && (
+                          <span>({prof.tipo_conselho}: {prof.registro})</span>
+                        )}
+                        {prof.cbo_descricao && (
+                          <span className="inline-flex items-center gap-1">
+                            <Stethoscope className="h-3 w-3" />
+                            {prof.cbo_descricao}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {a.possui_aih && <Badge className="bg-green-100 text-green-800 border border-green-300 hover:bg-green-100">AIH SOLICITADA</Badge>}
+                    {a.numero_atendimento && <Badge variant="outline">Nº {a.numero_atendimento}</Badge>}
+                    {a.classificacao_risco && <Badge variant="outline">{a.classificacao_risco}</Badge>}
+
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <Calendar className="h-3.5 w-3.5" />
+                      {formatDateBR(a.data_chegada)}
+                    </div>
+                  </div>
+                </div>
+              </CardHeader>
+
+              <CardContent className="pt-0 space-y-3">
+                {/* Bloco AIH na tela */}
+                {a.possui_aih && a.aih_detalhes && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-2 space-y-1.5">
+                    <div className="flex items-center gap-2 text-xs font-bold text-blue-800 uppercase">
+                      <InfoIcon className="h-3.5 w-3.5" /> Detalhes da Solicitação de Internação
+                    </div>
+                    <div className="text-sm grid gap-1.5">
+                      <p><strong>Data de Cadastro:</strong> {formatDateBR(a.aih_detalhes.data_cadastro) || "Não informado"}</p>
+                      <p><strong>Diagnóstico Inicial:</strong> {a.aih_detalhes.diagnostico_inicial || "Não informado"}</p>
+                      <p className="whitespace-pre-wrap break-words">
+                        <strong>Sinais e Sintomas:</strong> {a.aih_detalhes.principais_sinais || "Não informado"}
+                      </p>
+                      <p className="whitespace-pre-wrap break-words">
+                        <strong>Condições que Justificam a Internação:</strong> {a.aih_detalhes.condicoes_internacao || "Não informado"}
+                      </p>
+                      <p className="whitespace-pre-wrap break-words">
+                        <strong>Principais Resultados de Provas Diagnósticas:</strong> {a.aih_detalhes.principais_resultados || "Não informado"}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {(a.registros ?? []).length === 0 && !a.possui_aih && (
+                  <p className="text-xs italic text-muted-foreground">(Sem registros clínicos)</p>
+                )}
+
+                {a.registros?.map((r: ApiRegistro, ri) => {
+                  const blocos = blocosConteudo(r.conteudo);
+                  return (
+                    <div key={ri} className="rounded-md border border-border/60 bg-card p-3 space-y-2">
+                      <div className="flex items-start justify-between gap-2 flex-wrap">
+                        <Badge variant="secondary">{r.tipo}</Badge>
+                        <span className="text-xs text-muted-foreground">{formatDateBR(r.data)}</span>
+                      </div>
+
+                      {blocos.length > 0 ? (
+                        <div className="space-y-2">
+                          {blocos.map((b, bi) => (
+                            <div key={bi} className="space-y-0.5">
+                              <p className="text-xs font-semibold text-muted-foreground">{b.label}</p>
+                              <p className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap">
+                                {b.texto}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-xs italic text-muted-foreground">(Sem conteúdo)</p>
+                      )}
+                    </div>
+                  );
+                })}
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function Info({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex gap-2">
+      <span className="font-medium text-muted-foreground min-w-[110px]">{label}:</span>
+      <span className="text-foreground">{value || "—"}</span>
+    </div>
+  );
+}
