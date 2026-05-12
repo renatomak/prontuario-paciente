@@ -1,4 +1,4 @@
-import { Paciente } from "@/lib/api";
+import { Paciente } from "@/features/paciente/domain/schemas";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";

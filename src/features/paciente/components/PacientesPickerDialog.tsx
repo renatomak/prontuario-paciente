@@ -1,4 +1,4 @@
-import { PacienteResumo } from "@/lib/api";
+import { PacienteResumo } from "@/features/paciente/domain/schemas";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface Props {
