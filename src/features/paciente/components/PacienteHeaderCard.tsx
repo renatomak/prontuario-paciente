@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
 interface Props {
-  paciente: Paciente;
+  paciente: PacienteResponse;
 }
 
 function formatCpf(cpf: string | null | undefined) {
@@ -12,13 +12,6 @@ function formatCpf(cpf: string | null | undefined) {
   const d = cpf.replace(/\D/g, "");
   if (d.length !== 11) return cpf;
   return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6, 9)}-${d.slice(9)}`;
-}
-
-function fmtDate(d: string | null | undefined) {
-  if (!d) return "";
-  const [y, m, day] = d.split("-");
-  if (!y || !m || !day) return d;
-  return `${day}/${m}/${y}`;
 }
 
 export function PacienteHeaderCard({ paciente }: Props) {
@@ -35,7 +28,7 @@ export function PacienteHeaderCard({ paciente }: Props) {
         </div>
         <div className="space-y-1.5">
           <Label className="text-xs text-muted-foreground">Data de Nascimento</Label>
-          <Input value={fmtDate(paciente.dataNascimento)} readOnly className="bg-muted/50" />
+          <Input value={paciente.dataNascimento ?? ""} readOnly className="bg-muted/50" />
         </div>
       </div>
     </Card>

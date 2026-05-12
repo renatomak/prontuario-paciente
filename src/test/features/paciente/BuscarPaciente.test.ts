@@ -27,12 +27,6 @@ describe("PacienteMapper", () => {
     expect(dominio.dataNascimento).toBe("1990-05-10");
     expect(dominio.endereco?.logradouro).toBe("RUA A");
   });
-
-  it("deveCalcularIdadeQuandoNaoVierDoBackend", () => {
-    const dto = new PacienteProjectionBuilder().build();
-    const dominio = PacienteMapper.toDomain(dto);
-    expect(dominio.idade).toMatch(/\d+ anos/);
-  });
 });
 
 describe("BuscarPaciente (caso de uso)", () => {

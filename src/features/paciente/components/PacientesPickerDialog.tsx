@@ -2,16 +2,10 @@ import type { PacienteResumoResponse } from "@/features/paciente/domain/schemas"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface Props {
-  pacientes: PacienteResumo[];
+  pacientes: PacienteResumoResponse[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSelect: (id: number) => void;
-}
-
-function fmtDate(d: string | null) {
-  if (!d) return "—";
-  const [y, m, day] = d.split("-");
-  return `${day}/${m}/${y}`;
 }
 
 export function PacientesPickerDialog({ pacientes, open, onOpenChange, onSelect }: Props) {
@@ -30,8 +24,8 @@ export function PacientesPickerDialog({ pacientes, open, onOpenChange, onSelect 
             >
               <div className="font-medium text-foreground">{p.nome}</div>
               <div className="text-xs text-muted-foreground mt-1 flex gap-4">
-                <span>CPF: {p.cpf ?? "—"}</span>
-                <span>Nasc.: {fmtDate(p.dataNascimento)}</span>
+                <span>CPF: {p.cpf ?? "\u2014"}</span>
+                <span>Nasc.: {p.dataNascimento ?? "\u2014"}</span>
               </div>
             </button>
           ))}

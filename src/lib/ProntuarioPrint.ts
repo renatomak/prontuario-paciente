@@ -27,13 +27,6 @@ function escapeHtml(value?: string | number | null): string {
     .replace(/'/g, "&#39;");
 }
 
-function formatDateBR(dateStr?: string | null): string {
-  if (!dateStr) return "";
-  if (dateStr.includes("/")) return dateStr;
-  const date = new Date(dateStr);
-  return Number.isNaN(date.getTime()) ? dateStr : date.toLocaleDateString("pt-BR");
-}
-
 function formatEndereco(endereco?: ProntuarioEndereco | null): string {
   if (!endereco) return "";
   return [
@@ -127,7 +120,7 @@ function renderAtendimentoHeader(a: ProntuarioAtendimento): string {
       </div>
       <div class="atendimento-meta">
         ${a.possuiAih ? `<span class="aih-badge">AIH SOLICITADA</span>` : ""}
-        ${campo("Data Registro", formatDateBR(dataRegistro))}
+        ${campo("Data Registro", dataRegistro)}
         ${a.numeroAtendimento ? campo("Nº", a.numeroAtendimento) : ""}
         ${a.classificacaoRisco ? campo("Risco", a.classificacaoRisco) : ""}
       </div>
@@ -143,7 +136,7 @@ function renderAtendimento(a: ProntuarioAtendimento): string {
         <h4>DETALHES DA SOLICITAÇÃO DE INTERNAÇÃO</h4>
         <div class="content-block">
           <span class="content-label">Data de Cadastro:</span>
-          <div class="content-value">${escapeHtml(formatDateBR(a.aihDetalhes.dataCadastro) || "Não informado")}</div>
+          <div class="content-value">${escapeHtml(a.aihDetalhes.dataCadastro || "Não informado")}</div>
         </div>
         <div class="content-block">
           <span class="content-label">Diagnóstico Inicial:</span>
@@ -172,7 +165,7 @@ function renderAtendimento(a: ProntuarioAtendimento): string {
           <section class="registro-section pdf-section">
             <div class="registro-header">
               <strong>Tipo: ${escapeHtml(registro.tipo || "—")}</strong>
-              <span>${escapeHtml(formatDateBR(registro.data))}</span>
+              <span>${escapeHtml(registro.data)}</span>
             </div>
             ${blocos.length > 0
               ? blocos.map((b) => `

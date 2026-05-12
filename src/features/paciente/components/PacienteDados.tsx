@@ -1,24 +1,14 @@
 import type { PacienteResponse } from "@/features/paciente/domain/schemas";
 import { Card } from "@/components/ui/card";
 
-interface Props { paciente: Paciente }
-
-function fmtDateBR(d: string | null) {
-  if (!d) return "";
-  // Já está no formato DD/MM/YYYY
-  if (/^\d{1,2}\/\d{1,2}\/\d{4}/.test(d)) return d;
-  // ISO YYYY-MM-DD
-  const [y, m, day] = d.split("-");
-  if (!y || !m || !day) return d;
-  return `${day}/${m}/${y}`;
-}
+interface Props { paciente: PacienteResponse }
 
 function Field({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
       <span className="text-xs uppercase tracking-wide text-muted-foreground">{label}</span>
       <span className="text-sm font-medium text-foreground min-h-5 border-b border-border/60 pb-1">
-        {value || "—"}
+        {value || "\u2014"}
       </span>
     </div>
   );
@@ -35,8 +25,8 @@ export function PacienteDados({ paciente }: Props) {
           <Field label="Idade" value={paciente.idade} />
           <Field label="CPF" value={paciente.cpf} />
           <Field label="Sexo" value={paciente.sexo} />
-          <Field label="Data de Nascimento" value={fmtDateBR(paciente.dataNascimento)} />
-          <Field label="Nome da Mãe" value={paciente.nomeMae} />
+          <Field label="Data de Nascimento" value={paciente.dataNascimento} />
+          <Field label="Nome da Mae" value={paciente.nomeMae} />
           <Field label="Nome do Pai" value={paciente.nomePai} />
           <Field label="Telefone" value={paciente.telefone} />
         </div>
@@ -44,13 +34,13 @@ export function PacienteDados({ paciente }: Props) {
 
       {e && (
         <Card className="p-6 shadow-sm">
-          <h3 className="text-sm font-semibold text-primary mb-4 uppercase tracking-wider">Endereço</h3>
+          <h3 className="text-sm font-semibold text-primary mb-4 uppercase tracking-wider">Endereco</h3>
           <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
             <div className="md:col-span-3">
               <Field label="Logradouro" value={`${e.tipoLogradouro ?? ""} ${e.logradouro ?? ""}`.trim()} />
             </div>
             <div className="md:col-span-1">
-              <Field label="Número" value={e.numero} />
+              <Field label="Numero" value={e.numero} />
             </div>
             <div className="md:col-span-2">
               <Field label="Bairro" value={e.bairro} />

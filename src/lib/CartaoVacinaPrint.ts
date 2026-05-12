@@ -20,15 +20,6 @@ function escapeHtml(value?: string | number | null): string {
     .replace(/'/g, "&#39;");
 }
 
-function formatDateBR(dateStr?: string | null): string {
-  if (!dateStr) return "";
-  if (/^\d{2}\/\d{2}\/\d{4}/.test(dateStr)) return dateStr.slice(0, 10);
-  const m = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (m) return `${m[3]}/${m[2]}/${m[1]}`;
-  const d = new Date(dateStr);
-  return Number.isNaN(d.getTime()) ? dateStr : d.toLocaleDateString("pt-BR");
-}
-
 function formatCpf(cpf?: string | null): string {
   if (!cpf) return "—";
   const digits = cpf.replace(/\D/g, "");
@@ -44,13 +35,13 @@ function formatSexo(s?: string | null): string {
   return s;
 }
 
-function formatEnderecoLogradouro(p: Paciente): string {
+function formatEnderecoLogradouro(p: PacienteResponse): string {
   const e = p.endereco;
   if (!e) return "—";
   return [e.tipoLogradouro, e.logradouro].filter(Boolean).join(" ") || "—";
 }
 
-export function nomeArquivoCartaoVacinacao(p: Paciente): string {
+export function nomeArquivoCartaoVacinacao(p: PacienteResponse): string {
   const cpfDigits = (p.cpf || "").replace(/\D/g, "");
   const nomeSan = (p.nome || "PACIENTE")
     .normalize("NFD")
@@ -104,7 +95,7 @@ function renderField(label: string, value?: string | number | null): string {
   `;
 }
 
-function renderPaciente(p: Paciente): string {
+function renderPaciente(p: PacienteResponse): string {
   const e = p.endereco;
   return `
     <section class="paciente-box">
@@ -122,7 +113,7 @@ function renderPaciente(p: Paciente): string {
         ${renderField("Município de Nascimento", p.municipioNascimento)}
       </div>
       <div class="grid-3">
-        ${renderField("Nascimento", formatDateBR(p.dataNascimento))}
+        ${renderField("Nascimento", p.dataNascimento)}
         ${renderField("Idade", p.idade)}
         ${renderField("Sexo", formatSexo(p.sexo))}
       </div>
@@ -154,7 +145,7 @@ function renderPaciente(p: Paciente): string {
   `;
 }
 
-function renderTabelaVacinas(vacinas: VacinaResumo[]): string {
+function renderTabelaVacinas(vacinas: VacinaResumoResponse[]): string {
   if (!vacinas.length) {
     return `<div class="vazio">Nenhuma vacina registrada para este paciente.</div>`;
   }
@@ -162,7 +153,7 @@ function renderTabelaVacinas(vacinas: VacinaResumo[]): string {
     .map(
       (v) => `
       <tr>
-        <td class="data">${escapeHtml(formatDateBR(v.dataAplicacao))}</td>
+        <td class="data">${escapeHtml(v.dataAplicacao)}</td>
         <td>${escapeHtml(v.estrategia ?? "--")}</td>
         <td>${escapeHtml(v.nomeVacina ?? "--")}</td>
         <td class="dose">${escapeHtml(v.dose ?? "--")}</td>
@@ -192,7 +183,7 @@ function renderTabelaVacinas(vacinas: VacinaResumo[]): string {
   `;
 }
 
-function renderHtml(paciente: Paciente, vacinas: VacinaResumo[], logoBase64?: string): string {
+function renderHtml(paciente: PacienteResponse, vacinas: VacinaResumoResponse[], logoBase64?: string): string {
   const tituloArquivo = nomeArquivoCartaoVacinacao(paciente);
 
   return `<!DOCTYPE html>
@@ -332,8 +323,8 @@ function renderHtml(paciente: Paciente, vacinas: VacinaResumo[], logoBase64?: st
 }
 
 export function imprimirCartaoVacinacao(
-  paciente: Paciente,
-  vacinas: VacinaResumo[],
+  paciente: PacienteResponse,
+  vacinas: VacinaResumoResponse[],
   logoBase64?: string,
 ): void {
   const printWindow = window.open("", "_blank", "width=1024,height=768");

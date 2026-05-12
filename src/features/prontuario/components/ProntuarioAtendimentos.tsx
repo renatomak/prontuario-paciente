@@ -48,22 +48,6 @@ function blocosConteudo(c: ProntuarioRegistroConteudo): Bloco[] {
   return out;
 }
 
-function formatDateBR(dateStr?: string | null): string {
-  if (!dateStr) return "";
-  if (dateStr.includes("/")) return dateStr;
-  try {
-    const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return dateStr;
-    return date.toLocaleDateString("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  } catch {
-    return dateStr;
-  }
-}
-
 const formatEndereco = (endereco: ProntuarioEndereco | null | undefined): string => {
   if (!endereco) return "";
   return [
@@ -210,7 +194,7 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
 
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Calendar className="h-3.5 w-3.5" />
-                      {formatDateBR(a.dataChegada)}
+                      {a.dataChegada}
                     </div>
                   </div>
                 </div>
@@ -223,7 +207,7 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
                       <InfoIcon className="h-3.5 w-3.5" /> Detalhes da Solicitacao de Internacao
                     </div>
                     <div className="text-sm grid gap-1.5">
-                      <p><strong>Data de Cadastro:</strong> {formatDateBR(a.aihDetalhes.dataCadastro) || "Nao informado"}</p>
+                      <p><strong>Data de Cadastro:</strong> {a.aihDetalhes.dataCadastro || "Nao informado"}</p>
                       <p><strong>Diagnostico Inicial:</strong> {a.aihDetalhes.diagnosticoInicial || "Nao informado"}</p>
                       <p className="whitespace-pre-wrap break-words">
                         <strong>Sinais e Sintomas:</strong> {a.aihDetalhes.principaisSinais || "Nao informado"}
@@ -248,7 +232,7 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
                     <div key={ri} className="rounded-md border border-border/60 bg-card p-3 space-y-2">
                       <div className="flex items-start justify-between gap-2 flex-wrap">
                         <Badge variant="secondary">{r.tipo}</Badge>
-                        <span className="text-xs text-muted-foreground">{formatDateBR(r.data)}</span>
+                        <span className="text-xs text-muted-foreground">{r.data}</span>
                       </div>
 
                       {blocos.length > 0 ? (

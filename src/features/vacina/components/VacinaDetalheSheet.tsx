@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
 import { useObterVacinaDetalhe as useVacinaDetalhe } from "@/features/vacina/hooks/useObterVacinaDetalhe";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Loader2 } from "lucide-react";
-
 
 interface Props {
   idAplicacao: number | null;
@@ -15,28 +13,14 @@ function Field({ label, value }: { label: string; value: React.ReactNode }) {
     <div className="flex flex-col gap-1">
       <span className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</span>
       <span className="text-sm font-medium text-foreground min-h-5 border-b border-border/60 pb-1">
-        {value || "—"}
+        {value || "\u2014"}
       </span>
     </div>
   );
 }
 
-function fmtDate(d: string | null) {
-  if (!d) return "";
-  // Já em DD/MM/YYYY
-  if (/^\d{2}\/\d{2}\/\d{4}$/.test(d)) return d;
-  // ISO YYYY-MM-DD (com possível timestamp)
-  const isoMatch = d.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (isoMatch) {
-    const [, y, m, day] = isoMatch;
-    return `${day}/${m}/${y}`;
-  }
-  return d;
-}
-
-
 function YesNo({ v }: { v: boolean }) {
-  return <span>{v ? "Sim" : "Não"}</span>;
+  return <span>{v ? "Sim" : "Nao"}</span>;
 }
 
 export function VacinaDetalheSheet({ idAplicacao, open, onOpenChange }: Props) {
@@ -46,7 +30,7 @@ export function VacinaDetalheSheet({ idAplicacao, open, onOpenChange }: Props) {
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-2xl overflow-y-auto">
         <SheetHeader>
-          <SheetTitle className="text-primary">Detalhes da Aplicação</SheetTitle>
+          <SheetTitle className="text-primary">Detalhes da Aplicacao</SheetTitle>
         </SheetHeader>
 
         {loading && (
@@ -58,18 +42,18 @@ export function VacinaDetalheSheet({ idAplicacao, open, onOpenChange }: Props) {
         {detalhe && (
           <div className="space-y-6 mt-6">
             <section>
-              <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">Dados da Aplicação</h4>
+              <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">Dados da Aplicacao</h4>
               <div className="grid grid-cols-2 gap-4">
-                <Field label="Nº Atendimento" value={detalhe.nrAtendimento} />
+                <Field label="Nr Atendimento" value={detalhe.nrAtendimento} />
                 <Field label="Status" value={detalhe.status} />
                 <Field label="Vacina" value={detalhe.nomeVacina} />
                 <Field label="Dose" value={detalhe.dose} />
-                <Field label="Estratégia" value={detalhe.estrategia} />
-                <Field label="Data de Aplicação" value={fmtDate(detalhe.dataAplicacao)} />
+                <Field label="Estrategia" value={detalhe.estrategia} />
+                <Field label="Data de Aplicacao" value={detalhe.dataAplicacao} />
                 <Field label="Lote" value={detalhe.lote} />
-                <Field label="Validade do Lote" value={fmtDate(detalhe.validadeLote)} />
-                <Field label="Via Administração" value={detalhe.viaAdministracao} />
-                <Field label="Local Aplicação" value={detalhe.localAplicacao} />
+                <Field label="Validade do Lote" value={detalhe.validadeLote} />
+                <Field label="Via Administracao" value={detalhe.viaAdministracao} />
+                <Field label="Local Aplicacao" value={detalhe.localAplicacao} />
               </div>
             </section>
 
@@ -80,8 +64,8 @@ export function VacinaDetalheSheet({ idAplicacao, open, onOpenChange }: Props) {
                 <Field label="Turno" value={detalhe.turno} />
                 <Field label="Grupo de Atendimento" value={detalhe.grupoAtendimento} />
                 <Field label="Gestante" value={<YesNo v={detalhe.gestante} />} />
-                <Field label="Puérpera" value={<YesNo v={detalhe.puerpera} />} />
-                <Field label="Histórico" value={<YesNo v={detalhe.historico} />} />
+                <Field label="Puerpera" value={<YesNo v={detalhe.puerpera} />} />
+                <Field label="Historico" value={<YesNo v={detalhe.historico} />} />
                 <Field label="Fora de Esquema" value={<YesNo v={detalhe.foraEsquema} />} />
                 <Field label="Viajante" value={<YesNo v={detalhe.viajante} />} />
                 <Field label="Novo Frasco" value={<YesNo v={detalhe.novoFrasco} />} />
@@ -91,7 +75,7 @@ export function VacinaDetalheSheet({ idAplicacao, open, onOpenChange }: Props) {
             <section>
               <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">Fabricante</h4>
               <div className="grid grid-cols-2 gap-4">
-                <Field label="Laboratório" value={detalhe.fabricanteNome} />
+                <Field label="Laboratorio" value={detalhe.fabricanteNome} />
                 <Field label="CNPJ" value={detalhe.fabricanteCnpj} />
               </div>
             </section>
@@ -110,14 +94,14 @@ export function VacinaDetalheSheet({ idAplicacao, open, onOpenChange }: Props) {
             <section>
               <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">RNDS</h4>
               <div className="grid grid-cols-2 gap-4">
-                <Field label="Situação" value={detalhe.rndsSituacao} />
+                <Field label="Situacao" value={detalhe.rndsSituacao} />
                 <Field label="UUID" value={detalhe.rndsUuid} />
               </div>
             </section>
 
             {detalhe.observacao && (
               <section>
-                <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">Observação</h4>
+                <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">Observacao</h4>
                 <p className="text-sm">{detalhe.observacao}</p>
               </section>
             )}

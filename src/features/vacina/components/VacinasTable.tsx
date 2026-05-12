@@ -11,21 +11,10 @@ import { toast } from "sonner";
 import { useMemo } from "react";
 
 interface Props {
-  vacinas: VacinaResumo[];
+  vacinas: VacinaResumoResponse[];
   onSelect: (idAplicacao: number) => void;
   selectedId?: number;
-  paciente?: Paciente;
-}
-
-function fmtDate(d: string) {
-  if (!d) return "";
-  if (/^\d{2}\/\d{2}\/\d{4}$/.test(d)) return d;
-  const isoMatch = d.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (isoMatch) {
-    const [, y, m, day] = isoMatch;
-    return `${day}/${m}/${y}`;
-  }
-  return d;
+  paciente?: PacienteResponse;
 }
 
 function getYear(d: string): string {
@@ -66,7 +55,7 @@ export function VacinasTable({ vacinas, onSelect, selectedId, paciente }: Props)
 
   // Agrupa por ano (mantém ordem descendente vinda do backend)
   const grupos = useMemo(() => {
-    const map = new Map<string, VacinaResumo[]>();
+    const map = new Map<string, VacinaResumoResponse[]>();
     vacinas.forEach((v) => {
       const ano = getYear(v.dataAplicacao);
       if (!map.has(ano)) map.set(ano, []);
@@ -136,7 +125,7 @@ export function VacinasTable({ vacinas, onSelect, selectedId, paciente }: Props)
                               </h4>
                               <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
                                 <Calendar className="h-3 w-3" />
-                                {fmtDate(v.dataAplicacao)}
+                                {v.dataAplicacao}
                               </div>
                             </div>
                             <div className="flex items-center gap-1.5 shrink-0">

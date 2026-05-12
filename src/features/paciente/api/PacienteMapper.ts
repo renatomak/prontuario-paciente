@@ -5,29 +5,6 @@ import type {
   PacienteResumoProjection,
 } from "../types/PacienteProjection";
 
-function parseDataNascimento(d?: string | null): Date | null {
-  if (!d) return null;
-  const dmy = d.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if (dmy) {
-    const day = +dmy[1], m = +dmy[2], y = +dmy[3];
-    if (m < 1 || m > 12 || day < 1 || day > 31) return null;
-    return new Date(Date.UTC(y, m - 1, day));
-  }
-  const iso = d.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (iso) return new Date(Date.UTC(+iso[1], +iso[2] - 1, +iso[3]));
-  return null;
-}
-
-function calcIdade(d?: string | null): string {
-  const nasc = parseDataNascimento(d);
-  if (!nasc) return "";
-  const hoje = new Date();
-  let anos = hoje.getUTCFullYear() - nasc.getUTCFullYear();
-  const m = hoje.getUTCMonth() - nasc.getUTCMonth();
-  if (m < 0 || (m === 0 && hoje.getUTCDate() < nasc.getUTCDate())) anos--;
-  return `${anos} anos`;
-}
-
 export class PacienteMapper {
   static enderecoToDomain(e?: EnderecoProjection | null): EnderecoResponse | null {
     if (!e) return null;
@@ -55,7 +32,7 @@ export class PacienteMapper {
       nomePai: p.nomePai ?? null,
       dataNascimento: p.dataNascimento ?? null,
       telefone: p.telefone ?? null,
-      idade: p.idade ?? calcIdade(p.dataNascimento),
+      idade: p.idade ?? "",
       endereco: PacienteMapper.enderecoToDomain(p.endereco),
       cdUsuCadsus: p.cdUsuCadsus ?? p.cartaoSus ?? null,
       cartaoSus: p.cartaoSus ?? null,
