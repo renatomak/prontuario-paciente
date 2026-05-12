@@ -2,7 +2,6 @@ import type { PacienteResponse } from "@/features/paciente/domain/schemas";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { formatCpf } from "@/shared/formatters";
 
 interface Props {
   paciente: PacienteResponse;
@@ -18,7 +17,7 @@ export function PacienteHeaderCard({ paciente }: Props) {
         </div>
         <div className="space-y-1.5">
           <Label className="text-xs text-muted-foreground">CPF</Label>
-          <Input value={formatCpf(paciente.cpf)} readOnly className="bg-muted/50" />
+          <Input value={paciente.cpf ?? ""} readOnly className="bg-muted/50" />
         </div>
         <div className="space-y-1.5">
           <Label className="text-xs text-muted-foreground">Data de Nascimento</Label>

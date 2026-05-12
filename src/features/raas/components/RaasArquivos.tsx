@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FileArchive } from "lucide-react";
 import { toast } from "sonner";
 import { JavaApiClient } from "@/shared/http/JavaApiClient";
@@ -24,11 +24,25 @@ export function RaasArquivos() {
   const [pageSize, setPageSize] = useState(10);
 
   const listar = useListarArquivosRaas();
+  const inicializado = useRef(false);
 
   useEffect(() => {
+    if (inicializado.current) return;
+    inicializado.current = true;
+
     fetchUnidades()
       .then(setUnidades)
       .catch(() => setUnidades([]));
+
+    listar.mutate(
+      { page: 0, size: 1000 },
+      {
+        onSuccess: () => {
+          setCarregado(true);
+        },
+      },
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function procurar() {
@@ -73,7 +87,7 @@ export function RaasArquivos() {
           Gerar Arquivo do RAAS
         </h2>
         <p className="text-sm text-muted-foreground">
-          Unidade Saúde / RAAS / Processo / Gerar Arquivo do RAAS
+          Unidade Saude / RAAS / Processo / Gerar Arquivo do RAAS
         </p>
       </div>
 

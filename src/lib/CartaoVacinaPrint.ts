@@ -1,7 +1,7 @@
 import type { PacienteResponse } from "@/features/paciente/domain/schemas";
 import type { VacinaResumoResponse } from "@/features/vacina/domain/schemas";
-import { escapeHtml, formatCpf, formatSexo, sanitizeNomeArquivo } from "@/shared/formatters";
-import { documentoPadrao, renderPrintHeader, renderPrintFooter, renderField, openPrintWindow } from "@/shared/printUtils";
+import { escapeHtml, formatSexo, sanitizeNomeArquivo } from "@/shared/formatters";
+import { renderPrintHeader, renderPrintFooter, renderField, openPrintWindow } from "@/shared/printUtils";
 
 function formatEnderecoLogradouro(p: PacienteResponse): string {
   const e = p.endereco;
@@ -20,7 +20,7 @@ function renderPaciente(p: PacienteResponse): string {
       <div class="paciente-title">Paciente: ${escapeHtml(p.nome)}</div>
       <div class="grid-2">
         ${renderField("Cartao SUS", p.cartaoSus ?? p.cdUsuCadsus ?? null)}
-        ${renderField("CPF", formatCpf(p.cpf, "\u2014"))}
+        ${renderField("CPF", p.cpf)}
       </div>
       ${renderField("Nome", p.nome)}
       ${renderField("Nome Social", p.nomeSocial)}

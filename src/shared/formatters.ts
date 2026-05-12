@@ -7,29 +7,6 @@ export function escapeHtml(value?: string | number | null): string {
     .replace(/'/g, "&#39;");
 }
 
-export function formatCpf(cpf?: string | null, fallback = ""): string {
-  if (!cpf) return fallback;
-  const digits = cpf.replace(/\D/g, "");
-  if (digits.length !== 11) return cpf;
-  return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`;
-}
-
-export function formatCpfMask(raw: string): string {
-  const digits = raw.replace(/\D/g, "").slice(0, 11);
-  if (digits.length <= 3) return digits;
-  if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`;
-  if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`;
-  return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`;
-}
-
-export function formatSexo(s?: string | null): string {
-  if (!s) return "\u2014";
-  const v = s.trim().toUpperCase();
-  if (v === "M") return "Masculino";
-  if (v === "F") return "Feminino";
-  return s;
-}
-
 export interface EnderecoLike {
   tipoLogradouro?: string | null;
   logradouro?: string | null;
@@ -64,4 +41,12 @@ export function sanitizeNomeArquivo(prefix: string, nome?: string | null, cpf?: 
     .replace(/\s+/g, "_")
     .toUpperCase();
   return `${prefix}_${cpfDigits || id || 0}_${nomeSan}`;
+}
+
+export function formatSexo(s?: string | null): string {
+  if (!s) return "\u2014";
+  const v = s.trim().toUpperCase();
+  if (v === "M") return "Masculino";
+  if (v === "F") return "Feminino";
+  return s;
 }

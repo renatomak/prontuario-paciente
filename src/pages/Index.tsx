@@ -1,6 +1,5 @@
 import { useState } from "react";
 import type { PacienteResumoResponse } from "@/features/paciente/domain/schemas";
-import { formatCpfMask } from "@/shared/formatters";
 import { useBuscarPaciente } from "@/features/paciente/hooks/useBuscarPaciente";
 import { useCarregarPaciente } from "@/features/paciente/hooks/useCarregarPaciente";
 import { useListarVacinas } from "@/features/vacina/hooks/useListarVacinas";
@@ -30,9 +29,7 @@ const Index = () => {
   const vacinas = useListarVacinas(pacienteId ?? 0, !!pacienteId && !picker);
 
   function handleQueryChange(value: string) {
-    const digits = value.replace(/\D/g, "");
-    const isCpfLike = /^[\d.\-\s]*$/.test(value) && digits.length > 0;
-    setQuery(isCpfLike ? formatCpfMask(value) : value);
+    setQuery(value);
   }
 
   function handleSearch(e?: React.FormEvent) {
