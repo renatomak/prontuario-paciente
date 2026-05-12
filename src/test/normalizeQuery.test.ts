@@ -1,5 +1,5 @@
 // src/test/normalizeQuery.test.ts
-import { normalizeQuery, isCpfQuery } from "../domain/utils/normalizeQuery";
+import { normalizeQuery, isCpfQuery } from "@/shared/normalizeQuery";
 import { describe, it, expect } from "vitest";
 
 describe("normalizeQuery", () => {
