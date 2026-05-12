@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -32,32 +32,16 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { toast } from "sonner";
-import { getApiBaseUrl } from "@/shared/env";
-import { httpClient } from "@/shared/http";
+import { JavaApiRaasAdapter } from "@/adapters/java-api/JavaApiRaasAdapter";
 
-interface RaasArquivo {
-  id: number;
-  mes: number;
-  ano: number;
-  dataGeracao: string;
-  codigoEmpresa: string | null;
-  nomeEmpresa: string | null;
-  path: string;
-  status: string;
-  totalFolha: number;
+// Função utilitária para buscar unidades
+async function fetchUnidades(): Promise<Array<{ id: number; nome: string }>> {
+  const resp = await fetch("http://localhost:8081/api/v1/unidades");
+  if (!resp.ok) throw new Error("Falha ao buscar unidades");
+  return resp.json();
 }
 
-// Resposta esperada do novo endpoint
-interface RaasArquivoApi {
-  mes: number;
-  ano: number;
-  data_geracao: string;
-  codigo_empresa: string | null;
-  nome_empresa: string | null;
-  path: string;
-  status: string;
-  total_folha: number;
-}
+// Interface local removida. Usaremos um tipo inline para o estado.
 
 const MESES = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -89,8 +73,19 @@ export function RaasArquivos() {
   const [competencia, setCompetencia] = useState<string>("");
   const [situacao, setSituacao] = useState<string>("");
   const [unidade, setUnidade] = useState<string>("");
+  const [unidades, setUnidades] = useState<Array<{ id: number; nome: string }>>([]);
   const [loading, setLoading] = useState(false);
-  const [arquivos, setArquivos] = useState<RaasArquivo[]>([]);
+  const [arquivos, setArquivos] = useState<Array<{
+    id: number;
+    mes: number;
+    ano: number;
+    dataGeracao: string;
+    codigoEmpresa: string | null;
+    nomeEmpresa: string | null;
+    path: string;
+    status: string;
+    totalFolha: number;
+  }>>([]);
   const [carregado, setCarregado] = useState(false);
   const [totalElements, setTotalElements] = useState(0);
   const [page, setPage] = useState(0);
@@ -102,15 +97,28 @@ export function RaasArquivos() {
     return arquivos.slice(start, start + pageSize);
   }, [arquivos, page, pageSize]);
 
-  async function carregar() {
+  async function carregar(filtrar: boolean = false) {
     setLoading(true);
     try {
-      // Endpoint fixo para testes
-      const url = "http://localhost:8081/api/v1/raas";
-      const resp = await httpClient<RaasArquivoApi[]>(url, { method: "GET" });
-
-      const mapped: RaasArquivo[] = resp.map((r, i) => ({
-        id: i,
+      let params: Record<string, string | null> = {};
+      if (filtrar) {
+        let mes: string | undefined = undefined;
+        let ano: string | undefined = undefined;
+        if (competencia.match(/^\d{2}\/\d{4}$/)) {
+          [mes, ano] = competencia.split("/");
+        }
+        params.mes = mes || null;
+        params.ano = ano || null;
+        params.codigoEmpresa = unidade || null;
+        params.situacao = situacao || null;
+        // Se for busca padrão (sem filtro), envia tudo null
+        if (!filtrar) {
+          params = { mes: null, ano: null, codigoEmpresa: null, situacao: null };
+        }
+      }
+      const resp = await JavaApiRaasAdapter.listarArquivosRaas(params);
+      const mapped = resp.map((r, i) => ({
+        id: r.id ?? i,
         mes: r.mes,
         ano: r.ano,
         dataGeracao: r.data_geracao,
@@ -120,7 +128,6 @@ export function RaasArquivos() {
         status: r.status,
         totalFolha: r.total_folha,
       }));
-
       setArquivos(mapped);
       setTotalElements(mapped.length);
       setPage(0);
@@ -133,6 +140,15 @@ export function RaasArquivos() {
       setLoading(false);
     }
   }
+
+  // Carregar unidades e arquivos ao montar
+  useEffect(() => {
+    fetchUnidades()
+      .then(setUnidades)
+      .catch(() => setUnidades([]));
+    carregar(false); // Carrega arquivos ao abrir a aba
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="space-y-4">
@@ -163,30 +179,44 @@ export function RaasArquivos() {
             </div>
             <div className="space-y-1">
               <Label>Situação</Label>
-              <Select value={situacao || "todos"} onValueChange={(v) => setSituacao(v === "todos" ? "" : v)}>
+              <Select
+                value={situacao || "todos"}
+                onValueChange={(v) => setSituacao(v === "todos" ? "" : v)}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Todos" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="todos">Todos</SelectItem>
-                  <SelectItem value="Arquivo Gerado">Arquivo Gerado</SelectItem>
-                  <SelectItem value="Sem Registros">Sem Registros</SelectItem>
-                  <SelectItem value="Pendente">Pendente</SelectItem>
+                  <SelectItem value="3">Arquivo Gerado</SelectItem>
+                  <SelectItem value="6">Cancelados</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-1">
               <Label htmlFor="unidade">Unidade</Label>
-              <Input
-                id="unidade"
-                placeholder="Todas"
-                value={unidade}
-                onChange={(e) => setUnidade(e.target.value)}
-              />
+              <Select
+                value={unidade || "todas"}
+                onValueChange={(v) => setUnidade(v === "todas" ? "" : v)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Todas" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="todas">Todas</SelectItem>
+                  {unidades.map((u) => (
+                    <SelectItem key={u.id} value={String(u.id)}>{u.nome}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <div>
-            <Button onClick={carregar} disabled={loading} className="gap-2">
+            <Button
+              onClick={() => carregar(true)}
+              disabled={loading}
+              className="gap-2"
+            >
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
               Procurar
             </Button>
@@ -251,7 +281,13 @@ export function RaasArquivos() {
                     <TableCell>{a.ano}</TableCell>
                     <TableCell>{a.dataGeracao}</TableCell>
                     <TableCell className="text-muted-foreground">{a.nomeEmpresa ?? "—"}</TableCell>
-                    <TableCell>{a.status}</TableCell>
+                    <TableCell>
+                      {a.status === "3"
+                        ? "Arquivo Gerado"
+                        : a.status === "6"
+                        ? "Cancelados"
+                        : a.status || "—"}
+                    </TableCell>
                     <TableCell className="text-right tabular-nums">{a.totalFolha.toLocaleString("pt-BR")}</TableCell>
                   </TableRow>
                 ))}
