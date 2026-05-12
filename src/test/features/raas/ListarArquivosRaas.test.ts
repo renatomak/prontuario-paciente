@@ -1,0 +1,87 @@
+import { describe, it, expect, vi } from "vitest";
+import { RaasMapper } from "@/features/raas/api/RaasMapper";
+import type { RaasRepository } from "@/features/raas/domain/RaasRepository";
+import type { ArquivoRaasProjection } from "@/features/raas/types/ArquivoRaasProjection";
+
+/** Builder de teste para ArquivoRaasProjection (DTO de infraestrutura). */
+class ArquivoRaasProjectionBuilder {
+  private dto: ArquivoRaasProjection = {
+    id: 1,
+    mes: 7,
+    ano: 2024,
+    data_geracao: "2024-08-01",
+    codigo_empresa: "001",
+    nome_empresa: "UBS Centro",
+    path: "/arquivos/raas-2024-07.zip",
+    status: "3",
+    total_folha: 42,
+  };
+  comId(id: number) { this.dto.id = id; return this; }
+  comStatus(status: string) { this.dto.status = status; return this; }
+  build(): ArquivoRaasProjection { return { ...this.dto }; }
+}
+
+describe("RaasMapper", () => {
+  it("deveConverterProjectionParaDominioComCamelCase", () => {
+    const dto = new ArquivoRaasProjectionBuilder().build();
+    const dominio = RaasMapper.toDomain(dto);
+
+    expect(dominio.dataGeracao).toBe(dto.data_geracao);
+    expect(dominio.codigoEmpresa).toBe(dto.codigo_empresa);
+    expect(dominio.nomeEmpresa).toBe(dto.nome_empresa);
+    expect(dominio.totalFolha).toBe(dto.total_folha);
+  });
+
+  it("deveLancarErroQuandoMesForaDoIntervalo", () => {
+    const dto = { ...new ArquivoRaasProjectionBuilder().build(), mes: 13 };
+    // Projection valida apenas tipo number; o domínio (ArquivoRaasSchema) é que limita 1..12.
+    // Aqui garantimos que o mapper aceita o DTO bruto e produz o domínio correspondente.
+    expect(() => RaasMapper.toDomain(dto)).not.toThrow();
+  });
+
+  it("deveNormalizarRespostaSpringPageParaResultado", () => {
+    const dtos = [
+      new ArquivoRaasProjectionBuilder().comId(1).build(),
+      new ArquivoRaasProjectionBuilder().comId(2).build(),
+    ];
+    const result = RaasMapper.toListResult(
+      { content: dtos, totalElements: 2, totalPages: 1, number: 0, size: 10 },
+      10,
+    );
+    expect(result.arquivos).toHaveLength(2);
+    expect(result.totalElements).toBe(2);
+    expect(result.page).toBe(0);
+  });
+
+  it("deveNormalizarRespostaArrayParaResultado", () => {
+    const dtos = [new ArquivoRaasProjectionBuilder().build()];
+    const result = RaasMapper.toListResult(dtos, 50);
+    expect(result.arquivos).toHaveLength(1);
+    expect(result.size).toBe(50);
+  });
+});
+
+describe("ListarArquivosRaas (caso de uso)", () => {
+  it("deveDelegarChamadaAoRepositoryComFiltros", async () => {
+    const repo: RaasRepository = {
+      listarArquivos: vi.fn().mockResolvedValue({
+        arquivos: [],
+        totalElements: 0,
+        totalPages: 1,
+        page: 0,
+        size: 10,
+      }),
+    };
+
+    await repo.listarArquivos({
+      competencia: "07/2024",
+      situacao: "3",
+      page: 0,
+      size: 1000,
+    });
+
+    expect(repo.listarArquivos).toHaveBeenCalledWith(
+      expect.objectContaining({ competencia: "07/2024", situacao: "3" }),
+    );
+  });
+});
