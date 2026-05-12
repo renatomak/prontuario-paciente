@@ -1,9 +1,9 @@
 import type {
-  ApiAtendimento,
-  ApiEndereco,
-  ApiProntuarioResponse,
-  ApiRegistroConteudo,
-} from "@/lib/prontuarioApi";
+  ProntuarioAtendimento,
+  ProntuarioEndereco,
+  ProntuarioResponse,
+  ProntuarioRegistroConteudo,
+} from "@/features/prontuario/domain/schemas";
 import { limparHtml } from "@/lib/limparHtml";
 
 const documentoPadrao = {
@@ -34,7 +34,7 @@ function formatDateBR(dateStr?: string | null): string {
   return Number.isNaN(date.getTime()) ? dateStr : date.toLocaleDateString("pt-BR");
 }
 
-function formatEndereco(endereco?: ApiEndereco | null): string {
+function formatEndereco(endereco?: ProntuarioEndereco | null): string {
   if (!endereco) return "";
   return [
     endereco.tipo_logradouro,
@@ -48,7 +48,7 @@ function formatEndereco(endereco?: ApiEndereco | null): string {
     .join(", ");
 }
 
-function nomeArquivo(data: ApiProntuarioResponse): string {
+function nomeArquivo(data: ProntuarioResponse): string {
   const cpfDigits = (data.paciente.cpf || "").replace(/\D/g, "");
   const cdUsu = data.paciente.cd_usu_cadsus ?? data.paciente.id;
   const nomeSan = (data.paciente.nome || "PACIENTE")
@@ -68,7 +68,7 @@ function normalizarTexto(texto?: string | null): string {
     .trim();
 }
 
-function blocosConteudo(c: ApiRegistroConteudo): BlocoConteudo[] {
+function blocosConteudo(c: ProntuarioRegistroConteudo): BlocoConteudo[] {
   const blocos: BlocoConteudo[] = [];
   const avaliacao = normalizarTexto(c.avaliacao);
   const evolucao = normalizarTexto(c.evolucao);
@@ -88,7 +88,7 @@ function campo(label: string, value?: string | number | null, className = ""): s
   `;
 }
 
-function renderPaciente(data: ApiProntuarioResponse): string {
+function renderPaciente(data: ProntuarioResponse): string {
   const { paciente } = data;
   return `
     <section class="patient-section pdf-section">
@@ -106,7 +106,7 @@ function renderPaciente(data: ApiProntuarioResponse): string {
   `;
 }
 
-function renderAtendimentoHeader(a: ApiAtendimento): string {
+function renderAtendimentoHeader(a: ProntuarioAtendimento): string {
   const conselho = a.profissional?.tipo_conselho && a.profissional.registro
     ? ` (${a.profissional.tipo_conselho}: ${a.profissional.registro})`
     : "";
@@ -135,7 +135,7 @@ function renderAtendimentoHeader(a: ApiAtendimento): string {
   `;
 }
 
-function renderAtendimento(a: ApiAtendimento): string {
+function renderAtendimento(a: ProntuarioAtendimento): string {
   const registros = a.registros || [];
   const aih = a.possui_aih && a.aih_detalhes
     ? `
@@ -196,7 +196,7 @@ function renderAtendimento(a: ApiAtendimento): string {
   `;
 }
 
-function renderHtml(data: ApiProntuarioResponse, logoBase64?: string): string {
+function renderHtml(data: ProntuarioResponse, logoBase64?: string): string {
   const atendimentos = [...(data.atendimentos || [])].sort(
     (a, b) => new Date(b.data_chegada || "").getTime() - new Date(a.data_chegada || "").getTime(),
   );
@@ -378,7 +378,7 @@ function renderHtml(data: ApiProntuarioResponse, logoBase64?: string): string {
     </html>`;
 }
 
-export function imprimirProntuario(data: ApiProntuarioResponse, logoBase64?: string): void {
+export function imprimirProntuario(data: ProntuarioResponse, logoBase64?: string): void {
   const printWindow = window.open("", "_blank", "width=1024,height=768");
   if (!printWindow) throw new Error("Não foi possível abrir a janela de impressão.");
   printWindow.document.open();
@@ -386,6 +386,6 @@ export function imprimirProntuario(data: ApiProntuarioResponse, logoBase64?: str
   printWindow.document.close();
 }
 
-export function obterNomeArquivoProntuario(data: ApiProntuarioResponse): string {
+export function obterNomeArquivoProntuario(data: ProntuarioResponse): string {
   return nomeArquivo(data);
 }

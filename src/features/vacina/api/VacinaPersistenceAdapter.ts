@@ -1,4 +1,4 @@
-import { JavaApiClient } from "@/adapters/java-api/JavaApiClient";
+import { JavaApiClient } from "@/shared/http/JavaApiClient";
 import type { VacinaRepository } from "../domain/VacinaRepository";
 import type { VacinaResumo, VacinaDetalhe } from "../domain/schemas";
 import type {

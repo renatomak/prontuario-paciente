@@ -75,3 +75,11 @@ export const ProntuarioResponseSchema = z.object({
 });
 
 export type ProntuarioResponse = z.infer<typeof ProntuarioResponseSchema>;
+export type ProntuarioEndereco = z.infer<typeof EnderecoApiSchema>;
+export type ProntuarioPaciente = z.infer<typeof PacienteApiSchema>;
+export type ProntuarioRegistroConteudo = z.infer<typeof RegistroSchema>["conteudo"];
+export type ProntuarioRegistro = z.infer<typeof RegistroSchema>;
+export type ProntuarioAihDetalhes = NonNullable<z.infer<typeof AtendimentoSchema>["aih_detalhes"]>;
+export type ProntuarioUnidade = NonNullable<z.infer<typeof AtendimentoSchema>["unidade"]>;
+export type ProntuarioProfissional = NonNullable<z.infer<typeof AtendimentoSchema>["profissional"]>;
+export type ProntuarioAtendimento = z.infer<typeof AtendimentoSchema>;

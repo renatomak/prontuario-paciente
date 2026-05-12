@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { FileArchive } from "lucide-react";
 import { toast } from "sonner";
+import { JavaApiClient } from "@/shared/http/JavaApiClient";
 import { useListarArquivosRaas } from "../hooks/useListarArquivosRaas";
 import { RaasFiltros } from "./RaasFiltros";
 import { RaasTabela } from "./RaasTabela";
 import { RaasPaginacao } from "./RaasPaginacao";
 
+const apiClient = new JavaApiClient();
+
 async function fetchUnidades(): Promise<Array<{ id: number; nome: string }>> {
-  const resp = await fetch("http://localhost:8081/api/v1/unidades");
-  if (!resp.ok) throw new Error("Falha ao buscar unidades");
-  return resp.json();
+  return apiClient.get<Array<{ id: number; nome: string }>>("/api/v1/unidades");
 }
 
 export function RaasArquivos() {

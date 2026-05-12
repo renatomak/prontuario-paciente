@@ -1,4 +1,4 @@
-import { JavaApiClient } from "@/adapters/java-api/JavaApiClient";
+import { JavaApiClient } from "@/shared/http/JavaApiClient";
 import { ApiErrorImpl } from "@/shared/http";
 import type { PacienteRepository } from "../domain/PacienteRepository";
 import type { Paciente } from "../domain/schemas";

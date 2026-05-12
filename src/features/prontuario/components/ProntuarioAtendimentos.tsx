@@ -8,24 +8,22 @@ import { getLogoBase64 } from "@/lib/logoGoiania";
 import { imprimirProntuario } from "@/lib/ProntuarioPrint";
 import { useObterProntuario } from "@/features/prontuario/hooks/useObterProntuario";
 import type {
-  ApiProntuarioResponse,
-  ApiEndereco,
-  ApiRegistro,
-  ApiRegistroConteudo,
-} from "@/lib/prontuarioApi";
+  ProntuarioResponse,
+  ProntuarioEndereco,
+  ProntuarioRegistro,
+  ProntuarioRegistroConteudo,
+} from "@/features/prontuario/domain/schemas";
 
 interface Props {
   pacienteId: number;
 }
-
-// ==================== FUNÇÕES UTILITÁRIAS ====================
 
 function htmlToText(html?: string | null): string {
   if (!html) return "";
   const withBreaks = html
     .replace(/<\s*br\s*\/?\s*>/gi, "\n")
     .replace(/<\/\s*(p|div|li|tr|h[1-6])\s*>/gi, "\n")
-    .replace(/<\s*li\s*[^>]*>/gi, "• ");
+    .replace(/<\s*li\s*[^>]*>/gi, "\u2022 ");
   const tmp = document.createElement("div");
   tmp.innerHTML = withBreaks;
   const text = tmp.textContent || tmp.innerText || "";
@@ -39,22 +37,20 @@ function htmlToText(html?: string | null): string {
 
 interface Bloco { label: string; texto: string; }
 
-function blocosConteudo(c: ApiRegistroConteudo): Bloco[] {
+function blocosConteudo(c: ProntuarioRegistroConteudo): Bloco[] {
   const out: Bloco[] = [];
   const av = htmlToText(c.avaliacao);
   const ev = htmlToText(c.evolucao);
   const ex = htmlToText(c.exame);
-  if (av) out.push({ label: "Avaliação", texto: av });
-  if (ev) out.push({ label: "Evolução", texto: ev });
+  if (av) out.push({ label: "Avaliacao", texto: av });
+  if (ev) out.push({ label: "Evolucao", texto: ev });
   if (ex) out.push({ label: "Exame", texto: ex });
   return out;
 }
 
-// Formata data ISO ou com T para formato brasileiro legível
 function formatDateBR(dateStr?: string | null): string {
   if (!dateStr) return "";
   if (dateStr.includes("/")) return dateStr;
-
   try {
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) return dateStr;
@@ -68,7 +64,7 @@ function formatDateBR(dateStr?: string | null): string {
   }
 }
 
-const formatEndereco = (endereco: ApiEndereco | null | undefined): string => {
+const formatEndereco = (endereco: ProntuarioEndereco | null | undefined): string => {
   if (!endereco) return "";
   return [
     endereco.tipo_logradouro,
@@ -82,25 +78,25 @@ const formatEndereco = (endereco: ApiEndereco | null | undefined): string => {
 
 export function ProntuarioAtendimentos({ pacienteId }: Props) {
   const query = useObterProntuario(pacienteId);
-  const data = (query.data ?? null) as ApiProntuarioResponse | null;
+  const data: ProntuarioResponse | null = query.data ?? null;
   const loading = query.isLoading;
   const error = query.error
     ? query.error instanceof Error
       ? query.error.message
-      : "Falha ao carregar prontuário."
+      : "Falha ao carregar prontuario."
     : null;
   const [downloading, setDownloading] = useState(false);
+
   async function handleDownload() {
     if (!data) return;
     try {
       setDownloading(true);
       const logoBase64 = await getLogoBase64();
       imprimirProntuario(data, logoBase64);
-
-      toast.success("Janela de impressão aberta. Use 'Salvar como PDF' para baixar.");
+      toast.success("Janela de impressao aberta. Use 'Salvar como PDF' para baixar.");
     } catch (err) {
       console.error("Erro ao gerar PDF:", err);
-      toast.error("Falha ao abrir impressão do prontuário.");
+      toast.error("Falha ao abrir impressao do prontuario.");
     } finally {
       setDownloading(false);
     }
@@ -110,7 +106,7 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
     return (
       <div className="flex items-center justify-center py-16 text-muted-foreground gap-2">
         <Loader2 className="h-5 w-5 animate-spin" />
-        Carregando prontuário...
+        Carregando prontuario...
       </div>
     );
   }
@@ -120,7 +116,7 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
       <div className="flex items-start gap-3 rounded-md border border-destructive/40 bg-destructive/5 p-4 text-sm">
         <AlertCircle className="h-4 w-4 mt-0.5 text-destructive" />
         <div>
-          <p className="font-medium text-destructive">Não foi possível carregar o prontuário</p>
+          <p className="font-medium text-destructive">Nao foi possivel carregar o prontuario</p>
           <p className="text-muted-foreground">{error}</p>
         </div>
       </div>
@@ -139,10 +135,10 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
         <div>
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <FileText className="h-5 w-5 text-primary" />
-            Prontuário de Atendimentos
+            Prontuario de Atendimentos
           </h2>
           <p className="text-sm text-muted-foreground">
-            {atendimentos.length} atendimento{atendimentos.length === 1 ? "" : "s"} • {totalRegistros}{" "}
+            {atendimentos.length} atendimento{atendimentos.length === 1 ? "" : "s"} &bull; {totalRegistros}{" "}
             registro{totalRegistros === 1 ? "" : "s"}
           </p>
         </div>
@@ -162,9 +158,9 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
           <Info label="CPF" value={paciente.cpf ?? ""} />
           <Info label="Dt. Nascimento" value={paciente.data_nascimento ?? ""} />
           <Info label="Sexo" value={paciente.sexo ?? ""} />
-          <Info label="Mãe" value={paciente.nome_mae ?? ""} />
+          <Info label="Mae" value={paciente.nome_mae ?? ""} />
           <Info label="Telefone" value={paciente.telefone ?? ""} />
-          <Info label="Endereço" value={enderecoStr} />
+          <Info label="Endereco" value={enderecoStr} />
         </CardContent>
       </Card>
 
@@ -209,7 +205,7 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
 
                   <div className="flex items-center gap-2 flex-wrap">
                     {a.possui_aih && <Badge className="bg-green-100 text-green-800 border border-green-300 hover:bg-green-100">AIH SOLICITADA</Badge>}
-                    {a.numero_atendimento && <Badge variant="outline">Nº {a.numero_atendimento}</Badge>}
+                    {a.numero_atendimento && <Badge variant="outline">N&ordm; {a.numero_atendimento}</Badge>}
                     {a.classificacao_risco && <Badge variant="outline">{a.classificacao_risco}</Badge>}
 
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -221,33 +217,32 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
               </CardHeader>
 
               <CardContent className="pt-0 space-y-3">
-                {/* Bloco AIH na tela */}
                 {a.possui_aih && a.aih_detalhes && (
                   <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-2 space-y-1.5">
                     <div className="flex items-center gap-2 text-xs font-bold text-blue-800 uppercase">
-                      <InfoIcon className="h-3.5 w-3.5" /> Detalhes da Solicitação de Internação
+                      <InfoIcon className="h-3.5 w-3.5" /> Detalhes da Solicitacao de Internacao
                     </div>
                     <div className="text-sm grid gap-1.5">
-                      <p><strong>Data de Cadastro:</strong> {formatDateBR(a.aih_detalhes.data_cadastro) || "Não informado"}</p>
-                      <p><strong>Diagnóstico Inicial:</strong> {a.aih_detalhes.diagnostico_inicial || "Não informado"}</p>
+                      <p><strong>Data de Cadastro:</strong> {formatDateBR(a.aih_detalhes.data_cadastro) || "Nao informado"}</p>
+                      <p><strong>Diagnostico Inicial:</strong> {a.aih_detalhes.diagnostico_inicial || "Nao informado"}</p>
                       <p className="whitespace-pre-wrap break-words">
-                        <strong>Sinais e Sintomas:</strong> {a.aih_detalhes.principais_sinais || "Não informado"}
+                        <strong>Sinais e Sintomas:</strong> {a.aih_detalhes.principais_sinais || "Nao informado"}
                       </p>
                       <p className="whitespace-pre-wrap break-words">
-                        <strong>Condições que Justificam a Internação:</strong> {a.aih_detalhes.condicoes_internacao || "Não informado"}
+                        <strong>Condicoes que Justificam a Internacao:</strong> {a.aih_detalhes.condicoes_internacao || "Nao informado"}
                       </p>
                       <p className="whitespace-pre-wrap break-words">
-                        <strong>Principais Resultados de Provas Diagnósticas:</strong> {a.aih_detalhes.principais_resultados || "Não informado"}
+                        <strong>Principais Resultados de Provas Diagnosticas:</strong> {a.aih_detalhes.principais_resultados || "Nao informado"}
                       </p>
                     </div>
                   </div>
                 )}
 
                 {(a.registros ?? []).length === 0 && !a.possui_aih && (
-                  <p className="text-xs italic text-muted-foreground">(Sem registros clínicos)</p>
+                  <p className="text-xs italic text-muted-foreground">(Sem registros clinicos)</p>
                 )}
 
-                {a.registros?.map((r: ApiRegistro, ri) => {
+                {a.registros?.map((r: ProntuarioRegistro, ri) => {
                   const blocos = blocosConteudo(r.conteudo);
                   return (
                     <div key={ri} className="rounded-md border border-border/60 bg-card p-3 space-y-2">
@@ -268,7 +263,7 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
                           ))}
                         </div>
                       ) : (
-                        <p className="text-xs italic text-muted-foreground">(Sem conteúdo)</p>
+                        <p className="text-xs italic text-muted-foreground">(Sem conteudo)</p>
                       )}
                     </div>
                   );
@@ -286,7 +281,7 @@ function Info({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex gap-2">
       <span className="font-medium text-muted-foreground min-w-[110px]">{label}:</span>
-      <span className="text-foreground">{value || "—"}</span>
+      <span className="text-foreground">{value || "\u2014"}</span>
     </div>
   );
 }

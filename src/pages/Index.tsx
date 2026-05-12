@@ -28,8 +28,6 @@ const Index = () => {
   const paciente = useCarregarPaciente(pacienteId ?? 0, !!pacienteId && !picker);
   const vacinas = useListarVacinas(pacienteId ?? 0, !!pacienteId && !picker);
 
-  // Removido: função htmlToText usada apenas para PDF
-
   function formatCpfMask(value: string): string {
     const digits = value.replace(/\D/g, "").slice(0, 11);
     if (digits.length <= 3) return digits;
@@ -40,7 +38,6 @@ const Index = () => {
 
   function handleQueryChange(value: string) {
     const digits = value.replace(/\D/g, "");
-    // Se parece um CPF (somente dígitos/pontuação de CPF), aplica máscara
     const isCpfLike = /^[\d.\-\s]*$/.test(value) && digits.length > 0;
     setQuery(isCpfLike ? formatCpfMask(value) : value);
   }

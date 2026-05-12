@@ -1,6 +1,5 @@
-// src/adapters/java-api/JavaApiClient.ts
-import { getApiBaseUrl } from "../../shared/env";
-import { httpClient } from "../../shared/http";
+import { getApiBaseUrl } from "../env";
+import { httpClient } from "../http";
 
 export class JavaApiClient {
   private baseUrl: string;

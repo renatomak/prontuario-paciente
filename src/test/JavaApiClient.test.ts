@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, type Mock } from "vitest";
-import { JavaApiClient } from "../adapters/java-api/JavaApiClient";
+import { JavaApiClient } from "../shared/http/JavaApiClient";
 import { ApiErrorImpl } from "../shared/http";
 
 global.fetch = vi.fn() as unknown as typeof fetch;

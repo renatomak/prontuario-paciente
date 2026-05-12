@@ -1,13 +1,11 @@
-import axios from "axios";
+import { JavaApiClient } from "@/shared/http/JavaApiClient";
 import type { RaasRepository, ListarArquivosRaasResult } from "../domain/RaasRepository";
 import type { ListarArquivosRaasRequest } from "../types/ListarArquivosRaasRequest";
 import type { ListarArquivosRaasResponse } from "../types/ListarArquivosRaasResponse";
 import { RaasMapper } from "./RaasMapper";
 
-const DEFAULT_BASE_URL = "http://localhost:8081/api/v1/raas";
-
 export class RaasPersistenceAdapter implements RaasRepository {
-  constructor(private readonly baseUrl: string = DEFAULT_BASE_URL) {}
+  private client = new JavaApiClient();
 
   async listarArquivos(
     request: ListarArquivosRaasRequest,
@@ -26,9 +24,10 @@ export class RaasPersistenceAdapter implements RaasRepository {
     if (request.page != null) params.page = String(request.page);
     if (request.size != null) params.size = String(request.size);
 
-    const { data } = await axios.get<ListarArquivosRaasResponse>(this.baseUrl, {
+    const data = await this.client.get<ListarArquivosRaasResponse>(
+      "/api/v1/raas",
       params,
-    });
+    );
     return RaasMapper.toListResult(data, request.size ?? 1000);
   }
 }
