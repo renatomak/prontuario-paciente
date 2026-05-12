@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useVacinaDetalhe } from "@/ui/hooks/useVacinaDetalhe";
+import { useObterVacinaDetalhe as useVacinaDetalhe } from "@/features/vacina/hooks/useObterVacinaDetalhe";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Loader2 } from "lucide-react";
 
