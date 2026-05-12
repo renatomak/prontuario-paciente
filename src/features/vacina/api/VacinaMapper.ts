@@ -1,4 +1,4 @@
-import type { VacinaResumo, VacinaDetalhe } from "../domain/schemas";
+import type { VacinaResumoResponse, VacinaDetalheResponse } from "../domain/schemas";
 import type {
   VacinaResumoProjection,
   VacinaDetalheProjection,
@@ -32,7 +32,7 @@ function mapStatusVacina(s: unknown): string {
 }
 
 export class VacinaMapper {
-  static resumoToDomain(r: VacinaResumoProjection): VacinaResumo {
+  static resumoToDomain(r: VacinaResumoProjection): VacinaResumoResponse {
     return {
       idAplicacao: (r.idAplicacao ?? 0) as number,
       dataAplicacao: (pick(r.dataAplicacao) ?? "") as string,
@@ -47,7 +47,7 @@ export class VacinaMapper {
     };
   }
 
-  static detalheToDomain(r: VacinaDetalheProjection): VacinaDetalhe {
+  static detalheToDomain(r: VacinaDetalheProjection): VacinaDetalheResponse {
     return {
       idAplicacao: (r.idAplicacao ?? 0) as number,
       nrAtendimento: r.nrAtendimento ?? null,

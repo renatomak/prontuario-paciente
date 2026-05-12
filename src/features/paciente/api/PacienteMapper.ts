@@ -1,4 +1,4 @@
-import type { Paciente, Endereco, PacienteResumo } from "../domain/schemas";
+import type { PacienteResponse, EnderecoResponse, PacienteResumoResponse } from "../domain/schemas";
 import type {
   PacienteProjection,
   EnderecoProjection,
@@ -29,7 +29,7 @@ function calcIdade(d?: string | null): string {
 }
 
 export class PacienteMapper {
-  static enderecoToDomain(e?: EnderecoProjection | null): Endereco | null {
+  static enderecoToDomain(e?: EnderecoProjection | null): EnderecoResponse | null {
     if (!e) return null;
     return {
       keyword: e.keyword ?? null,
@@ -45,7 +45,7 @@ export class PacienteMapper {
     };
   }
 
-  static toDomain(p: PacienteProjection): Paciente {
+  static toDomain(p: PacienteProjection): PacienteResponse {
     return {
       id: p.id,
       nome: p.nome,
@@ -71,7 +71,7 @@ export class PacienteMapper {
     };
   }
 
-  static resumoToDomain(r: PacienteResumoProjection): PacienteResumo {
+  static resumoToDomain(r: PacienteResumoProjection): PacienteResumoResponse {
     return {
       id: r.id,
       nome: r.nome,

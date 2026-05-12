@@ -39,7 +39,7 @@ O frontend segue Clean Code e Arquitetura Hexagonal (Ports & Adapters), desacopl
 
 3. Configure as variáveis de ambiente:
 	 - Copie o arquivo `.env.example` ou crie `.env` com:
-		 - `VITE_API_URL` (obrigatório, ex: http://localhost:8083)
+		 - `PACIENTE_API_URL` (obrigatório, ex: http://localhost:8083)
 
 ## Rodando o Projeto
 

@@ -1,4 +1,4 @@
-import { getApiBaseUrl } from "../env";
+import { getPacienteApiBaseUrl } from "../env";
 import { httpClient } from "../http";
 
 export class JavaApiClient {
@@ -6,7 +6,7 @@ export class JavaApiClient {
   private commonHeaders: Record<string, string>;
 
   constructor(baseUrl?: string) {
-    this.baseUrl = baseUrl ?? getApiBaseUrl();
+    this.baseUrl = baseUrl ?? getPacienteApiBaseUrl();
     this.commonHeaders = {};
   }
 

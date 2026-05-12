@@ -1,6 +1,6 @@
-import type { VacinaResumo, VacinaDetalhe } from "./schemas";
+import type { VacinaResumoResponse, VacinaDetalheResponse } from "./schemas";
 
 export interface VacinaPort {
-  listarPorPaciente(pacienteId: number): Promise<VacinaResumo[]>;
-  obterDetalhe(idAplicacao: number): Promise<VacinaDetalhe>;
+  listarPorPaciente(pacienteId: number): Promise<VacinaResumoResponse[]>;
+  obterDetalhe(idAplicacao: number): Promise<VacinaDetalheResponse>;
 }

@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Download, Eye, Loader2, Trash2 } from "lucide-react";
-import type { ArquivoRaas } from "../domain/schemas";
+import type { ArquivoRaasResponse } from "../domain/schemas";
 
 const MESES = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -38,7 +38,7 @@ function situacaoBadge(s: string) {
 }
 
 export interface RaasTabelaProps {
-  arquivos: ArquivoRaas[];
+  arquivos: ArquivoRaasResponse[];
   loading: boolean;
   carregado: boolean;
 }

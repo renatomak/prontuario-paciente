@@ -1,14 +1,25 @@
 import {
   ArquivoRaasProjectionSchema,
-  type ArquivoRaas,
+  type ArquivoRaasResponse,
 } from "../domain/schemas";
 import type { ArquivoRaasProjection } from "../types/ArquivoRaasProjection";
 import type { ListarArquivosRaasResponse } from "../types/ListarArquivosRaasResponse";
 import type { ListarArquivosRaasResult } from "../domain/RaasPort";
 
 export class RaasMapper {
-  static toDomain(raw: ArquivoRaasProjection): ArquivoRaas {
-    return ArquivoRaasProjectionSchema.parse(raw);
+  static toDomain(raw: ArquivoRaasProjection): ArquivoRaasResponse {
+    const dto = ArquivoRaasProjectionSchema.parse(raw);
+    return {
+      id: dto.id,
+      mes: dto.mes,
+      ano: dto.ano,
+      dataGeracao: dto.dataGeracao ?? "",
+      codigoEmpresa: dto.codigoEmpresa,
+      nomeEmpresa: dto.nomeEmpresa,
+      path: dto.path ?? "",
+      status: dto.status ?? "",
+      totalFolha: dto.totalFolha ?? 0,
+    };
   }
 
   static toListResult(

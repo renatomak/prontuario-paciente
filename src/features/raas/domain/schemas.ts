@@ -1,27 +1,27 @@
-import { z } from "zod";
+import { z as validarTipo } from "zod";
 
-export const ArquivoRaasProjectionSchema = z.object({
-  id: z.number(),
-  mes: z.number(),
-  ano: z.number(),
-  dataGeracao: z.string(),
-  codigoEmpresa: z.string().nullable(),
-  nomeEmpresa: z.string().nullable(),
-  path: z.string(),
-  status: z.string(),
-  totalFolha: z.number(),
+export const ArquivoRaasProjectionSchema = validarTipo.object({
+  id: validarTipo.number(),
+  mes: validarTipo.number(),
+  ano: validarTipo.number(),
+  dataGeracao: validarTipo.string().nullable().default(""),
+  codigoEmpresa: validarTipo.string().nullable().default(null),
+  nomeEmpresa: validarTipo.string().nullable().default(null),
+  path: validarTipo.string().nullable().default(""),
+  status: validarTipo.string().nullable().default(""),
+  totalFolha: validarTipo.number().nullable().default(0),
+}).passthrough();
+
+export const ArquivoRaasSchema = validarTipo.object({
+  id: validarTipo.number(),
+  mes: validarTipo.number().int().min(1).max(12),
+  ano: validarTipo.number().int(),
+  dataGeracao: validarTipo.string(),
+  codigoEmpresa: validarTipo.string().nullable(),
+  nomeEmpresa: validarTipo.string().nullable(),
+  path: validarTipo.string(),
+  status: validarTipo.string(),
+  totalFolha: validarTipo.number(),
 });
 
-export const ArquivoRaasSchema = z.object({
-  id: z.number(),
-  mes: z.number().int().min(1).max(12),
-  ano: z.number().int(),
-  dataGeracao: z.string(),
-  codigoEmpresa: z.string().nullable(),
-  nomeEmpresa: z.string().nullable(),
-  path: z.string(),
-  status: z.string(),
-  totalFolha: z.number(),
-});
-
-export type ArquivoRaas = z.infer<typeof ArquivoRaasSchema>;
+export type ArquivoRaasResponse = validarTipo.infer<typeof ArquivoRaasSchema>;

@@ -1,7 +1,7 @@
 import { JavaApiClient } from "@/shared/http/JavaApiClient";
 import { ApiErrorImpl } from "@/shared/http";
 import type { PacientePort } from "../domain/PacientePort";
-import type { Paciente } from "../domain/schemas";
+import type { PacienteResponse } from "../domain/schemas";
 import type { BuscarPacienteRequest } from "../types/BuscarPacienteRequest";
 import type { BuscarPacienteResponse } from "../types/BuscarPacienteResponse";
 import type {
@@ -41,7 +41,7 @@ export class PacientePersistenceAdapter implements PacientePort {
     };
   }
 
-  async carregarPorId(id: number): Promise<Paciente> {
+  async carregarPorId(id: number): Promise<PacienteResponse> {
     const dto = await this.client.get<PacienteProjection>(`/api/pacientes/${id}`);
     return PacienteMapper.toDomain(dto);
   }

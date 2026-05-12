@@ -2,12 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { FileArchive } from "lucide-react";
 import { toast } from "sonner";
 import { JavaApiClient } from "@/shared/http/JavaApiClient";
+import { getRaasApiBaseUrl } from "@/shared/env";
 import { useListarArquivosRaas } from "../hooks/useListarArquivosRaas";
 import { RaasFiltros } from "./RaasFiltros";
 import { RaasTabela } from "./RaasTabela";
 import { RaasPaginacao } from "./RaasPaginacao";
 
-const apiClient = new JavaApiClient();
+const apiClient = new JavaApiClient(getRaasApiBaseUrl());
 
 async function fetchUnidades(): Promise<Array<{ id: number; nome: string }>> {
   return apiClient.get<Array<{ id: number; nome: string }>>("/api/v1/unidades");
@@ -28,6 +29,7 @@ export function RaasArquivos() {
     fetchUnidades()
       .then(setUnidades)
       .catch(() => setUnidades([]));
+    listar.mutate({ page: 0, size: 1000 });
   }, []);
 
   function procurar() {

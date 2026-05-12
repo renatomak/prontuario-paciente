@@ -44,6 +44,6 @@ export const PacienteResumoSchema = z.object({
   dataNascimento: z.string().nullable(),
 });
 
-export type Endereco = z.infer<typeof EnderecoSchema>;
-export type Paciente = z.infer<typeof PacienteSchema>;
-export type PacienteResumo = z.infer<typeof PacienteResumoSchema>;
+export type EnderecoResponse = z.infer<typeof EnderecoSchema>;
+export type PacienteResponse = z.infer<typeof PacienteSchema>;
+export type PacienteResumoResponse = z.infer<typeof PacienteResumoSchema>;

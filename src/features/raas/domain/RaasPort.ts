@@ -1,8 +1,8 @@
-import type { ArquivoRaas } from "./schemas";
+import type { ArquivoRaasResponse } from "./schemas";
 import type { ListarArquivosRaasRequest } from "../types/ListarArquivosRaasRequest";
 
 export interface ListarArquivosRaasResult {
-  arquivos: ArquivoRaas[];
+  arquivos: ArquivoRaasResponse[];
   totalElements: number;
   totalPages: number;
   page: number;

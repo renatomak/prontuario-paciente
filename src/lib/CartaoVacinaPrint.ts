@@ -1,5 +1,5 @@
-import type { Paciente } from "@/features/paciente/domain/schemas";
-import type { VacinaResumo } from "@/features/vacina/domain/schemas";
+import type { PacienteResponse } from "@/features/paciente/domain/schemas";
+import type { VacinaResumoResponse } from "@/features/vacina/domain/schemas";
 
 const documentoPadrao = {
   titulo: "CARTÃO DE VACINAÇÃO",
