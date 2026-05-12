@@ -1,17 +1,17 @@
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Download, Loader2, FileText, MapPin, User, Calendar, Stethoscope, AlertCircle, Info as InfoIcon } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { getLogoBase64 } from "@/lib/logoGoiania";
 import { imprimirProntuario } from "@/lib/ProntuarioPrint";
-import {
-  fetchProntuarioByPacienteId,
-  type ApiProntuarioResponse,
-  type ApiEndereco,
-  type ApiRegistro,
-  type ApiRegistroConteudo,
+import { useObterProntuario } from "@/features/prontuario/hooks/useObterProntuario";
+import type {
+  ApiProntuarioResponse,
+  ApiEndereco,
+  ApiRegistro,
+  ApiRegistroConteudo,
 } from "@/lib/prontuarioApi";
 
 interface Props {
@@ -81,28 +81,15 @@ const formatEndereco = (endereco: ApiEndereco | null | undefined): string => {
 };
 
 export function ProntuarioAtendimentos({ pacienteId }: Props) {
-  const [data, setData] = useState<ApiProntuarioResponse | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const query = useObterProntuario(pacienteId);
+  const data = (query.data ?? null) as ApiProntuarioResponse | null;
+  const loading = query.isLoading;
+  const error = query.error
+    ? query.error instanceof Error
+      ? query.error.message
+      : "Falha ao carregar prontuário."
+    : null;
   const [downloading, setDownloading] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-    setData(null);
-
-    fetchProntuarioByPacienteId(pacienteId)
-      .then((r) => { if (!cancelled) setData(r); })
-      .catch((err) => {
-        console.error(err);
-        if (!cancelled) setError(err instanceof Error ? err.message : "Falha ao carregar prontuário.");
-      })
-      .finally(() => { if (!cancelled) setLoading(false); });
-
-    return () => { cancelled = true; };
-  }, [pacienteId]);
-
   async function handleDownload() {
     if (!data) return;
     try {

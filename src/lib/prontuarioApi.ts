@@ -1,6 +1,7 @@
-import { getApiBaseUrl } from "@/shared/env";
+// Shim — mantido apenas para compatibilidade com src/lib/ProntuarioPrint.ts.
+// O fetch foi migrado para `features/prontuario/api/ProntuarioPersistenceAdapter`
+// e exposto via `useObterProntuario`.
 
-// ====== Tipos da resposta real da API Java ======
 export interface ApiEndereco {
   keyword?: string | null;
   tipo_logradouro?: string | null;
@@ -71,25 +72,8 @@ export interface ApiAtendimento {
   profissional?: ApiProfissional | null;
   registros: ApiRegistro[];
 }
+
 export interface ApiProntuarioResponse {
   paciente: ApiPaciente;
   atendimentos: ApiAtendimento[];
-}
-
-export async function fetchProntuarioByPacienteId(
-  pacienteId: number,
-): Promise<ApiProntuarioResponse> {
-  const base = getApiBaseUrl();
-  const res = await fetch(`${base}/api/prontuario/${pacienteId}`);
-  if (!res.ok) {
-    throw new Error(`Erro ao buscar prontuário (HTTP ${res.status})`);
-  }
-  const data = (await res.json()) as ApiProntuarioResponse;
-  if (!data || typeof data !== "object" || !("paciente" in data)) {
-    throw new Error("Resposta inválida da API de prontuário.");
-  }
-  if (!Array.isArray(data.atendimentos)) {
-    data.atendimentos = [];
-  }
-  return data;
 }
