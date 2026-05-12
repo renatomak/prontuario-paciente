@@ -55,7 +55,6 @@ export function RaasArquivos() {
     );
   }
 
-  // Memoize arquivos para não mudar referência a cada render
   const arquivos = useMemo(() => listar.data?.arquivos ?? [], [listar.data?.arquivos]);
   const totalElements = listar.data?.totalElements ?? 0;
 

@@ -1,13 +1,13 @@
 import { RaasPersistenceAdapter } from "@/features/raas/api/RaasPersistenceAdapter";
-import type { RaasRepository } from "@/features/raas/domain/RaasRepository";
+import type { RaasPort } from "@/features/raas/domain/RaasPort";
 import { PacientePersistenceAdapter } from "@/features/paciente/api/PacientePersistenceAdapter";
-import type { PacienteRepository } from "@/features/paciente/domain/PacienteRepository";
+import type { PacientePort } from "@/features/paciente/domain/PacientePort";
 import { VacinaPersistenceAdapter } from "@/features/vacina/api/VacinaPersistenceAdapter";
-import type { VacinaRepository } from "@/features/vacina/domain/VacinaRepository";
+import type { VacinaPort } from "@/features/vacina/domain/VacinaPort";
 import { ProntuarioPersistenceAdapter } from "@/features/prontuario/api/ProntuarioPersistenceAdapter";
-import type { ProntuarioRepository } from "@/features/prontuario/domain/ProntuarioRepository";
+import type { ProntuarioPort } from "@/features/prontuario/domain/ProntuarioPort";
 
-export const raasRepository: RaasRepository = new RaasPersistenceAdapter();
-export const pacienteRepository: PacienteRepository = new PacientePersistenceAdapter();
-export const vacinaRepository: VacinaRepository = new VacinaPersistenceAdapter();
-export const prontuarioRepository: ProntuarioRepository = new ProntuarioPersistenceAdapter();
+export const raasRepository: RaasPort = new RaasPersistenceAdapter();
+export const pacienteRepository: PacientePort = new PacientePersistenceAdapter();
+export const vacinaRepository: VacinaPort = new VacinaPersistenceAdapter();
+export const prontuarioRepository: ProntuarioPort = new ProntuarioPersistenceAdapter();

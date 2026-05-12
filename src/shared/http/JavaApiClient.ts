@@ -5,8 +5,8 @@ export class JavaApiClient {
   private baseUrl: string;
   private commonHeaders: Record<string, string>;
 
-  constructor() {
-    this.baseUrl = getApiBaseUrl();
+  constructor(baseUrl?: string) {
+    this.baseUrl = baseUrl ?? getApiBaseUrl();
     this.commonHeaders = {};
   }
 

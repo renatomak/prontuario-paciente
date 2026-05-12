@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { PacienteMapper } from "@/features/paciente/api/PacienteMapper";
-import type { PacienteRepository } from "@/features/paciente/domain/PacienteRepository";
+import type { PacientePort } from "@/features/paciente/domain/PacientePort";
 import type { PacienteProjection } from "@/features/paciente/types/PacienteProjection";
 
 class PacienteProjectionBuilder {
@@ -37,7 +37,7 @@ describe("PacienteMapper", () => {
 
 describe("BuscarPaciente (caso de uso)", () => {
   it("deveDelegarChamadaAoRepositoryComQuery", async () => {
-    const repo: PacienteRepository = {
+    const repo: PacientePort = {
       buscar: vi.fn().mockResolvedValue({ tipo: "lista", pacientes: [] }),
       carregarPorId: vi.fn(),
     };

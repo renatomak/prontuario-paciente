@@ -1,6 +1,6 @@
 import { JavaApiClient } from "@/shared/http/JavaApiClient";
 import { ApiErrorImpl } from "@/shared/http";
-import type { PacienteRepository } from "../domain/PacienteRepository";
+import type { PacientePort } from "../domain/PacientePort";
 import type { Paciente } from "../domain/schemas";
 import type { BuscarPacienteRequest } from "../types/BuscarPacienteRequest";
 import type { BuscarPacienteResponse } from "../types/BuscarPacienteResponse";
@@ -10,7 +10,7 @@ import type {
 } from "../types/PacienteProjection";
 import { PacienteMapper } from "./PacienteMapper";
 
-export class PacientePersistenceAdapter implements PacienteRepository {
+export class PacientePersistenceAdapter implements PacientePort {
   private client = new JavaApiClient();
 
   async buscar({ query }: BuscarPacienteRequest): Promise<BuscarPacienteResponse> {

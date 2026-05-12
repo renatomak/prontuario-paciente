@@ -1,5 +1,5 @@
 import { JavaApiClient } from "@/shared/http/JavaApiClient";
-import type { VacinaRepository } from "../domain/VacinaRepository";
+import type { VacinaPort } from "../domain/VacinaPort";
 import type { VacinaResumo, VacinaDetalhe } from "../domain/schemas";
 import type {
   VacinaResumoProjection,
@@ -7,7 +7,7 @@ import type {
 } from "../types/VacinaProjection";
 import { VacinaMapper } from "./VacinaMapper";
 
-export class VacinaPersistenceAdapter implements VacinaRepository {
+export class VacinaPersistenceAdapter implements VacinaPort {
   private client = new JavaApiClient();
 
   async listarPorPaciente(pacienteId: number): Promise<VacinaResumo[]> {

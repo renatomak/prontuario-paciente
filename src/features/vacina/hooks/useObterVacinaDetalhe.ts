@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { vacinaRepository as defaultRepository } from "@/shared/container";
-import type { VacinaRepository } from "../domain/VacinaRepository";
+import type { VacinaPort } from "../domain/VacinaPort";
 
-/** Caso de uso: Obter detalhes de uma aplicação de vacina. */
+/** Caso de uso: Obter detalhes de uma aplicacao de vacina. */
 export function useObterVacinaDetalhe(
   idAplicacao: number,
   enabled = true,
-  repository: VacinaRepository = defaultRepository,
+  repository: VacinaPort = defaultRepository,
 ) {
   return useQuery({
     queryKey: ["vacinaDetalhe", idAplicacao],

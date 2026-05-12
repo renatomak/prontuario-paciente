@@ -1,11 +1,12 @@
 import { JavaApiClient } from "@/shared/http/JavaApiClient";
-import type { RaasRepository, ListarArquivosRaasResult } from "../domain/RaasRepository";
+import { getRaasApiBaseUrl } from "@/shared/env";
+import type { RaasPort, ListarArquivosRaasResult } from "../domain/RaasPort";
 import type { ListarArquivosRaasRequest } from "../types/ListarArquivosRaasRequest";
 import type { ListarArquivosRaasResponse } from "../types/ListarArquivosRaasResponse";
 import { RaasMapper } from "./RaasMapper";
 
-export class RaasPersistenceAdapter implements RaasRepository {
-  private client = new JavaApiClient();
+export class RaasPersistenceAdapter implements RaasPort {
+  private client = new JavaApiClient(getRaasApiBaseUrl());
 
   async listarArquivos(
     request: ListarArquivosRaasRequest,

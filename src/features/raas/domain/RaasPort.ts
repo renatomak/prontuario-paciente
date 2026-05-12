@@ -9,11 +9,7 @@ export interface ListarArquivosRaasResult {
   size: number;
 }
 
-/**
- * Porta (Port) do domínio RAAS.
- * Os hooks (Application/Use Cases) dependem somente desta interface.
- */
-export interface RaasRepository {
+export interface RaasPort {
   listarArquivos(
     request: ListarArquivosRaasRequest,
   ): Promise<ListarArquivosRaasResult>;

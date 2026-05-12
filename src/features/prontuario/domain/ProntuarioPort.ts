@@ -1,5 +1,5 @@
 import type { ProntuarioResponse } from "./schemas";
 
-export interface ProntuarioRepository {
+export interface ProntuarioPort {
   obterPorPacienteId(pacienteId: number): Promise<ProntuarioResponse>;
 }

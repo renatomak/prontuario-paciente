@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { VacinaMapper } from "@/features/vacina/api/VacinaMapper";
-import type { VacinaRepository } from "@/features/vacina/domain/VacinaRepository";
+import type { VacinaPort } from "@/features/vacina/domain/VacinaPort";
 import type { VacinaResumoProjection } from "@/features/vacina/types/VacinaProjection";
 
 class VacinaResumoProjectionBuilder {
@@ -35,7 +35,7 @@ describe("VacinaMapper", () => {
 
 describe("ListarVacinas (caso de uso)", () => {
   it("deveDelegarChamadaAoRepositoryComPacienteId", async () => {
-    const repo: VacinaRepository = {
+    const repo: VacinaPort = {
       listarPorPaciente: vi.fn().mockResolvedValue([]),
       obterDetalhe: vi.fn(),
     };

@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { pacienteRepository as defaultRepository } from "@/shared/container";
-import type { PacienteRepository } from "../domain/PacienteRepository";
+import type { PacientePort } from "../domain/PacientePort";
 
 /** Caso de uso: Carregar dados completos do paciente por ID. */
 export function useCarregarPaciente(
   id: number,
   enabled = true,
-  repository: PacienteRepository = defaultRepository,
+  repository: PacientePort = defaultRepository,
 ) {
   return useQuery({
     queryKey: ["paciente", id],

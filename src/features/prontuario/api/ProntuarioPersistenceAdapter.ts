@@ -3,9 +3,9 @@ import {
   ProntuarioResponseSchema,
   type ProntuarioResponse,
 } from "../domain/schemas";
-import type { ProntuarioRepository } from "../domain/ProntuarioRepository";
+import type { ProntuarioPort } from "../domain/ProntuarioPort";
 
-export class ProntuarioPersistenceAdapter implements ProntuarioRepository {
+export class ProntuarioPersistenceAdapter implements ProntuarioPort {
   private client = new JavaApiClient();
 
   async obterPorPacienteId(pacienteId: number): Promise<ProntuarioResponse> {

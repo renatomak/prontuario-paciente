@@ -4,7 +4,7 @@ import {
 } from "../domain/schemas";
 import type { ArquivoRaasProjection } from "../types/ArquivoRaasProjection";
 import type { ListarArquivosRaasResponse } from "../types/ListarArquivosRaasResponse";
-import type { ListarArquivosRaasResult } from "../domain/RaasRepository";
+import type { ListarArquivosRaasResult } from "../domain/RaasPort";
 
 export class RaasMapper {
   static toDomain(raw: ArquivoRaasProjection): ArquivoRaas {

@@ -3,7 +3,7 @@ import {
   ProntuarioResponseSchema,
   type ProntuarioResponse,
 } from "@/features/prontuario/domain/schemas";
-import type { ProntuarioRepository } from "@/features/prontuario/domain/ProntuarioRepository";
+import type { ProntuarioPort } from "@/features/prontuario/domain/ProntuarioPort";
 
 class ProntuarioResponseBuilder {
   private dto: ProntuarioResponse = {
@@ -30,7 +30,7 @@ describe("ProntuarioResponseSchema (Zod)", () => {
 describe("ObterProntuario (caso de uso)", () => {
   it("deveDelegarChamadaAoRepositoryComPacienteId", async () => {
     const dto = new ProntuarioResponseBuilder().build();
-    const repo: ProntuarioRepository = {
+    const repo: ProntuarioPort = {
       obterPorPacienteId: vi.fn().mockResolvedValue(dto),
     };
     const result = await repo.obterPorPacienteId(99);
