@@ -8,18 +8,7 @@ import type { ListarArquivosRaasResult } from "../domain/RaasRepository";
 
 export class RaasMapper {
   static toDomain(raw: ArquivoRaasProjection): ArquivoRaas {
-    const dto = ArquivoRaasProjectionSchema.parse(raw);
-    return {
-      id: dto.id,
-      mes: dto.mes,
-      ano: dto.ano,
-      dataGeracao: dto.data_geracao,
-      codigoEmpresa: dto.codigo_empresa,
-      nomeEmpresa: dto.nome_empresa,
-      path: dto.path,
-      status: dto.status,
-      totalFolha: dto.total_folha,
-    };
+    return ArquivoRaasProjectionSchema.parse(raw);
   }
 
   static toListResult(

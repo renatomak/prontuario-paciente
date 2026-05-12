@@ -3,18 +3,17 @@ import { RaasMapper } from "@/features/raas/api/RaasMapper";
 import type { RaasRepository } from "@/features/raas/domain/RaasRepository";
 import type { ArquivoRaasProjection } from "@/features/raas/types/ArquivoRaasProjection";
 
-/** Builder de teste para ArquivoRaasProjection (DTO de infraestrutura). */
 class ArquivoRaasProjectionBuilder {
   private dto: ArquivoRaasProjection = {
     id: 1,
     mes: 7,
     ano: 2024,
-    data_geracao: "2024-08-01",
-    codigo_empresa: "001",
-    nome_empresa: "UBS Centro",
+    dataGeracao: "2024-08-01",
+    codigoEmpresa: "001",
+    nomeEmpresa: "UBS Centro",
     path: "/arquivos/raas-2024-07.zip",
     status: "3",
-    total_folha: 42,
+    totalFolha: 42,
   };
   comId(id: number) { this.dto.id = id; return this; }
   comStatus(status: string) { this.dto.status = status; return this; }
@@ -22,20 +21,18 @@ class ArquivoRaasProjectionBuilder {
 }
 
 describe("RaasMapper", () => {
-  it("deveConverterProjectionParaDominioComCamelCase", () => {
+  it("deveConverterProjectionParaDominio", () => {
     const dto = new ArquivoRaasProjectionBuilder().build();
     const dominio = RaasMapper.toDomain(dto);
 
-    expect(dominio.dataGeracao).toBe(dto.data_geracao);
-    expect(dominio.codigoEmpresa).toBe(dto.codigo_empresa);
-    expect(dominio.nomeEmpresa).toBe(dto.nome_empresa);
-    expect(dominio.totalFolha).toBe(dto.total_folha);
+    expect(dominio.dataGeracao).toBe(dto.dataGeracao);
+    expect(dominio.codigoEmpresa).toBe(dto.codigoEmpresa);
+    expect(dominio.nomeEmpresa).toBe(dto.nomeEmpresa);
+    expect(dominio.totalFolha).toBe(dto.totalFolha);
   });
 
   it("deveLancarErroQuandoMesForaDoIntervalo", () => {
     const dto = { ...new ArquivoRaasProjectionBuilder().build(), mes: 13 };
-    // Projection valida apenas tipo number; o domínio (ArquivoRaasSchema) é que limita 1..12.
-    // Aqui garantimos que o mapper aceita o DTO bruto e produz o domínio correspondente.
     expect(() => RaasMapper.toDomain(dto)).not.toThrow();
   });
 

@@ -67,7 +67,7 @@ function formatDateBR(dateStr?: string | null): string {
 const formatEndereco = (endereco: ProntuarioEndereco | null | undefined): string => {
   if (!endereco) return "";
   return [
-    endereco.tipo_logradouro,
+    endereco.tipoLogradouro,
     endereco.logradouro,
     endereco.numero !== "00" ? endereco.numero : null,
     endereco.complemento,
@@ -156,9 +156,9 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
         <CardContent className="grid gap-2 text-sm sm:grid-cols-2">
           <Info label="Nome" value={paciente.nome} />
           <Info label="CPF" value={paciente.cpf ?? ""} />
-          <Info label="Dt. Nascimento" value={paciente.data_nascimento ?? ""} />
+          <Info label="Dt. Nascimento" value={paciente.dataNascimento ?? ""} />
           <Info label="Sexo" value={paciente.sexo ?? ""} />
-          <Info label="Mae" value={paciente.nome_mae ?? ""} />
+          <Info label="Mae" value={paciente.nomeMae ?? ""} />
           <Info label="Telefone" value={paciente.telefone ?? ""} />
           <Info label="Endereco" value={enderecoStr} />
         </CardContent>
@@ -183,20 +183,20 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
                       {a.unidade?.nome}
                       {a.unidade?.telefone && <span className="text-xs text-muted-foreground">({a.unidade.telefone})</span>}
                     </div>
-                    {a.tipo_atendimento && (
-                      <div className="text-xs text-muted-foreground">{a.tipo_atendimento}</div>
+                    {a.tipoAtendimento && (
+                      <div className="text-xs text-muted-foreground">{a.tipoAtendimento}</div>
                     )}
                     {prof?.nome && (
                       <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
                         <User className="h-3.5 w-3.5" />
                         <span className="font-medium">{prof.nome}</span>
-                        {prof.tipo_conselho && prof.registro && (
-                          <span>({prof.tipo_conselho}: {prof.registro})</span>
+                        {prof.tipoConselho && prof.registro && (
+                          <span>({prof.tipoConselho}: {prof.registro})</span>
                         )}
-                        {prof.cbo_descricao && (
+                        {prof.cboDescricao && (
                           <span className="inline-flex items-center gap-1">
                             <Stethoscope className="h-3 w-3" />
-                            {prof.cbo_descricao}
+                            {prof.cboDescricao}
                           </span>
                         )}
                       </div>
@@ -204,41 +204,41 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
                   </div>
 
                   <div className="flex items-center gap-2 flex-wrap">
-                    {a.possui_aih && <Badge className="bg-green-100 text-green-800 border border-green-300 hover:bg-green-100">AIH SOLICITADA</Badge>}
-                    {a.numero_atendimento && <Badge variant="outline">N&ordm; {a.numero_atendimento}</Badge>}
-                    {a.classificacao_risco && <Badge variant="outline">{a.classificacao_risco}</Badge>}
+                    {a.possuiAih && <Badge className="bg-green-100 text-green-800 border border-green-300 hover:bg-green-100">AIH SOLICITADA</Badge>}
+                    {a.numeroAtendimento && <Badge variant="outline">N&ordm; {a.numeroAtendimento}</Badge>}
+                    {a.classificacaoRisco && <Badge variant="outline">{a.classificacaoRisco}</Badge>}
 
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Calendar className="h-3.5 w-3.5" />
-                      {formatDateBR(a.data_chegada)}
+                      {formatDateBR(a.dataChegada)}
                     </div>
                   </div>
                 </div>
               </CardHeader>
 
               <CardContent className="pt-0 space-y-3">
-                {a.possui_aih && a.aih_detalhes && (
+                {a.possuiAih && a.aihDetalhes && (
                   <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-2 space-y-1.5">
                     <div className="flex items-center gap-2 text-xs font-bold text-blue-800 uppercase">
                       <InfoIcon className="h-3.5 w-3.5" /> Detalhes da Solicitacao de Internacao
                     </div>
                     <div className="text-sm grid gap-1.5">
-                      <p><strong>Data de Cadastro:</strong> {formatDateBR(a.aih_detalhes.data_cadastro) || "Nao informado"}</p>
-                      <p><strong>Diagnostico Inicial:</strong> {a.aih_detalhes.diagnostico_inicial || "Nao informado"}</p>
+                      <p><strong>Data de Cadastro:</strong> {formatDateBR(a.aihDetalhes.dataCadastro) || "Nao informado"}</p>
+                      <p><strong>Diagnostico Inicial:</strong> {a.aihDetalhes.diagnosticoInicial || "Nao informado"}</p>
                       <p className="whitespace-pre-wrap break-words">
-                        <strong>Sinais e Sintomas:</strong> {a.aih_detalhes.principais_sinais || "Nao informado"}
+                        <strong>Sinais e Sintomas:</strong> {a.aihDetalhes.principaisSinais || "Nao informado"}
                       </p>
                       <p className="whitespace-pre-wrap break-words">
-                        <strong>Condicoes que Justificam a Internacao:</strong> {a.aih_detalhes.condicoes_internacao || "Nao informado"}
+                        <strong>Condicoes que Justificam a Internacao:</strong> {a.aihDetalhes.condicoesInternacao || "Nao informado"}
                       </p>
                       <p className="whitespace-pre-wrap break-words">
-                        <strong>Principais Resultados de Provas Diagnosticas:</strong> {a.aih_detalhes.principais_resultados || "Nao informado"}
+                        <strong>Principais Resultados de Provas Diagnosticas:</strong> {a.aihDetalhes.principaisResultados || "Nao informado"}
                       </p>
                     </div>
                   </div>
                 )}
 
-                {(a.registros ?? []).length === 0 && !a.possui_aih && (
+                {(a.registros ?? []).length === 0 && !a.possuiAih && (
                   <p className="text-xs italic text-muted-foreground">(Sem registros clinicos)</p>
                 )}
 

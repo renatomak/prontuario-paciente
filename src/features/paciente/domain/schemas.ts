@@ -24,7 +24,7 @@ export const PacienteSchema = z.object({
   telefone: z.string().nullable(),
   idade: z.string(),
   endereco: EnderecoSchema.nullable(),
-  cd_usu_cadsus: z.union([z.number(), z.string()]).nullable().optional(),
+  cdUsuCadsus: z.union([z.number(), z.string()]).nullable().optional(),
   cartaoSus: z.string().nullable().optional(),
   nomeSocial: z.string().nullable().optional(),
   paisNascimento: z.string().nullable().optional(),

@@ -37,7 +37,7 @@ function formatDateBR(dateStr?: string | null): string {
 function formatEndereco(endereco?: ProntuarioEndereco | null): string {
   if (!endereco) return "";
   return [
-    endereco.tipo_logradouro,
+    endereco.tipoLogradouro,
     endereco.logradouro,
     endereco.numero !== "00" ? endereco.numero : null,
     endereco.complemento,
@@ -50,7 +50,7 @@ function formatEndereco(endereco?: ProntuarioEndereco | null): string {
 
 function nomeArquivo(data: ProntuarioResponse): string {
   const cpfDigits = (data.paciente.cpf || "").replace(/\D/g, "");
-  const cdUsu = data.paciente.cd_usu_cadsus ?? data.paciente.id;
+  const cdUsu = data.paciente.cdUsuCadsus ?? data.paciente.id;
   const nomeSan = (data.paciente.nome || "PACIENTE")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -96,8 +96,8 @@ function renderPaciente(data: ProntuarioResponse): string {
       <div class="patient-grid">
         ${campo("Nome", `( ${paciente.id} ) ${paciente.nome || ""}`, "patient-name")}
         ${campo("Sexo", paciente.sexo)}
-        ${campo("Nome da Mãe", paciente.nome_mae)}
-        ${campo("Dt. Nascimento", paciente.data_nascimento)}
+        ${campo("Nome da Mãe", paciente.nomeMae)}
+        ${campo("Dt. Nascimento", paciente.dataNascimento)}
         ${campo("Endereço", formatEndereco(paciente.endereco), "patient-address")}
         ${campo("Telefone", paciente.telefone)}
         ${campo("CPF", paciente.cpf)}
@@ -107,13 +107,13 @@ function renderPaciente(data: ProntuarioResponse): string {
 }
 
 function renderAtendimentoHeader(a: ProntuarioAtendimento): string {
-  const conselho = a.profissional?.tipo_conselho && a.profissional.registro
-    ? ` (${a.profissional.tipo_conselho}: ${a.profissional.registro})`
+  const conselho = a.profissional?.tipoConselho && a.profissional.registro
+    ? ` (${a.profissional.tipoConselho}: ${a.profissional.registro})`
     : "";
 
-  let dataRegistro = a.data_chegada;
-  if (a.possui_aih && a.aih_detalhes?.data_cadastro) {
-    dataRegistro = a.aih_detalhes.data_cadastro;
+  let dataRegistro = a.dataChegada;
+  if (a.possuiAih && a.aihDetalhes?.dataCadastro) {
+    dataRegistro = a.aihDetalhes.dataCadastro;
   } else if (a.registros && a.registros.length > 0 && a.registros[0].data) {
     dataRegistro = a.registros[0].data;
   }
@@ -122,14 +122,14 @@ function renderAtendimentoHeader(a: ProntuarioAtendimento): string {
     <div class="atendimento-header">
       <div class="atendimento-main">
         <h3>${escapeHtml(a.unidade?.nome || "Unidade não informada")}</h3>
-        ${a.tipo_atendimento ? campo("Tipo de Atendimento", a.tipo_atendimento) : ""}
+        ${a.tipoAtendimento ? campo("Tipo de Atendimento", a.tipoAtendimento) : ""}
         ${a.profissional?.nome ? campo("Profissional", `${a.profissional.nome}${conselho}`) : ""}
       </div>
       <div class="atendimento-meta">
-        ${a.possui_aih ? `<span class="aih-badge">AIH SOLICITADA</span>` : ""}
+        ${a.possuiAih ? `<span class="aih-badge">AIH SOLICITADA</span>` : ""}
         ${campo("Data Registro", formatDateBR(dataRegistro))}
-        ${a.numero_atendimento ? campo("Nº", a.numero_atendimento) : ""}
-        ${a.classificacao_risco ? campo("Risco", a.classificacao_risco) : ""}
+        ${a.numeroAtendimento ? campo("Nº", a.numeroAtendimento) : ""}
+        ${a.classificacaoRisco ? campo("Risco", a.classificacaoRisco) : ""}
       </div>
     </div>
   `;
@@ -137,29 +137,29 @@ function renderAtendimentoHeader(a: ProntuarioAtendimento): string {
 
 function renderAtendimento(a: ProntuarioAtendimento): string {
   const registros = a.registros || [];
-  const aih = a.possui_aih && a.aih_detalhes
+  const aih = a.possuiAih && a.aihDetalhes
     ? `
       <div class="aih-section pdf-section">
         <h4>DETALHES DA SOLICITAÇÃO DE INTERNAÇÃO</h4>
         <div class="content-block">
           <span class="content-label">Data de Cadastro:</span>
-          <div class="content-value">${escapeHtml(formatDateBR(a.aih_detalhes.data_cadastro) || "Não informado")}</div>
+          <div class="content-value">${escapeHtml(formatDateBR(a.aihDetalhes.dataCadastro) || "Não informado")}</div>
         </div>
         <div class="content-block">
           <span class="content-label">Diagnóstico Inicial:</span>
-          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aih_detalhes.diagnostico_inicial) || "Não informado")}</div>
+          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aihDetalhes.diagnosticoInicial) || "Não informado")}</div>
         </div>
         <div class="content-block">
           <span class="content-label">Sinais e Sintomas:</span>
-          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aih_detalhes.principais_sinais) || "Não informado")}</div>
+          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aihDetalhes.principaisSinais) || "Não informado")}</div>
         </div>
         <div class="content-block">
           <span class="content-label">Condições que Justificam a Internação:</span>
-          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aih_detalhes.condicoes_internacao) || "Não informado")}</div>
+          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aihDetalhes.condicoesInternacao) || "Não informado")}</div>
         </div>
         <div class="content-block">
           <span class="content-label">Principais Resultados de Provas Diagnósticas:</span>
-          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aih_detalhes.principais_resultados) || "Não informado")}</div>
+          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aihDetalhes.principaisResultados) || "Não informado")}</div>
         </div>
       </div>
     `
@@ -185,7 +185,7 @@ function renderAtendimento(a: ProntuarioAtendimento): string {
           </section>
         `;
       }).join("")
-    : (!a.possui_aih ? `<p class="empty-text sem-registro">(Sem registros clínicos)</p>` : "");
+    : (!a.possuiAih ? `<p class="empty-text sem-registro">(Sem registros clínicos)</p>` : "");
 
   return `
     <article class="atendimento-section pdf-section">
@@ -198,7 +198,7 @@ function renderAtendimento(a: ProntuarioAtendimento): string {
 
 function renderHtml(data: ProntuarioResponse, logoBase64?: string): string {
   const atendimentos = [...(data.atendimentos || [])].sort(
-    (a, b) => new Date(b.data_chegada || "").getTime() - new Date(a.data_chegada || "").getTime(),
+    (a, b) => new Date(b.dataChegada || "").getTime() - new Date(a.dataChegada || "").getTime(),
   );
 
   return `<!doctype html>

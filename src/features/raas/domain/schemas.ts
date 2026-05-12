@@ -4,12 +4,12 @@ export const ArquivoRaasProjectionSchema = z.object({
   id: z.number(),
   mes: z.number(),
   ano: z.number(),
-  data_geracao: z.string(),
-  codigo_empresa: z.string().nullable(),
-  nome_empresa: z.string().nullable(),
+  dataGeracao: z.string(),
+  codigoEmpresa: z.string().nullable(),
+  nomeEmpresa: z.string().nullable(),
   path: z.string(),
   status: z.string(),
-  total_folha: z.number(),
+  totalFolha: z.number(),
 });
 
 export const ArquivoRaasSchema = z.object({

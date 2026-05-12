@@ -5,10 +5,10 @@ import type { VacinaResumoProjection } from "@/features/vacina/types/VacinaProje
 
 class VacinaResumoProjectionBuilder {
   private dto: VacinaResumoProjection = {
-    id_aplicacao: 100,
-    data_aplicacao: "01/02/2024",
-    nome_vacina: "BCG",
-    dose: "1ª",
+    idAplicacao: 100,
+    dataAplicacao: "01/02/2024",
+    nomeVacina: "BCG",
+    dose: "1a",
     estrategia: "ROTINA",
     status: 0,
   };

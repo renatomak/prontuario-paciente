@@ -9,8 +9,8 @@ class PacienteProjectionBuilder {
     nome: "JOAO DA SILVA",
     cpf: "12345678901",
     sexo: "M",
-    nome_mae: "MARIA DA SILVA",
-    data_nascimento: "1990-05-10",
+    nomeMae: "MARIA DA SILVA",
+    dataNascimento: "1990-05-10",
     endereco: { logradouro: "RUA A", numero: "10", cidade: "GOIANIA", uf: "GO" },
   };
   comId(id: number) { this.dto.id = id; return this; }

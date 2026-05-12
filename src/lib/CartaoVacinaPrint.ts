@@ -110,7 +110,7 @@ function renderPaciente(p: Paciente): string {
     <section class="paciente-box">
       <div class="paciente-title">Paciente: ${escapeHtml(p.nome)}</div>
       <div class="grid-2">
-        ${renderField("Cartão SUS", p.cartaoSus ?? p.cd_usu_cadsus ?? null)}
+        ${renderField("Cartão SUS", p.cartaoSus ?? p.cdUsuCadsus ?? null)}
         ${renderField("CPF", formatCpf(p.cpf))}
       </div>
       ${renderField("Nome", p.nome)}

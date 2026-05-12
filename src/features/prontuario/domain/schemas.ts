@@ -2,13 +2,13 @@ import { z } from "zod";
 
 const EnderecoApiSchema = z.object({
   keyword: z.string().nullable().optional(),
-  tipo_logradouro: z.string().nullable().optional(),
+  tipoLogradouro: z.string().nullable().optional(),
   logradouro: z.string().nullable().optional(),
   complemento: z.string().nullable().optional(),
   numero: z.string().nullable().optional(),
   cep: z.string().nullable().optional(),
   bairro: z.string().nullable().optional(),
-  cidade_id: z.number().nullable().optional(),
+  cidadeId: z.number().nullable().optional(),
   cidade: z.string().nullable().optional(),
   uf: z.string().nullable().optional(),
 });
@@ -18,12 +18,12 @@ const PacienteApiSchema = z.object({
   nome: z.string(),
   cpf: z.string().nullable().optional(),
   sexo: z.string().nullable().optional(),
-  nome_mae: z.string().nullable().optional(),
-  nome_pai: z.string().nullable().optional(),
-  data_nascimento: z.string().nullable().optional(),
+  nomeMae: z.string().nullable().optional(),
+  nomePai: z.string().nullable().optional(),
+  dataNascimento: z.string().nullable().optional(),
   telefone: z.string().nullable().optional(),
   endereco: EnderecoApiSchema.nullable().optional(),
-  cd_usu_cadsus: z.union([z.number(), z.string()]).nullable().optional(),
+  cdUsuCadsus: z.union([z.number(), z.string()]).nullable().optional(),
 });
 
 const RegistroSchema = z.object({
@@ -37,18 +37,18 @@ const RegistroSchema = z.object({
 });
 
 const AtendimentoSchema = z.object({
-  data_chegada: z.string().nullable().optional(),
-  numero_atendimento: z.string().nullable().optional(),
-  tipo_atendimento: z.string().nullable().optional(),
-  classificacao_risco: z.string().nullable().optional(),
-  possui_aih: z.boolean().optional(),
-  aih_detalhes: z
+  dataChegada: z.string().nullable().optional(),
+  numeroAtendimento: z.string().nullable().optional(),
+  tipoAtendimento: z.string().nullable().optional(),
+  classificacaoRisco: z.string().nullable().optional(),
+  possuiAih: z.boolean().optional(),
+  aihDetalhes: z
     .object({
-      data_cadastro: z.string().nullable().optional(),
-      principais_sinais: z.string().nullable().optional(),
-      condicoes_internacao: z.string().nullable().optional(),
-      principais_resultados: z.string().nullable().optional(),
-      diagnostico_inicial: z.string().nullable().optional(),
+      dataCadastro: z.string().nullable().optional(),
+      principaisSinais: z.string().nullable().optional(),
+      condicoesInternacao: z.string().nullable().optional(),
+      principaisResultados: z.string().nullable().optional(),
+      diagnosticoInicial: z.string().nullable().optional(),
     })
     .nullable()
     .optional(),
@@ -59,10 +59,10 @@ const AtendimentoSchema = z.object({
   profissional: z
     .object({
       nome: z.string().nullable().optional(),
-      tipo_conselho: z.string().nullable().optional(),
+      tipoConselho: z.string().nullable().optional(),
       registro: z.string().nullable().optional(),
       cbo: z.string().nullable().optional(),
-      cbo_descricao: z.string().nullable().optional(),
+      cboDescricao: z.string().nullable().optional(),
     })
     .nullable()
     .optional(),
@@ -79,7 +79,7 @@ export type ProntuarioEndereco = z.infer<typeof EnderecoApiSchema>;
 export type ProntuarioPaciente = z.infer<typeof PacienteApiSchema>;
 export type ProntuarioRegistroConteudo = z.infer<typeof RegistroSchema>["conteudo"];
 export type ProntuarioRegistro = z.infer<typeof RegistroSchema>;
-export type ProntuarioAihDetalhes = NonNullable<z.infer<typeof AtendimentoSchema>["aih_detalhes"]>;
+export type ProntuarioAihDetalhes = NonNullable<z.infer<typeof AtendimentoSchema>["aihDetalhes"]>;
 export type ProntuarioUnidade = NonNullable<z.infer<typeof AtendimentoSchema>["unidade"]>;
 export type ProntuarioProfissional = NonNullable<z.infer<typeof AtendimentoSchema>["profissional"]>;
 export type ProntuarioAtendimento = z.infer<typeof AtendimentoSchema>;
