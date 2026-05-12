@@ -55,7 +55,8 @@ export function RaasArquivos() {
     );
   }
 
-  const arquivos = listar.data?.arquivos ?? [];
+  // Memoize arquivos para não mudar referência a cada render
+  const arquivos = useMemo(() => listar.data?.arquivos ?? [], [listar.data?.arquivos]);
   const totalElements = listar.data?.totalElements ?? 0;
 
   const totalPages = Math.max(1, Math.ceil(arquivos.length / pageSize));

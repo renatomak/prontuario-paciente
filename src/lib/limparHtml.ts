@@ -93,7 +93,8 @@ export function limparHtml(texto?: string | null): string {
 
   // 5. Remover caracteres de controle (exceto \n) que podem virar glifos no PDF
   // Inclui \x00-\x08, \x0B, \x0C, \x0E-\x1F, \x7F
-  textoLimpo = textoLimpo.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "");
+  // eslint-disable-next-line no-control-regex
+  textoLimpo = textoLimpo.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "");
 
   // 5.1 Remover entidades HTML residuais que não foram decodificadas
   // (ex: "&nbsp" sem ;, "&amp" sem ;, ou "&" solto seguido de espaço/fim)
