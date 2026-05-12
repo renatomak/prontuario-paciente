@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { PacienteResumoResponse } from "@/features/paciente/domain/schemas";
+import { formatCpfMask } from "@/shared/formatters";
 import { useBuscarPaciente } from "@/features/paciente/hooks/useBuscarPaciente";
 import { useCarregarPaciente } from "@/features/paciente/hooks/useCarregarPaciente";
 import { useListarVacinas } from "@/features/vacina/hooks/useListarVacinas";
@@ -27,14 +28,6 @@ const Index = () => {
   const pacienteSearch = useBuscarPaciente();
   const paciente = useCarregarPaciente(pacienteId ?? 0, !!pacienteId && !picker);
   const vacinas = useListarVacinas(pacienteId ?? 0, !!pacienteId && !picker);
-
-  function formatCpfMask(value: string): string {
-    const digits = value.replace(/\D/g, "").slice(0, 11);
-    if (digits.length <= 3) return digits;
-    if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`;
-    if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`;
-    return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`;
-  }
 
   function handleQueryChange(value: string) {
     const digits = value.replace(/\D/g, "");

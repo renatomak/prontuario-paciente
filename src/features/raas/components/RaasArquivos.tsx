@@ -29,7 +29,6 @@ export function RaasArquivos() {
     fetchUnidades()
       .then(setUnidades)
       .catch(() => setUnidades([]));
-    listar.mutate({ page: 0, size: 1000 });
   }, []);
 
   function procurar() {

@@ -1,18 +1,8 @@
 import type { PacienteResponse } from "@/features/paciente/domain/schemas";
 import { Card } from "@/components/ui/card";
+import { FieldDisplay } from "@/components/FieldDisplay";
 
 interface Props { paciente: PacienteResponse }
-
-function Field({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1">
-      <span className="text-xs uppercase tracking-wide text-muted-foreground">{label}</span>
-      <span className="text-sm font-medium text-foreground min-h-5 border-b border-border/60 pb-1">
-        {value || "\u2014"}
-      </span>
-    </div>
-  );
-}
 
 export function PacienteDados({ paciente }: Props) {
   const e = paciente.endereco;
@@ -21,14 +11,14 @@ export function PacienteDados({ paciente }: Props) {
       <Card className="p-6 shadow-sm">
         <h3 className="text-sm font-semibold text-primary mb-4 uppercase tracking-wider">Dados do Paciente</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="md:col-span-2"><Field label="Paciente" value={paciente.nome} /></div>
-          <Field label="Idade" value={paciente.idade} />
-          <Field label="CPF" value={paciente.cpf} />
-          <Field label="Sexo" value={paciente.sexo} />
-          <Field label="Data de Nascimento" value={paciente.dataNascimento} />
-          <Field label="Nome da Mae" value={paciente.nomeMae} />
-          <Field label="Nome do Pai" value={paciente.nomePai} />
-          <Field label="Telefone" value={paciente.telefone} />
+          <div className="md:col-span-2"><FieldDisplay label="Paciente" value={paciente.nome} /></div>
+          <FieldDisplay label="Idade" value={paciente.idade} />
+          <FieldDisplay label="CPF" value={paciente.cpf} />
+          <FieldDisplay label="Sexo" value={paciente.sexo} />
+          <FieldDisplay label="Data de Nascimento" value={paciente.dataNascimento} />
+          <FieldDisplay label="Nome da Mae" value={paciente.nomeMae} />
+          <FieldDisplay label="Nome do Pai" value={paciente.nomePai} />
+          <FieldDisplay label="Telefone" value={paciente.telefone} />
         </div>
       </Card>
 
@@ -37,25 +27,25 @@ export function PacienteDados({ paciente }: Props) {
           <h3 className="text-sm font-semibold text-primary mb-4 uppercase tracking-wider">Endereco</h3>
           <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
             <div className="md:col-span-3">
-              <Field label="Logradouro" value={`${e.tipoLogradouro ?? ""} ${e.logradouro ?? ""}`.trim()} />
+              <FieldDisplay label="Logradouro" value={`${e.tipoLogradouro ?? ""} ${e.logradouro ?? ""}`.trim()} />
             </div>
             <div className="md:col-span-1">
-              <Field label="Numero" value={e.numero} />
+              <FieldDisplay label="Numero" value={e.numero} />
             </div>
             <div className="md:col-span-2">
-              <Field label="Bairro" value={e.bairro} />
+              <FieldDisplay label="Bairro" value={e.bairro} />
             </div>
             <div className="md:col-span-2">
-              <Field label="Complemento" value={e.complemento} />
+              <FieldDisplay label="Complemento" value={e.complemento} />
             </div>
             <div className="md:col-span-1">
-              <Field label="CEP" value={e.cep} />
+              <FieldDisplay label="CEP" value={e.cep} />
             </div>
             <div className="md:col-span-2">
-              <Field label="Cidade" value={e.cidade} />
+              <FieldDisplay label="Cidade" value={e.cidade} />
             </div>
             <div className="md:col-span-1">
-              <Field label="UF" value={e.uf} />
+              <FieldDisplay label="UF" value={e.uf} />
             </div>
           </div>
         </Card>

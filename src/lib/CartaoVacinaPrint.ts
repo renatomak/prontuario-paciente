@@ -1,98 +1,16 @@
 import type { PacienteResponse } from "@/features/paciente/domain/schemas";
 import type { VacinaResumoResponse } from "@/features/vacina/domain/schemas";
-
-const documentoPadrao = {
-  titulo: "CARTÃO DE VACINAÇÃO",
-  prefeitura: "Prefeitura Municipal de Goiânia - GO",
-  sistema: "SUS - SISTEMA ÚNICO DE SAÚDE",
-  orgao: "Secretaria Municipal de Saúde de Goiânia - GO",
-  enderecoUnidade: "Industrial - Setor Leste Vila Nova - CEP 74635-040",
-  cidadeUnidade: "GOIANIA - GO",
-  telefoneUnidade: "(62) 3524-1824",
-};
-
-function escapeHtml(value?: string | number | null): string {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-function formatCpf(cpf?: string | null): string {
-  if (!cpf) return "—";
-  const digits = cpf.replace(/\D/g, "");
-  if (digits.length !== 11) return cpf;
-  return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`;
-}
-
-function formatSexo(s?: string | null): string {
-  if (!s) return "—";
-  const v = s.trim().toUpperCase();
-  if (v === "M") return "Masculino";
-  if (v === "F") return "Feminino";
-  return s;
-}
+import { escapeHtml, formatCpf, formatSexo, sanitizeNomeArquivo } from "@/shared/formatters";
+import { documentoPadrao, renderPrintHeader, renderPrintFooter, renderField, openPrintWindow } from "@/shared/printUtils";
 
 function formatEnderecoLogradouro(p: PacienteResponse): string {
   const e = p.endereco;
-  if (!e) return "—";
-  return [e.tipoLogradouro, e.logradouro].filter(Boolean).join(" ") || "—";
+  if (!e) return "\u2014";
+  return [e.tipoLogradouro, e.logradouro].filter(Boolean).join(" ") || "\u2014";
 }
 
 export function nomeArquivoCartaoVacinacao(p: PacienteResponse): string {
-  const cpfDigits = (p.cpf || "").replace(/\D/g, "");
-  const nomeSan = (p.nome || "PACIENTE")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-zA-Z0-9\s]/g, "")
-    .trim()
-    .replace(/\s+/g, "_")
-    .toUpperCase();
-  return `CARTAO_VACINACAO_${cpfDigits || p.id}_${nomeSan}`;
-}
-
-function renderHeader(logoBase64?: string): string {
-  return `
-    <header class="print-header">
-      <div>${logoBase64 ? `<img class="logo" src="${logoBase64}" alt="Prefeitura de Goiânia" />` : ""}</div>
-      <div class="header-text">
-        <div class="prefeitura">${escapeHtml(documentoPadrao.prefeitura)}</div>
-        <div class="sistema">${escapeHtml(documentoPadrao.sistema)}</div>
-        <div class="orgao">${escapeHtml(documentoPadrao.orgao)}</div>
-        <h1>${escapeHtml(documentoPadrao.titulo)}</h1>
-      </div>
-      <div></div>
-    </header>
-  `;
-}
-
-function renderFooter(): string {
-  const ts = new Date().toLocaleString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  return `
-    <footer class="print-footer">
-      <div>${escapeHtml(documentoPadrao.enderecoUnidade)}</div>
-      <strong>${escapeHtml(documentoPadrao.cidadeUnidade)} | ${escapeHtml(documentoPadrao.telefoneUnidade)}</strong>
-      <div class="print-timestamp">Emitido em ${escapeHtml(ts)}</div>
-    </footer>
-  `;
-}
-
-function renderField(label: string, value?: string | number | null): string {
-  const v = value === null || value === undefined || value === "" ? "—" : value;
-  return `
-    <div class="card-field">
-      <span class="card-label">${escapeHtml(label)}:</span>
-      <span class="card-value">${escapeHtml(v)}</span>
-    </div>
-  `;
+  return sanitizeNomeArquivo("CARTAO_VACINACAO", p.nome, p.cpf, p.id);
 }
 
 function renderPaciente(p: PacienteResponse): string {
@@ -101,16 +19,16 @@ function renderPaciente(p: PacienteResponse): string {
     <section class="paciente-box">
       <div class="paciente-title">Paciente: ${escapeHtml(p.nome)}</div>
       <div class="grid-2">
-        ${renderField("Cartão SUS", p.cartaoSus ?? p.cdUsuCadsus ?? null)}
-        ${renderField("CPF", formatCpf(p.cpf))}
+        ${renderField("Cartao SUS", p.cartaoSus ?? p.cdUsuCadsus ?? null)}
+        ${renderField("CPF", formatCpf(p.cpf, "\u2014"))}
       </div>
       ${renderField("Nome", p.nome)}
       ${renderField("Nome Social", p.nomeSocial)}
-      ${renderField("Nome da Mãe", p.nomeMae)}
+      ${renderField("Nome da Mae", p.nomeMae)}
       <div class="grid-3">
-        ${renderField("País de Nascimento", p.paisNascimento)}
+        ${renderField("Pais de Nascimento", p.paisNascimento)}
         ${renderField("UF de Nascimento", p.ufNascimento)}
-        ${renderField("Município de Nascimento", p.municipioNascimento)}
+        ${renderField("Municipio de Nascimento", p.municipioNascimento)}
       </div>
       <div class="grid-3">
         ${renderField("Nascimento", p.dataNascimento)}
@@ -118,23 +36,23 @@ function renderPaciente(p: PacienteResponse): string {
         ${renderField("Sexo", formatSexo(p.sexo))}
       </div>
       <div class="grid-2">
-        ${renderField("Raça", p.raca)}
+        ${renderField("Raca", p.raca)}
         ${renderField("Etnia", p.etnia)}
       </div>
       <div class="endereco-divider"></div>
       <div class="grid-3">
-        ${renderField("Endereço", formatEnderecoLogradouro(p))}
-        ${renderField("Número", e?.numero)}
+        ${renderField("Endereco", formatEnderecoLogradouro(p))}
+        ${renderField("Numero", e?.numero)}
         ${renderField("Complemento", e?.complemento)}
       </div>
       <div class="grid-3">
         ${renderField("Bairro", e?.bairro)}
-        ${renderField("Município", e?.cidade)}
+        ${renderField("Municipio", e?.cidade)}
         ${renderField("UF", e?.uf)}
       </div>
       <div class="grid-2">
         ${renderField("CEP", e?.cep)}
-        ${renderField("País", p.paisEndereco)}
+        ${renderField("Pais", p.paisEndereco)}
       </div>
       <div class="grid-3">
         ${renderField("Telefone", p.telefone)}
@@ -169,13 +87,13 @@ function renderTabelaVacinas(vacinas: VacinaResumoResponse[]): string {
     <table class="vacinas-table">
       <thead>
         <tr>
-          <th class="col-aplic">Aplicação</th>
-          <th class="col-estrat">Estratégia</th>
-          <th class="col-imuno">Imunobiológico</th>
+          <th class="col-aplic">Aplicacao</th>
+          <th class="col-estrat">Estrategia</th>
+          <th class="col-imuno">Imunobiologico</th>
           <th class="col-dose">Dose</th>
-          <th class="col-lab">Laboratório</th>
+          <th class="col-lab">Laboratorio</th>
           <th class="col-lote">Lote</th>
-          <th class="col-estab">Estab. de Saúde</th>
+          <th class="col-estab">Estab. de Saude</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
@@ -195,8 +113,6 @@ function renderHtml(paciente: PacienteResponse, vacinas: VacinaResumoResponse[],
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: #f3f4f6; color: #202020; font-family: Arial, Helvetica, sans-serif; }
   #cartao-vacinacao { max-width: 297mm; margin: 0 auto; background: #fff; font-size: 11px; line-height: 1.35; }
-
-  /* Shell de tabela para repetir cabeçalho/rodapé em cada página impressa */
   .page-shell { width: 100%; border-collapse: collapse; }
   .page-shell thead { display: table-header-group; }
   .page-shell tfoot { display: table-footer-group; }
@@ -204,59 +120,29 @@ function renderHtml(paciente: PacienteResponse, vacinas: VacinaResumoResponse[],
   .page-shell td.content-cell { padding: 4mm 14mm 6mm 14mm; }
   .page-shell thead td { padding: 8mm 14mm 0 14mm; }
   .page-shell tfoot td { padding: 0 14mm 8mm 14mm; }
-
-  /* Header (igual ao prontuário) */
-  .print-header {
-    display: grid;
-    grid-template-columns: 34mm 1fr 34mm;
-    align-items: start;
-    gap: 8px;
-    border-bottom: 1px solid #b8b8b8;
-    padding-bottom: 8px;
-    margin-bottom: 14px;
-  }
+  .print-header { display: grid; grid-template-columns: 34mm 1fr 34mm; align-items: start; gap: 8px; border-bottom: 1px solid #b8b8b8; padding-bottom: 8px; margin-bottom: 14px; }
   .logo { width: 54mm; max-height: 28mm; object-fit: contain; display: block; margin: 0 auto; }
   .header-text { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
   .print-header h1 { margin: 4px 0 0; font-size: 14px; font-weight: 700; }
   .print-header .prefeitura { font-size: 14px; font-weight: 700; }
   .print-header .sistema { font-size: 12px; }
   .print-header .orgao { font-size: 10px; }
-
-  /* Footer (igual ao prontuário) */
-  .print-footer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    border-top: 1px solid #b8b8b8;
-    margin-top: 14px;
-    padding-top: 6px;
-    color: #666666;
-    font-size: 9px;
-  }
+  .print-footer { display: flex; flex-direction: column; align-items: center; gap: 3px; border-top: 1px solid #b8b8b8; margin-top: 14px; padding-top: 6px; color: #666666; font-size: 9px; }
   .print-timestamp { color: #b8b8b8; font-size: 8px; font-style: italic; margin-top: 2px; }
-
-  /* Paciente */
   .paciente-box { border: 1px solid #d1d5db; border-radius: 4px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
   .paciente-title { font-size: 13px; font-weight: 700; color: #0f3a8a; padding-bottom: 4px; border-bottom: 1px dashed #e5e7eb; margin-bottom: 4px; }
-
   .card-field { display: flex; flex-wrap: wrap; gap: 0 6px; font-size: 11px; line-height: 1.4; min-width: 0; }
   .card-label { font-weight: 700; color: #374151; }
   .card-value { color: #111; overflow-wrap: anywhere; word-break: break-word; }
-
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; }
   .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px 16px; }
   .endereco-divider { height: 1px; background: #e5e7eb; margin: 4px 0; }
-
-  /* Tabela de vacinas */
   .vacinas-table { width: 100%; border-collapse: collapse; font-size: 10px; table-layout: fixed; }
   .vacinas-table thead th { background: #0f3a8a; color: #ffffff; text-align: center; padding: 6px 6px; font-weight: 700; border: 1px solid #0f3a8a; }
   .vacinas-table tbody td { padding: 6px 8px; border: 1px solid #4b5563; vertical-align: middle; overflow-wrap: anywhere; word-break: break-word; }
   .vacinas-table tbody tr:nth-child(even) td { background: #ffffff; }
   .vacinas-table td.data { white-space: nowrap; text-align: center; }
   .vacinas-table td.dose { white-space: nowrap; text-align: center; }
-  .vacinas-table td.muted { color: #9ca3af; text-align: center; font-style: italic; }
-  /* Larguras pensadas para A4 retrato (~182mm úteis) */
   .vacinas-table .col-aplic { width: 9%; }
   .vacinas-table .col-estrat { width: 9%; }
   .vacinas-table .col-imuno { width: 22%; }
@@ -264,25 +150,9 @@ function renderHtml(paciente: PacienteResponse, vacinas: VacinaResumoResponse[],
   .vacinas-table .col-lab { width: 14%; }
   .vacinas-table .col-lote { width: 12%; }
   .vacinas-table .col-estab { width: 26%; }
-
   .vazio { text-align: center; padding: 24px 12px; color: #6b7280; font-size: 12px; border: 1px dashed #d1d5db; border-radius: 4px; }
-
   @media print {
-    @page {
-      size: A4 landscape;
-      margin: 12mm 12mm 18mm;
-      @top-left { content: ""; }
-      @top-center { content: ""; }
-      @top-right { content: ""; }
-      @bottom-left { content: ""; }
-      @bottom-center {
-        content: "Página " counter(page) " de " counter(pages);
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 8pt;
-        color: #b8b8b8;
-      }
-      @bottom-right { content: ""; }
-    }
+    @page { size: A4 landscape; margin: 12mm 12mm 18mm; @bottom-center { content: "Pagina " counter(page) " de " counter(pages); font-family: Arial, Helvetica, sans-serif; font-size: 8pt; color: #b8b8b8; } }
     html, body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     #cartao-vacinacao { max-width: none; box-shadow: none; }
     .page-shell td.content-cell, .page-shell thead td, .page-shell tfoot td { padding-left: 0; padding-right: 0; }
@@ -295,10 +165,10 @@ function renderHtml(paciente: PacienteResponse, vacinas: VacinaResumoResponse[],
   <div id="cartao-vacinacao">
     <table class="page-shell">
       <thead>
-        <tr><td>${renderHeader(logoBase64)}</td></tr>
+        <tr><td>${renderPrintHeader("CARTAO DE VACINACAO", logoBase64)}</td></tr>
       </thead>
       <tfoot>
-        <tr><td>${renderFooter()}</td></tr>
+        <tr><td>${renderPrintFooter()}</td></tr>
       </tfoot>
       <tbody>
         <tr>
@@ -311,12 +181,7 @@ function renderHtml(paciente: PacienteResponse, vacinas: VacinaResumoResponse[],
     </table>
   </div>
   <script>
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        window.focus();
-        window.print();
-      }, 250);
-    });
+    window.addEventListener('load', function() { setTimeout(function() { window.focus(); window.print(); }, 250); });
   </script>
 </body>
 </html>`;
@@ -327,11 +192,5 @@ export function imprimirCartaoVacinacao(
   vacinas: VacinaResumoResponse[],
   logoBase64?: string,
 ): void {
-  const printWindow = window.open("", "_blank", "width=1024,height=768");
-  if (!printWindow) {
-    throw new Error("Não foi possível abrir a janela de impressão. Verifique o bloqueador de pop-ups.");
-  }
-  printWindow.document.open();
-  printWindow.document.write(renderHtml(paciente, vacinas, logoBase64));
-  printWindow.document.close();
+  openPrintWindow(renderHtml(paciente, vacinas, logoBase64));
 }

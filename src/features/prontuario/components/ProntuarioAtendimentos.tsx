@@ -7,58 +7,16 @@ import { toast } from "sonner";
 import { getLogoBase64 } from "@/lib/logoGoiania";
 import { imprimirProntuario } from "@/lib/ProntuarioPrint";
 import { useObterProntuario } from "@/features/prontuario/hooks/useObterProntuario";
+import { formatEndereco } from "@/shared/formatters";
+import { blocosConteudo } from "@/shared/prontuarioUtils";
 import type {
   ProntuarioResponse,
-  ProntuarioEndereco,
   ProntuarioRegistro,
-  ProntuarioRegistroConteudo,
 } from "@/features/prontuario/domain/schemas";
 
 interface Props {
   pacienteId: number;
 }
-
-function htmlToText(html?: string | null): string {
-  if (!html) return "";
-  const withBreaks = html
-    .replace(/<\s*br\s*\/?\s*>/gi, "\n")
-    .replace(/<\/\s*(p|div|li|tr|h[1-6])\s*>/gi, "\n")
-    .replace(/<\s*li\s*[^>]*>/gi, "\u2022 ");
-  const tmp = document.createElement("div");
-  tmp.innerHTML = withBreaks;
-  const text = tmp.textContent || tmp.innerText || "";
-  return text
-    .replace(/\u00a0/g, " ")
-    .replace(/[ \t]+\n/g, "\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .replace(/[ \t]{2,}/g, " ")
-    .trim();
-}
-
-interface Bloco { label: string; texto: string; }
-
-function blocosConteudo(c: ProntuarioRegistroConteudo): Bloco[] {
-  const out: Bloco[] = [];
-  const av = htmlToText(c.avaliacao);
-  const ev = htmlToText(c.evolucao);
-  const ex = htmlToText(c.exame);
-  if (av) out.push({ label: "Avaliacao", texto: av });
-  if (ev) out.push({ label: "Evolucao", texto: ev });
-  if (ex) out.push({ label: "Exame", texto: ex });
-  return out;
-}
-
-const formatEndereco = (endereco: ProntuarioEndereco | null | undefined): string => {
-  if (!endereco) return "";
-  return [
-    endereco.tipoLogradouro,
-    endereco.logradouro,
-    endereco.numero !== "00" ? endereco.numero : null,
-    endereco.complemento,
-    endereco.bairro,
-    endereco.cidade && `${endereco.cidade} - ${endereco.uf ?? ""}`,
-  ].filter(Boolean).join(", ");
-};
 
 export function ProntuarioAtendimentos({ pacienteId }: Props) {
   const query = useObterProntuario(pacienteId);
@@ -189,7 +147,7 @@ export function ProntuarioAtendimentos({ pacienteId }: Props) {
 
                   <div className="flex items-center gap-2 flex-wrap">
                     {a.possuiAih && <Badge className="bg-green-100 text-green-800 border border-green-300 hover:bg-green-100">AIH SOLICITADA</Badge>}
-                    {a.numeroAtendimento && <Badge variant="outline">N&ordm; {a.numeroAtendimento}</Badge>}
+                    {a.numeroAtendimento && <Badge variant="outline">Nr {a.numeroAtendimento}</Badge>}
                     {a.classificacaoRisco && <Badge variant="outline">{a.classificacaoRisco}</Badge>}
 
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">

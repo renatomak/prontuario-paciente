@@ -1,22 +1,12 @@
 import { useObterVacinaDetalhe as useVacinaDetalhe } from "@/features/vacina/hooks/useObterVacinaDetalhe";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Loader2 } from "lucide-react";
+import { FieldDisplay } from "@/components/FieldDisplay";
 
 interface Props {
   idAplicacao: number | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}
-
-function Field({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1">
-      <span className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</span>
-      <span className="text-sm font-medium text-foreground min-h-5 border-b border-border/60 pb-1">
-        {value || "\u2014"}
-      </span>
-    </div>
-  );
 }
 
 function YesNo({ v }: { v: boolean }) {
@@ -44,58 +34,58 @@ export function VacinaDetalheSheet({ idAplicacao, open, onOpenChange }: Props) {
             <section>
               <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">Dados da Aplicacao</h4>
               <div className="grid grid-cols-2 gap-4">
-                <Field label="Nr Atendimento" value={detalhe.nrAtendimento} />
-                <Field label="Status" value={detalhe.status} />
-                <Field label="Vacina" value={detalhe.nomeVacina} />
-                <Field label="Dose" value={detalhe.dose} />
-                <Field label="Estrategia" value={detalhe.estrategia} />
-                <Field label="Data de Aplicacao" value={detalhe.dataAplicacao} />
-                <Field label="Lote" value={detalhe.lote} />
-                <Field label="Validade do Lote" value={detalhe.validadeLote} />
-                <Field label="Via Administracao" value={detalhe.viaAdministracao} />
-                <Field label="Local Aplicacao" value={detalhe.localAplicacao} />
+                <FieldDisplay label="Nr Atendimento" value={detalhe.nrAtendimento} labelClassName="text-[11px]" />
+                <FieldDisplay label="Status" value={detalhe.status} labelClassName="text-[11px]" />
+                <FieldDisplay label="Vacina" value={detalhe.nomeVacina} labelClassName="text-[11px]" />
+                <FieldDisplay label="Dose" value={detalhe.dose} labelClassName="text-[11px]" />
+                <FieldDisplay label="Estrategia" value={detalhe.estrategia} labelClassName="text-[11px]" />
+                <FieldDisplay label="Data de Aplicacao" value={detalhe.dataAplicacao} labelClassName="text-[11px]" />
+                <FieldDisplay label="Lote" value={detalhe.lote} labelClassName="text-[11px]" />
+                <FieldDisplay label="Validade do Lote" value={detalhe.validadeLote} labelClassName="text-[11px]" />
+                <FieldDisplay label="Via Administracao" value={detalhe.viaAdministracao} labelClassName="text-[11px]" />
+                <FieldDisplay label="Local Aplicacao" value={detalhe.localAplicacao} labelClassName="text-[11px]" />
               </div>
             </section>
 
             <section>
               <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">Atendimento</h4>
               <div className="grid grid-cols-2 gap-4">
-                <Field label="Local Atendimento" value={detalhe.localAtendimento} />
-                <Field label="Turno" value={detalhe.turno} />
-                <Field label="Grupo de Atendimento" value={detalhe.grupoAtendimento} />
-                <Field label="Gestante" value={<YesNo v={detalhe.gestante} />} />
-                <Field label="Puerpera" value={<YesNo v={detalhe.puerpera} />} />
-                <Field label="Historico" value={<YesNo v={detalhe.historico} />} />
-                <Field label="Fora de Esquema" value={<YesNo v={detalhe.foraEsquema} />} />
-                <Field label="Viajante" value={<YesNo v={detalhe.viajante} />} />
-                <Field label="Novo Frasco" value={<YesNo v={detalhe.novoFrasco} />} />
+                <FieldDisplay label="Local Atendimento" value={detalhe.localAtendimento} labelClassName="text-[11px]" />
+                <FieldDisplay label="Turno" value={detalhe.turno} labelClassName="text-[11px]" />
+                <FieldDisplay label="Grupo de Atendimento" value={detalhe.grupoAtendimento} labelClassName="text-[11px]" />
+                <FieldDisplay label="Gestante" value={<YesNo v={detalhe.gestante} />} labelClassName="text-[11px]" />
+                <FieldDisplay label="Puerpera" value={<YesNo v={detalhe.puerpera} />} labelClassName="text-[11px]" />
+                <FieldDisplay label="Historico" value={<YesNo v={detalhe.historico} />} labelClassName="text-[11px]" />
+                <FieldDisplay label="Fora de Esquema" value={<YesNo v={detalhe.foraEsquema} />} labelClassName="text-[11px]" />
+                <FieldDisplay label="Viajante" value={<YesNo v={detalhe.viajante} />} labelClassName="text-[11px]" />
+                <FieldDisplay label="Novo Frasco" value={<YesNo v={detalhe.novoFrasco} />} labelClassName="text-[11px]" />
               </div>
             </section>
 
             <section>
               <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">Fabricante</h4>
               <div className="grid grid-cols-2 gap-4">
-                <Field label="Laboratorio" value={detalhe.fabricanteNome} />
-                <Field label="CNPJ" value={detalhe.fabricanteCnpj} />
+                <FieldDisplay label="Laboratorio" value={detalhe.fabricanteNome} labelClassName="text-[11px]" />
+                <FieldDisplay label="CNPJ" value={detalhe.fabricanteCnpj} labelClassName="text-[11px]" />
               </div>
             </section>
 
             <section>
               <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">Profissional & Unidade</h4>
               <div className="grid grid-cols-2 gap-4">
-                <Field label="Profissional" value={detalhe.profissionalNome} />
-                <Field label="Conselho" value={`${detalhe.profissionalConselho ?? ""} ${detalhe.profissionalRegistro ?? ""}`.trim()} />
-                <Field label="CNS" value={detalhe.profissionalCns} />
-                <Field label="Unidade" value={detalhe.unidadeNome} />
-                <Field label="CNES" value={detalhe.unidadeCnes} />
+                <FieldDisplay label="Profissional" value={detalhe.profissionalNome} labelClassName="text-[11px]" />
+                <FieldDisplay label="Conselho" value={`${detalhe.profissionalConselho ?? ""} ${detalhe.profissionalRegistro ?? ""}`.trim()} labelClassName="text-[11px]" />
+                <FieldDisplay label="CNS" value={detalhe.profissionalCns} labelClassName="text-[11px]" />
+                <FieldDisplay label="Unidade" value={detalhe.unidadeNome} labelClassName="text-[11px]" />
+                <FieldDisplay label="CNES" value={detalhe.unidadeCnes} labelClassName="text-[11px]" />
               </div>
             </section>
 
             <section>
               <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">RNDS</h4>
               <div className="grid grid-cols-2 gap-4">
-                <Field label="Situacao" value={detalhe.rndsSituacao} />
-                <Field label="UUID" value={detalhe.rndsUuid} />
+                <FieldDisplay label="Situacao" value={detalhe.rndsSituacao} labelClassName="text-[11px]" />
+                <FieldDisplay label="UUID" value={detalhe.rndsUuid} labelClassName="text-[11px]" />
               </div>
             </section>
 

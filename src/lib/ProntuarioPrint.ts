@@ -1,58 +1,11 @@
 import type {
   ProntuarioAtendimento,
-  ProntuarioEndereco,
   ProntuarioResponse,
-  ProntuarioRegistroConteudo,
 } from "@/features/prontuario/domain/schemas";
+import { escapeHtml, formatEndereco, sanitizeNomeArquivo } from "@/shared/formatters";
+import { renderPrintHeader, renderPrintFooter, renderCampo, openPrintWindow } from "@/shared/printUtils";
+import { blocosConteudo } from "@/shared/prontuarioUtils";
 import { limparHtml } from "@/lib/limparHtml";
-
-const documentoPadrao = {
-  titulo: "PRONTUÁRIO DE ATENDIMENTOS",
-  prefeitura: "Prefeitura Municipal de Goiânia - GO",
-  sistema: "SUS - SISTEMA ÚNICO DE SAÚDE",
-  orgao: "Secretaria Municipal de Saúde de Goiânia - GO",
-  enderecoUnidade: "Industrial - Setor Leste Vila Nova - CEP 74635-040",
-  cidadeUnidade: "GOIANIA - GO",
-  telefoneUnidade: "(62) 3524-1824",
-};
-
-type BlocoConteudo = { label: string; texto: string; longText?: boolean };
-
-function escapeHtml(value?: string | number | null): string {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-function formatEndereco(endereco?: ProntuarioEndereco | null): string {
-  if (!endereco) return "";
-  return [
-    endereco.tipoLogradouro,
-    endereco.logradouro,
-    endereco.numero !== "00" ? endereco.numero : null,
-    endereco.complemento,
-    endereco.bairro,
-    endereco.cidade && `${endereco.cidade} - ${endereco.uf ?? ""}`,
-  ]
-    .filter(Boolean)
-    .join(", ");
-}
-
-function nomeArquivo(data: ProntuarioResponse): string {
-  const cpfDigits = (data.paciente.cpf || "").replace(/\D/g, "");
-  const cdUsu = data.paciente.cdUsuCadsus ?? data.paciente.id;
-  const nomeSan = (data.paciente.nome || "PACIENTE")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-zA-Z0-9\s]/g, "")
-    .trim()
-    .replace(/\s+/g, "_")
-    .toUpperCase();
-  return `PRONTUARIO_${cdUsu}_${cpfDigits || data.paciente.id}_${nomeSan}.pdf`;
-}
 
 function normalizarTexto(texto?: string | null): string {
   return limparHtml(texto)
@@ -61,39 +14,19 @@ function normalizarTexto(texto?: string | null): string {
     .trim();
 }
 
-function blocosConteudo(c: ProntuarioRegistroConteudo): BlocoConteudo[] {
-  const blocos: BlocoConteudo[] = [];
-  const avaliacao = normalizarTexto(c.avaliacao);
-  const evolucao = normalizarTexto(c.evolucao);
-  const exame = normalizarTexto(c.exame);
-  if (avaliacao) blocos.push({ label: "Avaliação", texto: avaliacao });
-  if (evolucao) blocos.push({ label: "Evolução", texto: evolucao, longText: true });
-  if (exame) blocos.push({ label: "Exame", texto: exame });
-  return blocos;
-}
-
-function campo(label: string, value?: string | number | null, className = ""): string {
-  return `
-    <div class="pdf-field ${className}">
-      <span class="pdf-label">${escapeHtml(label)}:</span>
-      <span class="pdf-value">${escapeHtml(value || "—")}</span>
-    </div>
-  `;
-}
-
 function renderPaciente(data: ProntuarioResponse): string {
   const { paciente } = data;
   return `
     <section class="patient-section pdf-section">
       <h2>Dados do Paciente</h2>
       <div class="patient-grid">
-        ${campo("Nome", `( ${paciente.id} ) ${paciente.nome || ""}`, "patient-name")}
-        ${campo("Sexo", paciente.sexo)}
-        ${campo("Nome da Mãe", paciente.nomeMae)}
-        ${campo("Dt. Nascimento", paciente.dataNascimento)}
-        ${campo("Endereço", formatEndereco(paciente.endereco), "patient-address")}
-        ${campo("Telefone", paciente.telefone)}
-        ${campo("CPF", paciente.cpf)}
+        ${renderCampo("Nome", `( ${paciente.id} ) ${paciente.nome || ""}`, "patient-name")}
+        ${renderCampo("Sexo", paciente.sexo)}
+        ${renderCampo("Nome da Mae", paciente.nomeMae)}
+        ${renderCampo("Dt. Nascimento", paciente.dataNascimento)}
+        ${renderCampo("Endereco", formatEndereco(paciente.endereco), "patient-address")}
+        ${renderCampo("Telefone", paciente.telefone)}
+        ${renderCampo("CPF", paciente.cpf)}
       </div>
     </section>
   `;
@@ -114,15 +47,15 @@ function renderAtendimentoHeader(a: ProntuarioAtendimento): string {
   return `
     <div class="atendimento-header">
       <div class="atendimento-main">
-        <h3>${escapeHtml(a.unidade?.nome || "Unidade não informada")}</h3>
-        ${a.tipoAtendimento ? campo("Tipo de Atendimento", a.tipoAtendimento) : ""}
-        ${a.profissional?.nome ? campo("Profissional", `${a.profissional.nome}${conselho}`) : ""}
+        <h3>${escapeHtml(a.unidade?.nome || "Unidade nao informada")}</h3>
+        ${a.tipoAtendimento ? renderCampo("Tipo de Atendimento", a.tipoAtendimento) : ""}
+        ${a.profissional?.nome ? renderCampo("Profissional", `${a.profissional.nome}${conselho}`) : ""}
       </div>
       <div class="atendimento-meta">
         ${a.possuiAih ? `<span class="aih-badge">AIH SOLICITADA</span>` : ""}
-        ${campo("Data Registro", dataRegistro)}
-        ${a.numeroAtendimento ? campo("Nº", a.numeroAtendimento) : ""}
-        ${a.classificacaoRisco ? campo("Risco", a.classificacaoRisco) : ""}
+        ${renderCampo("Data Registro", dataRegistro)}
+        ${a.numeroAtendimento ? renderCampo("Nr", a.numeroAtendimento) : ""}
+        ${a.classificacaoRisco ? renderCampo("Risco", a.classificacaoRisco) : ""}
       </div>
     </div>
   `;
@@ -133,26 +66,26 @@ function renderAtendimento(a: ProntuarioAtendimento): string {
   const aih = a.possuiAih && a.aihDetalhes
     ? `
       <div class="aih-section pdf-section">
-        <h4>DETALHES DA SOLICITAÇÃO DE INTERNAÇÃO</h4>
+        <h4>DETALHES DA SOLICITACAO DE INTERNACAO</h4>
         <div class="content-block">
           <span class="content-label">Data de Cadastro:</span>
-          <div class="content-value">${escapeHtml(a.aihDetalhes.dataCadastro || "Não informado")}</div>
+          <div class="content-value">${escapeHtml(a.aihDetalhes.dataCadastro || "Nao informado")}</div>
         </div>
         <div class="content-block">
-          <span class="content-label">Diagnóstico Inicial:</span>
-          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aihDetalhes.diagnosticoInicial) || "Não informado")}</div>
+          <span class="content-label">Diagnostico Inicial:</span>
+          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aihDetalhes.diagnosticoInicial) || "Nao informado")}</div>
         </div>
         <div class="content-block">
           <span class="content-label">Sinais e Sintomas:</span>
-          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aihDetalhes.principaisSinais) || "Não informado")}</div>
+          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aihDetalhes.principaisSinais) || "Nao informado")}</div>
         </div>
         <div class="content-block">
-          <span class="content-label">Condições que Justificam a Internação:</span>
-          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aihDetalhes.condicoesInternacao) || "Não informado")}</div>
+          <span class="content-label">Condicoes que Justificam a Internacao:</span>
+          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aihDetalhes.condicoesInternacao) || "Nao informado")}</div>
         </div>
         <div class="content-block">
-          <span class="content-label">Principais Resultados de Provas Diagnósticas:</span>
-          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aihDetalhes.principaisResultados) || "Não informado")}</div>
+          <span class="content-label">Principais Resultados de Provas Diagnosticas:</span>
+          <div class="content-value long-text">${escapeHtml(normalizarTexto(a.aihDetalhes.principaisResultados) || "Nao informado")}</div>
         </div>
       </div>
     `
@@ -164,7 +97,7 @@ function renderAtendimento(a: ProntuarioAtendimento): string {
         return `
           <section class="registro-section pdf-section">
             <div class="registro-header">
-              <strong>Tipo: ${escapeHtml(registro.tipo || "—")}</strong>
+              <strong>Tipo: ${escapeHtml(registro.tipo || "\u2014")}</strong>
               <span>${escapeHtml(registro.data)}</span>
             </div>
             ${blocos.length > 0
@@ -174,11 +107,11 @@ function renderAtendimento(a: ProntuarioAtendimento): string {
                   <div class="content-value ${b.longText ? "long-text" : ""}">${escapeHtml(b.texto)}</div>
                 </div>
               `).join("")
-              : `<p class="empty-text">(Sem conteúdo)</p>`}
+              : `<p class="empty-text">(Sem conteudo)</p>`}
           </section>
         `;
       }).join("")
-    : (!a.possuiAih ? `<p class="empty-text sem-registro">(Sem registros clínicos)</p>` : "");
+    : (!a.possuiAih ? `<p class="empty-text sem-registro">(Sem registros clinicos)</p>` : "");
 
   return `
     <article class="atendimento-section pdf-section">
@@ -198,23 +131,9 @@ function renderHtml(data: ProntuarioResponse, logoBase64?: string): string {
     <html lang="pt-BR">
       <head>
         <meta charset="utf-8" />
-        <title>Prontuário de Atendimentos</title>
+        <title>Prontuario de Atendimentos</title>
         <style>
-          @page {
-            size: A4 portrait;
-            margin: 14mm 14mm 20mm;
-            @top-left { content: ""; }
-            @top-center { content: ""; }
-            @top-right { content: ""; }
-            @bottom-left { content: ""; }
-            @bottom-center {
-              content: "Página " counter(page) " de " counter(pages);
-              font-family: Arial, Helvetica, sans-serif;
-              font-size: 8pt;
-              color: #b8b8b8;
-            }
-            @bottom-right { content: ""; }
-          }
+          @page { size: A4 portrait; margin: 14mm 14mm 20mm; @bottom-center { content: "Pagina " counter(page) " de " counter(pages); font-family: Arial, Helvetica, sans-serif; font-size: 8pt; color: #b8b8b8; } }
           @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
           #prontuario-impressao, #prontuario-impressao * { box-sizing: border-box; }
           body { margin: 0; background: #ffffff; color: #202020; font-family: Arial, Helvetica, sans-serif; }
@@ -223,22 +142,8 @@ function renderHtml(data: ProntuarioResponse, logoBase64?: string): string {
           #prontuario-impressao .print-shell thead { display: table-header-group; }
           #prontuario-impressao .print-shell tfoot { display: table-footer-group; }
           #prontuario-impressao .print-shell td { padding: 0; vertical-align: top; }
-          #prontuario-impressao .print-header {
-            display: grid;
-            grid-template-columns: 34mm 1fr 34mm;
-            align-items: start;
-            gap: 8px;
-            border-bottom: 1px solid #b8b8b8;
-            padding-bottom: 8px;
-            margin-bottom: 14px;
-          }
-          #prontuario-impressao .logo {
-            width: 54mm;
-            max-height: 28mm;
-            object-fit: contain;
-            display: block;
-            margin: 0 auto;
-          }
+          #prontuario-impressao .print-header { display: grid; grid-template-columns: 34mm 1fr 34mm; align-items: start; gap: 8px; border-bottom: 1px solid #b8b8b8; padding-bottom: 8px; margin-bottom: 14px; }
+          #prontuario-impressao .logo { width: 54mm; max-height: 28mm; object-fit: contain; display: block; margin: 0 auto; }
           #prontuario-impressao .header-text { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
           #prontuario-impressao h1, #prontuario-impressao h2, #prontuario-impressao h3, #prontuario-impressao h4, #prontuario-impressao p { margin: 0; }
           #prontuario-impressao h1 { margin-top: 4px; font-size: 14px; font-weight: 700; }
@@ -247,57 +152,20 @@ function renderHtml(data: ProntuarioResponse, logoBase64?: string): string {
           #prontuario-impressao .orgao { font-size: 10px; }
           #prontuario-impressao .print-body { display: flex; flex-direction: column; gap: 12px; }
           #prontuario-impressao .pdf-section { break-inside: auto; page-break-inside: auto; }
-          #prontuario-impressao .patient-section {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            border: 1px solid #b8b8b8;
-            border-radius: 4px;
-            background: #f5f7fa;
-            padding: 10px;
-          }
+          #prontuario-impressao .patient-section { display: flex; flex-direction: column; gap: 8px; border: 1px solid #b8b8b8; border-radius: 4px; background: #f5f7fa; padding: 10px; }
           #prontuario-impressao .patient-section h2 { font-size: 12px; font-weight: 700; }
           #prontuario-impressao .patient-grid { display: grid; grid-template-columns: 1fr 0.55fr; column-gap: 16px; row-gap: 6px; }
           #prontuario-impressao .patient-address, #prontuario-impressao .patient-name { grid-column: span 1; }
-          #prontuario-impressao .pdf-field {
-            display: flex;
-            flex-direction: row;
-            align-items: baseline;
-            gap: 0 8px;
-            min-width: 0;
-            flex-wrap: nowrap;
-          }
+          #prontuario-impressao .pdf-field { display: flex; flex-direction: row; align-items: baseline; gap: 0 8px; min-width: 0; flex-wrap: nowrap; }
           #prontuario-impressao .pdf-label { flex: 0 0 auto; font-weight: 700; color: #4f4f4f; }
           #prontuario-impressao .pdf-value { flex: 1 1 70px; min-width: 0; overflow-wrap: break-word; word-break: break-word; }
           #prontuario-impressao .atendimento-section { display: flex; flex-direction: column; gap: 12px; }
-          #prontuario-impressao .atendimento-header {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) 54mm;
-            gap: 14px;
-            border: 1px solid #c4c9cf;
-            border-radius: 4px;
-            background: #dfe7f2;
-            padding: 10px;
-            break-inside: avoid;
-            page-break-inside: avoid;
-            break-after: avoid;
-            page-break-after: avoid;
-          }
+          #prontuario-impressao .atendimento-header { display: grid; grid-template-columns: minmax(0, 1fr) 54mm; gap: 14px; border: 1px solid #c4c9cf; border-radius: 4px; background: #dfe7f2; padding: 10px; break-inside: avoid; page-break-inside: avoid; break-after: avoid; page-break-after: avoid; }
           #prontuario-impressao .atendimento-main, #prontuario-impressao .atendimento-meta { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
           #prontuario-impressao .atendimento-main h3 { font-size: 13px; font-weight: 700; overflow-wrap: break-word; word-break: break-word; }
           #prontuario-impressao .atendimento-meta { text-align: right; align-items: flex-end; }
           #prontuario-impressao .atendimento-meta .pdf-field { justify-content: flex-end; }
-          #prontuario-impressao .aih-badge {
-            display: inline-block;
-            background: #d1fae5;
-            color: #065f46;
-            border: 1px solid #6ee7b7;
-            font-weight: 700;
-            font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 10px;
-            letter-spacing: 0.3px;
-          }
+          #prontuario-impressao .aih-badge { display: inline-block; background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; font-weight: 700; font-size: 10px; padding: 2px 8px; border-radius: 10px; letter-spacing: 0.3px; }
           #prontuario-impressao .aih-section, #prontuario-impressao .registro-section { display: flex; flex-direction: column; gap: 8px; padding: 0 4px 4px; }
           #prontuario-impressao .aih-section h4 { color: #1e40af; font-size: 10px; font-weight: 700; }
           #prontuario-impressao .registro-section { border-top: 1px solid #dedede; padding-top: 8px; }
@@ -309,41 +177,15 @@ function renderHtml(data: ProntuarioResponse, logoBase64?: string): string {
           #prontuario-impressao .evolucao-block { padding-bottom: 4px; }
           #prontuario-impressao .empty-text { color: #666666; font-style: italic; padding: 0 4px 4px; }
           #prontuario-impressao .sem-registro { display: block; }
-          #prontuario-impressao .print-footer {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            border-top: 1px solid #b8b8b8;
-            margin-top: 14px;
-            padding-top: 6px;
-            color: #666666;
-            font-size: 9px;
-          }
-          #prontuario-impressao .print-timestamp {
-            color: #b8b8b8;
-            font-size: 8px;
-            font-style: italic;
-            margin-top: 2px;
-          }
+          #prontuario-impressao .print-footer { display: flex; flex-direction: column; align-items: center; gap: 3px; border-top: 1px solid #b8b8b8; margin-top: 14px; padding-top: 6px; color: #666666; font-size: 9px; }
+          #prontuario-impressao .print-timestamp { color: #b8b8b8; font-size: 8px; font-style: italic; margin-top: 2px; }
         </style>
       </head>
       <body>
         <main id="prontuario-impressao">
           <table class="print-shell">
             <thead>
-              <tr><td>
-                <header class="print-header">
-                  <div>${logoBase64 ? `<img class="logo" src="${logoBase64}" alt="Prefeitura de Goiânia" />` : ""}</div>
-                  <div class="header-text">
-                    <div class="prefeitura">${documentoPadrao.prefeitura}</div>
-                    <div class="sistema">${documentoPadrao.sistema}</div>
-                    <div class="orgao">${documentoPadrao.orgao}</div>
-                    <h1>${documentoPadrao.titulo}</h1>
-                  </div>
-                  <div></div>
-                </header>
-              </td></tr>
+              <tr><td>${renderPrintHeader("PRONTUARIO DE ATENDIMENTOS", logoBase64)}</td></tr>
             </thead>
             <tbody>
               <tr><td>
@@ -354,13 +196,7 @@ function renderHtml(data: ProntuarioResponse, logoBase64?: string): string {
               </td></tr>
             </tbody>
             <tfoot>
-              <tr><td>
-                <footer class="print-footer">
-                  <div>${documentoPadrao.enderecoUnidade}</div>
-                  <strong>${documentoPadrao.cidadeUnidade} | ${documentoPadrao.telefoneUnidade}</strong>
-                  <div class="print-timestamp">Emitido em ${new Date().toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })}</div>
-                </footer>
-              </td></tr>
+              <tr><td>${renderPrintFooter()}</td></tr>
             </tfoot>
           </table>
         </main>
@@ -372,13 +208,9 @@ function renderHtml(data: ProntuarioResponse, logoBase64?: string): string {
 }
 
 export function imprimirProntuario(data: ProntuarioResponse, logoBase64?: string): void {
-  const printWindow = window.open("", "_blank", "width=1024,height=768");
-  if (!printWindow) throw new Error("Não foi possível abrir a janela de impressão.");
-  printWindow.document.open();
-  printWindow.document.write(renderHtml(data, logoBase64));
-  printWindow.document.close();
+  openPrintWindow(renderHtml(data, logoBase64));
 }
 
 export function obterNomeArquivoProntuario(data: ProntuarioResponse): string {
-  return nomeArquivo(data);
+  return sanitizeNomeArquivo("PRONTUARIO", data.paciente.nome, data.paciente.cpf, data.paciente.cdUsuCadsus ?? data.paciente.id);
 }
