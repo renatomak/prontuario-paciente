@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { raasRepository as defaultRepository } from "@/shared/container";
-import type { RaasPort } from "../domain/RaasPort";
+import type { RaasPort } from "../port/RaasPort";
 import type { ListarArquivosRaasRequest } from "../types/ListarArquivosRaasRequest";
 
 export function useListarArquivosRaas(repository: RaasPort = defaultRepository) {

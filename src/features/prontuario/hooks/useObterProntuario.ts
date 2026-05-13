@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { prontuarioRepository as defaultRepository } from "@/shared/container";
-import type { ProntuarioPort } from "../domain/ProntuarioPort";
+import type { ProntuarioPort } from "../port/ProntuarioPort";
 
 /** Caso de uso: Obter prontuario (atendimentos) de um paciente. */
 export function useObterProntuario(

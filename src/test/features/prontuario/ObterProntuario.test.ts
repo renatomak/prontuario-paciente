@@ -2,8 +2,8 @@ import { describe, it, expect, vi } from "vitest";
 import {
   ProntuarioResponseSchema,
   type ProntuarioResponse,
-} from "@/features/prontuario/domain/schemas";
-import type { ProntuarioPort } from "@/features/prontuario/domain/ProntuarioPort";
+} from "@/features/prontuario/port/schemas";
+import type { ProntuarioPort } from "@/features/prontuario/port/ProntuarioPort";
 
 class ProntuarioResponseBuilder {
   private dto: ProntuarioResponse = {

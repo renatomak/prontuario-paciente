@@ -10,10 +10,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Download, Eye, Loader2, Trash2 } from "lucide-react";
-import type { ArquivoRaasResponse } from "../domain/schemas";
+import { useState } from "react";
+import { toast } from "sonner";
+import { raasRepository, downloadArquivoRaasPort } from "@/shared/container";
+import type { ArquivoRaasResponse } from "../port/schemas";
 
 const MESES = [
-  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+  "Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho",
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
 
@@ -34,7 +37,19 @@ function situacaoBadge(s: string) {
         Cancelados
       </Badge>
     );
-  return <Badge variant="outline">{s || "—"}</Badge>;
+  return <Badge variant="outline">{s || "\u2014"}</Badge>;
+}
+
+function downloadTxt(conteudo: string, nomeArquivo: string) {
+  const blob = new Blob([conteudo], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = nomeArquivo;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 export interface RaasTabelaProps {
@@ -44,18 +59,34 @@ export interface RaasTabelaProps {
 }
 
 export function RaasTabela({ arquivos, loading, carregado }: RaasTabelaProps) {
+  const [baixandoId, setBaixandoId] = useState<number | null>(null);
+
+  async function handleDownload(arquivo: ArquivoRaasResponse) {
+    try {
+      setBaixandoId(arquivo.id);
+      const { nome, arquivo: conteudo } = await downloadArquivoRaasPort.download(arquivo.id);
+      const nomeArquivo = nome.split("/").pop() ?? `raas_${arquivo.id}.txt`;
+      const nomeTxt = nomeArquivo.endsWith(".txt") ? nomeArquivo : nomeArquivo.replace(/\.[^.]+$/, ".txt");
+      downloadTxt(conteudo, nomeTxt);
+    } catch {
+      toast.error("Falha ao baixar o arquivo.");
+    } finally {
+      setBaixandoId(null);
+    }
+  }
+
   return (
     <Card>
       <CardContent className="p-0">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[120px]">Ações</TableHead>
-              <TableHead>Mês</TableHead>
+              <TableHead className="w-[120px]">Acoes</TableHead>
+              <TableHead>Mes</TableHead>
               <TableHead>Ano</TableHead>
-              <TableHead>Data Geração</TableHead>
+              <TableHead>Data Geracao</TableHead>
               <TableHead>Unidade</TableHead>
-              <TableHead>Situação</TableHead>
+              <TableHead>Situacao</TableHead>
               <TableHead className="text-right">Folhas</TableHead>
             </TableRow>
           </TableHeader>
@@ -87,8 +118,19 @@ export function RaasTabela({ arquivos, loading, carregado }: RaasTabelaProps) {
                 <TableRow key={a.id}>
                   <TableCell>
                     <div className="flex items-center gap-1">
-                      <Button size="icon" variant="ghost" className="h-7 w-7" title="Baixar">
-                        <Download className="h-4 w-4 text-green-600" />
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7"
+                        title="Baixar"
+                        disabled={baixandoId === a.id}
+                        onClick={() => handleDownload(a)}
+                      >
+                        {baixandoId === a.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin text-green-600" />
+                        ) : (
+                          <Download className="h-4 w-4 text-green-600" />
+                        )}
                       </Button>
                       <Button size="icon" variant="ghost" className="h-7 w-7" title="Visualizar">
                         <Eye className="h-4 w-4 text-blue-600" />
@@ -101,7 +143,7 @@ export function RaasTabela({ arquivos, loading, carregado }: RaasTabelaProps) {
                   <TableCell className="font-medium">{nomeMes(a.mes)}</TableCell>
                   <TableCell>{a.ano}</TableCell>
                   <TableCell>{a.dataGeracao}</TableCell>
-                  <TableCell className="text-muted-foreground">{a.nomeEmpresa ?? "—"}</TableCell>
+                  <TableCell className="text-muted-foreground">{a.nomeEmpresa ?? "\u2014"}</TableCell>
                   <TableCell>{situacaoBadge(a.status)}</TableCell>
                   <TableCell className="text-right tabular-nums">
                     {a.totalFolha.toLocaleString("pt-BR")}

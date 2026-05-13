@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { PacienteMapper } from "@/features/paciente/api/PacienteMapper";
-import type { PacientePort } from "@/features/paciente/domain/PacientePort";
+import type { PacientePort } from "@/features/paciente/port/PacientePort";
 import type { PacienteProjection } from "@/features/paciente/types/PacienteProjection";
 
 class PacienteProjectionBuilder {

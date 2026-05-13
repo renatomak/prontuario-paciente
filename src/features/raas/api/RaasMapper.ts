@@ -1,10 +1,10 @@
 import {
   ArquivoRaasProjectionSchema,
   type ArquivoRaasResponse,
-} from "../domain/schemas";
+} from "../port/schemas";
 import type { ArquivoRaasProjection } from "../types/ArquivoRaasProjection";
 import type { ListarArquivosRaasResponse } from "../types/ListarArquivosRaasResponse";
-import type { ListarArquivosRaasResult } from "../domain/RaasPort";
+import type { ListarArquivosRaasResult } from "../port/RaasPort";
 
 export class RaasMapper {
   static toDomain(raw: ArquivoRaasProjection): ArquivoRaasResponse {

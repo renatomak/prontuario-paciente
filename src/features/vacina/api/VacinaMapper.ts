@@ -1,4 +1,4 @@
-import type { VacinaResumoResponse, VacinaDetalheResponse } from "../domain/schemas";
+import type { VacinaResumoResponse, VacinaDetalheResponse } from "../port/schemas";
 import type {
   VacinaResumoProjection,
   VacinaDetalheProjection,

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { vacinaRepository as defaultRepository } from "@/shared/container";
-import type { VacinaPort } from "../domain/VacinaPort";
+import type { VacinaPort } from "../port/VacinaPort";
 
 export function useListarVacinas(
   pacienteId: number,

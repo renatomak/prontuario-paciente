@@ -1,4 +1,4 @@
-import type { PacienteResponse, PacienteResumoResponse } from "../domain/schemas";
+import type { PacienteResponse, PacienteResumoResponse } from "../port/schemas";
 
 export type BuscarPacienteResponse =
   | { tipo: "paciente"; paciente: PacienteResponse }

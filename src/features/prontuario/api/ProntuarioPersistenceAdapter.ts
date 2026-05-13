@@ -2,8 +2,8 @@ import { JavaApiClient } from "@/shared/http/JavaApiClient";
 import {
   ProntuarioResponseSchema,
   type ProntuarioResponse,
-} from "../domain/schemas";
-import type { ProntuarioPort } from "../domain/ProntuarioPort";
+} from "../port/schemas";
+import type { ProntuarioPort } from "../port/ProntuarioPort";
 
 export class ProntuarioPersistenceAdapter implements ProntuarioPort {
   private client = new JavaApiClient();

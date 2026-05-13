@@ -1,5 +1,5 @@
-import type { VacinaResumoResponse } from "@/features/vacina/domain/schemas";
-import type { PacienteResponse } from "@/features/paciente/domain/schemas";
+import type { VacinaResumoResponse } from "@/features/vacina/port/schemas";
+import type { PacienteResponse } from "@/features/paciente/port/schemas";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Button from "@/components/ui/button";

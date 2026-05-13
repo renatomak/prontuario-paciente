@@ -1,6 +1,6 @@
 import { JavaApiClient } from "@/shared/http/JavaApiClient";
 import { getRaasApiBaseUrl } from "@/shared/env";
-import type { RaasPort, ListarArquivosRaasResult } from "../domain/RaasPort";
+import type { RaasPort, ListarArquivosRaasResult } from "../port/RaasPort";
 import type { ListarArquivosRaasRequest } from "../types/ListarArquivosRaasRequest";
 import type { ListarArquivosRaasResponse } from "../types/ListarArquivosRaasResponse";
 import { RaasMapper } from "./RaasMapper";

@@ -10,7 +10,5 @@ export interface ListarArquivosRaasResult {
 }
 
 export interface RaasPort {
-  listarArquivos(
-    request: ListarArquivosRaasRequest,
-  ): Promise<ListarArquivosRaasResult>;
+  listarArquivos(request: ListarArquivosRaasRequest): Promise<ListarArquivosRaasResult>;
 }

@@ -12,7 +12,7 @@ import { blocosConteudo } from "@/shared/prontuarioUtils";
 import type {
   ProntuarioResponse,
   ProntuarioRegistro,
-} from "@/features/prontuario/domain/schemas";
+} from "@/features/prontuario/port/schemas";
 
 interface Props {
   pacienteId: number;

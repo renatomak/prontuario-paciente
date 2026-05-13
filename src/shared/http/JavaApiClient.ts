@@ -20,4 +20,16 @@ export class JavaApiClient {
       headers: this.commonHeaders,
     });
   }
+
+  async getText(path: string): Promise<string> {
+    const url = new URL(this.baseUrl + path);
+    const res = await fetch(url.toString(), {
+      method: "GET",
+      headers: this.commonHeaders,
+    });
+    if (!res.ok) {
+      throw new Error(`Erro HTTP ${res.status}`);
+    }
+    return res.text();
+  }
 }

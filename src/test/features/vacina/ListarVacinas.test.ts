@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { VacinaMapper } from "@/features/vacina/api/VacinaMapper";
-import type { VacinaPort } from "@/features/vacina/domain/VacinaPort";
+import type { VacinaPort } from "@/features/vacina/port/VacinaPort";
 import type { VacinaResumoProjection } from "@/features/vacina/types/VacinaProjection";
 
 class VacinaResumoProjectionBuilder {

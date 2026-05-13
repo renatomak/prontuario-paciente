@@ -1,5 +1,5 @@
-import type { PacienteResponse } from "@/features/paciente/domain/schemas";
-import type { VacinaResumoResponse } from "@/features/vacina/domain/schemas";
+import type { PacienteResponse } from "@/features/paciente/port/schemas";
+import type { VacinaResumoResponse } from "@/features/vacina/port/schemas";
 import { escapeHtml, formatSexo, sanitizeNomeArquivo } from "@/shared/formatters";
 import { renderPrintHeader, renderPrintFooter, renderField, openPrintWindow } from "@/shared/printUtils";
 

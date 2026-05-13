@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { RaasMapper } from "@/features/raas/api/RaasMapper";
-import type { RaasPort } from "@/features/raas/domain/RaasPort";
+import type { RaasPort } from "@/features/raas/port/RaasPort";
 import type { ArquivoRaasProjection } from "@/features/raas/types/ArquivoRaasProjection";
 
 class ArquivoRaasProjectionBuilder {
@@ -68,6 +68,7 @@ describe("ListarArquivosRaas (caso de uso)", () => {
         page: 0,
         size: 10,
       }),
+      downloadArquivo: vi.fn().mockResolvedValue({ nome: "raas.txt", arquivo: "" }),
     };
 
     await repo.listarArquivos({

@@ -1,5 +1,5 @@
 import { limparHtml } from "@/lib/limparHtml";
-import type { ProntuarioRegistroConteudo } from "@/features/prontuario/domain/schemas";
+import type { ProntuarioRegistroConteudo } from "@/features/prontuario/port/schemas";
 
 export interface BlocoConteudo {
   label: string;

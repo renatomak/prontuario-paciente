@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { PacienteResumoResponse } from "@/features/paciente/domain/schemas";
+import type { PacienteResumoResponse } from "@/features/paciente/port/schemas";
 import { useBuscarPaciente } from "@/features/paciente/hooks/useBuscarPaciente";
 import { useCarregarPaciente } from "@/features/paciente/hooks/useCarregarPaciente";
 import { useListarVacinas } from "@/features/vacina/hooks/useListarVacinas";
@@ -39,7 +39,6 @@ const Index = () => {
     setPacienteId(null);
     const raw = query.trim();
     const digits = raw.replace(/\D/g, "");
-    // Se for CPF formatado (11 dígitos numéricos), envia apenas dígitos
     const searchTerm = digits.length === 11 && /^[\d.\-\s]*$/.test(raw) ? digits : raw;
     pacienteSearch.mutate(searchTerm, {
       onSuccess: (res) => {

@@ -1,4 +1,4 @@
-import type { PacienteResponse } from "@/features/paciente/domain/schemas";
+import type { PacienteResponse } from "@/features/paciente/port/schemas";
 import { Card } from "@/components/ui/card";
 import { FieldDisplay } from "@/components/FieldDisplay";
 

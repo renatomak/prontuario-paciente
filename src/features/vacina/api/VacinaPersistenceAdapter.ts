@@ -1,6 +1,6 @@
 import { JavaApiClient } from "@/shared/http/JavaApiClient";
-import type { VacinaPort } from "../domain/VacinaPort";
-import type { VacinaResumoResponse, VacinaDetalheResponse } from "../domain/schemas";
+import type { VacinaPort } from "../port/VacinaPort";
+import type { VacinaResumoResponse, VacinaDetalheResponse } from "../port/schemas";
 import type {
   VacinaResumoProjection,
   VacinaDetalheProjection,

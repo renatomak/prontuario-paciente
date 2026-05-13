@@ -1,4 +1,4 @@
-import type { PacienteResponse, EnderecoResponse, PacienteResumoResponse } from "../domain/schemas";
+import type { PacienteResponse, EnderecoResponse, PacienteResumoResponse } from "../port/schemas";
 import type {
   PacienteProjection,
   EnderecoProjection,
