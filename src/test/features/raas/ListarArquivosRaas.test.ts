@@ -31,9 +31,11 @@ describe("RaasMapper", () => {
     expect(dominio.totalFolha).toBe(dto.totalFolha);
   });
 
-  it("deveLancarErroQuandoMesForaDoIntervalo", () => {
+  it("deveUsarFallbackQuandoMesForaDoIntervalo", () => {
     const dto = { ...new ArquivoRaasProjectionBuilder().build(), mes: 13 };
-    expect(() => RaasMapper.toDomain(dto)).toThrow();
+    const dominio = RaasMapper.toDomain(dto);
+    // Não deve derrubar a listagem; mantém o valor cru.
+    expect(dominio.mes).toBe(13);
   });
 
   it("deveNormalizarRespostaSpringPageParaResultado", () => {
