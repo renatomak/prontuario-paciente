@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
-import { VacinaMapper } from "@/features/vacina/api/VacinaMapper";
-import type { VacinaPort } from "@/features/vacina/port/VacinaPort";
+import { ListarVacinasConsumer } from "@/features/vacina/consumer/ListarVacinasConsumer";
+import type { ListarVacinasPort } from "@/features/vacina/port/ListarVacinasPort";
 import type { VacinaResumoProjection } from "@/features/vacina/types/VacinaProjection";
+import { JavaApiClient } from "@/shared/http/JavaApiClient";
 
 class VacinaResumoProjectionBuilder {
   private dto: VacinaResumoProjection = {
@@ -16,30 +17,42 @@ class VacinaResumoProjectionBuilder {
   build(): VacinaResumoProjection { return { ...this.dto }; }
 }
 
-describe("VacinaMapper", () => {
-  it("deveConverterResumoProjectionParaDominio", () => {
+describe("ListarVacinasConsumer (mapeamento de status)", () => {
+  it("deveConverterResumoProjectionParaDominio", async () => {
     const dto = new VacinaResumoProjectionBuilder().build();
-    const dominio = VacinaMapper.resumoToDomain(dto);
+    vi.spyOn(JavaApiClient.prototype, "get").mockResolvedValueOnce([dto]);
+    const consumer = new ListarVacinasConsumer();
+    const resultado = await consumer.listarPorPaciente(1);
 
-    expect(dominio.idAplicacao).toBe(100);
-    expect(dominio.nomeVacina).toBe("BCG");
-    expect(dominio.dataAplicacao).toBe("01/02/2024");
+    expect(resultado[0].idAplicacao).toBe(100);
+    expect(resultado[0].nomeVacina).toBe("BCG");
+    expect(resultado[0].dataAplicacao).toBe("01/02/2024");
   });
 
-  it("deveTraduzirStatusNumericoParaTextoLegivel", () => {
-    expect(VacinaMapper.resumoToDomain(new VacinaResumoProjectionBuilder().comStatus(0).build()).status).toBe("Aplicada");
-    expect(VacinaMapper.resumoToDomain(new VacinaResumoProjectionBuilder().comStatus(1).build()).status).toBe("Aprazada");
-    expect(VacinaMapper.resumoToDomain(new VacinaResumoProjectionBuilder().comStatus("Cancelada").build()).status).toBe("Cancelada");
+  it("deveTraduzirStatusNumericoParaTextoLegivel", async () => {
+    const casos = [
+      { status: 0, esperado: "Aplicada" },
+      { status: 1, esperado: "Aprazada" },
+      { status: "Cancelada", esperado: "Cancelada" },
+    ];
+
+    for (const { status, esperado } of casos) {
+      const dto = new VacinaResumoProjectionBuilder().comStatus(status).build();
+      vi.spyOn(JavaApiClient.prototype, "get").mockResolvedValueOnce([dto]);
+      const consumer = new ListarVacinasConsumer();
+      const resultado = await consumer.listarPorPaciente(1);
+      expect(resultado[0].status).toBe(esperado);
+    }
   });
 });
 
 describe("ListarVacinas (caso de uso)", () => {
-  it("deveDelegarChamadaAoRepositoryComPacienteId", async () => {
-    const repo: VacinaPort = {
+  it("deveDelegarChamadaAoPortComPacienteId", async () => {
+    const port: ListarVacinasPort = {
       listarPorPaciente: vi.fn().mockResolvedValue([]),
-      obterDetalhe: vi.fn(),
     };
-    await repo.listarPorPaciente(42);
-    expect(repo.listarPorPaciente).toHaveBeenCalledWith(42);
+    await port.listarPorPaciente(42);
+    expect(port.listarPorPaciente).toHaveBeenCalledWith(42);
   });
 });
+

@@ -10,8 +10,11 @@ import type {
 } from "@/features/raas";
 import { PacientePersistenceAdapter } from "@/features/paciente/api/PacientePersistenceAdapter";
 import type { PacientePort } from "@/features/paciente/port/PacientePort";
-import { VacinaPersistenceAdapter } from "@/features/vacina/api/VacinaPersistenceAdapter";
-import type { VacinaPort } from "@/features/vacina/port/VacinaPort";
+import {
+  ListarVacinasConsumer,
+  ObterVacinaDetalheConsumer,
+} from "@/features/vacina";
+import type { ListarVacinasPort, ObterVacinaDetalhePort } from "@/features/vacina";
 import { ProntuarioPersistenceAdapter } from "@/features/prontuario/api/ProntuarioPersistenceAdapter";
 import type { ProntuarioPort } from "@/features/prontuario/port/ProntuarioPort";
 
@@ -19,5 +22,7 @@ export const downloadArquivoRaasPort: DownloadArquivoRaasPort = new DownloadArqu
 export const listarArquivosRaasPort: ListarArquivoRaasPort = new ListarArquivoRaasConsumer();
 export const listarUnidadesRaasPort: ListarUnidadesPort = new ListarUnidadesConsumer();
 export const pacienteRepository: PacientePort = new PacientePersistenceAdapter();
-export const vacinaRepository: VacinaPort = new VacinaPersistenceAdapter();
+export const listarVacinasPort: ListarVacinasPort = new ListarVacinasConsumer();
+export const obterVacinaDetalhePort: ObterVacinaDetalhePort = new ObterVacinaDetalheConsumer();
 export const prontuarioRepository: ProntuarioPort = new ProntuarioPersistenceAdapter();
+

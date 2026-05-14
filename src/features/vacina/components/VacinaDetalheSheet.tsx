@@ -1,4 +1,4 @@
-import { useObterVacinaDetalhe as useVacinaDetalhe } from "@/features/vacina/hooks/useObterVacinaDetalhe";
+import { useObterVacinaDetalhe as useVacinaDetalhe } from "../hooks";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Loader2 } from "lucide-react";
 import { FieldDisplay } from "@/components/FieldDisplay";

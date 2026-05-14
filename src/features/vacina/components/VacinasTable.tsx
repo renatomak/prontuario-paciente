@@ -1,4 +1,4 @@
-import type { VacinaResumoResponse } from "@/features/vacina/port/schemas";
+import type { VacinaResumoResponse } from "../types";
 import type { PacienteResponse } from "@/features/paciente/port/schemas";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

@@ -1,15 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { vacinaRepository as defaultRepository } from "@/shared/container";
-import type { VacinaPort } from "../port/VacinaPort";
+import { listarVacinasPort as defaultPort } from "@/shared/container";
+import type { ListarVacinasPort } from "../port";
 
 export function useListarVacinas(
   pacienteId: number,
   enabled = true,
-  repository: VacinaPort = defaultRepository,
+  port: ListarVacinasPort = defaultPort,
 ) {
   return useQuery({
     queryKey: ["vacinas", pacienteId],
-    queryFn: () => repository.listarPorPaciente(pacienteId),
+    queryFn: () => port.listarPorPaciente(pacienteId),
     enabled: !!pacienteId && enabled,
   });
 }
