@@ -33,7 +33,7 @@ describe("RaasMapper", () => {
 
   it("deveLancarErroQuandoMesForaDoIntervalo", () => {
     const dto = { ...new ArquivoRaasProjectionBuilder().build(), mes: 13 };
-    expect(() => RaasMapper.toDomain(dto)).not.toThrow();
+    expect(() => RaasMapper.toDomain(dto)).toThrow();
   });
 
   it("deveNormalizarRespostaSpringPageParaResultado", () => {
