@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { RaasMapper } from "@/features/raas/api/RaasMapper";
-import type { RaasPort } from "@/features/raas/port/RaasPort";
+import type { ListarArquivoRaasPort } from "@/features/raas/port/ListarArquivoRaasPort";
 import type { ArquivoRaasProjection } from "@/features/raas/types/ArquivoRaasProjection";
 
 class ArquivoRaasProjectionBuilder {
@@ -60,7 +60,7 @@ describe("RaasMapper", () => {
 
 describe("ListarArquivosRaas (caso de uso)", () => {
   it("deveDelegarChamadaAoRepositoryComFiltros", async () => {
-    const repo: RaasPort = {
+    const repo: ListarArquivoRaasPort = {
       listarArquivos: vi.fn().mockResolvedValue({
         arquivos: [],
         totalElements: 0,

@@ -7,6 +7,7 @@ import { useListarArquivosRaas } from "../hooks/useListarArquivosRaas";
 import { RaasFiltros } from "./RaasFiltros";
 import { RaasTabela } from "./RaasTabela";
 import { RaasPaginacao } from "./RaasPaginacao";
+import type { ListarArquivosRaasResponse } from "../types/raas";
 
 const apiClient = new JavaApiClient(getRaasApiBaseUrl());
 
@@ -42,7 +43,6 @@ export function RaasArquivos() {
         },
       },
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function procurar() {
@@ -70,8 +70,9 @@ export function RaasArquivos() {
     );
   }
 
-  const arquivos = useMemo(() => listar.data?.arquivos ?? [], [listar.data?.arquivos]);
-  const totalElements = listar.data?.totalElements ?? 0;
+  const data = listar.data as ListarArquivosRaasResponse | undefined;
+  const arquivos = useMemo(() => data?.arquivos ?? [], [data?.arquivos]);
+  const totalElements = data?.totalElements ?? 0;
 
   const totalPages = Math.max(1, Math.ceil(arquivos.length / pageSize));
   const pageItems = useMemo(() => {

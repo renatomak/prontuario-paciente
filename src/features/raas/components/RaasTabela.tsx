@@ -13,7 +13,7 @@ import { Download, Eye, Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { raasRepository, downloadArquivoRaasPort } from "@/shared/container";
-import type { ArquivoRaasResponse } from "../port/schemas";
+import type { ArquivoRaas } from "../types/raas";
 
 const MESES = [
   "Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho",
@@ -40,6 +40,7 @@ function situacaoBadge(s: string) {
   return <Badge variant="outline">{s || "\u2014"}</Badge>;
 }
 
+
 function downloadTxt(conteudo: string, nomeArquivo: string) {
   const blob = new Blob([conteudo], { type: "text/plain;charset=utf-8" });
   const url = URL.createObjectURL(blob);
@@ -53,7 +54,7 @@ function downloadTxt(conteudo: string, nomeArquivo: string) {
 }
 
 export interface RaasTabelaProps {
-  arquivos: ArquivoRaasResponse[];
+  arquivos: ArquivoRaas[];
   loading: boolean;
   carregado: boolean;
 }
@@ -61,7 +62,7 @@ export interface RaasTabelaProps {
 export function RaasTabela({ arquivos, loading, carregado }: RaasTabelaProps) {
   const [baixandoId, setBaixandoId] = useState<number | null>(null);
 
-  async function handleDownload(arquivo: ArquivoRaasResponse) {
+  async function handleDownload(arquivo: ArquivoRaas) {
     try {
       setBaixandoId(arquivo.id);
       const { nome, arquivo: conteudo } = await downloadArquivoRaasPort.download(arquivo.id);

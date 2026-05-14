@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { raasRepository as defaultRepository } from "@/shared/container";
-import type { RaasPort } from "../port/RaasPort";
-import type { ListarArquivosRaasRequest } from "../types/ListarArquivosRaasRequest";
+import type { ListarArquivoRaasPort } from "../port/ListarArquivoRaasPort";
+import type { ListarArquivosRaasRequest, ListarArquivosRaasResponse } from "../types/raas";
 
-export function useListarArquivosRaas(repository: RaasPort = defaultRepository) {
-  return useMutation({
+export function useListarArquivosRaas(repository: ListarArquivoRaasPort = defaultRepository) {
+  return useMutation<ListarArquivosRaasResponse, unknown, ListarArquivosRaasRequest>({
     mutationKey: ["raas", "listarArquivos"],
     mutationFn: (request: ListarArquivosRaasRequest) =>
       repository.listarArquivos(request),
