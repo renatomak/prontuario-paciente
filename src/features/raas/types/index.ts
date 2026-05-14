@@ -1,7 +1,5 @@
 export type { Unidade } from "./Unidade";
 export type { UnidadeResponse } from "./UnidadeResponse";
-export { ArquivoRaasSchema } from "./ArquivoRaas";
-export type { ArquivoRaas } from "./ArquivoRaas";
 export type {
   ArquivoRaasProjection,
   SpringPageProjection,

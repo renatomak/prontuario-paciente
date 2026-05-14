@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { FileArchive } from "lucide-react";
 import { toast } from "sonner";
 import { RaasFiltros } from "./RaasFiltros";
@@ -7,6 +7,8 @@ import { RaasPaginacao } from "./RaasPaginacao";
 import { useListarArquivosRaas, useListarUnidades } from "../hooks";
 import type { ListarArquivosRaasRequest } from "../types";
 
+const DEFAULT_PAGE = 0;
+const DEFAULT_PAGE_SIZE = 10;
 const FALLBACK_ERROR_MESSAGE = "Falha ao carregar arquivos do RAAS.";
 
 function extractErrorMessage(err: unknown): string {
@@ -22,6 +24,11 @@ interface FiltrosState {
   unidade: string;
 }
 
+interface PaginacaoState {
+  page: number;
+  pageSize: number;
+}
+
 export function RaasArquivos() {
   const [filtros, setFiltros] = useState<FiltrosState>({
     competencia: "",
@@ -29,60 +36,69 @@ export function RaasArquivos() {
     unidade: "",
   });
 
-  const [page, setPage] = useState<number | null>(null);
-  const [pageSize, setPageSize] = useState<number | null>(null);
+  const [paginacao, setPaginacao] = useState<PaginacaoState>({
+    page: DEFAULT_PAGE,
+    pageSize: DEFAULT_PAGE_SIZE,
+  });
+
   const [carregado, setCarregado] = useState(false);
 
   const listar = useListarArquivosRaas();
   const unidadesQuery = useListarUnidades();
   const unidades = unidadesQuery.data ?? [];
 
-  const arquivos = listar.data?.arquivos ?? [];
+  const listarRef = useRef(listar.mutate);
+  useEffect(() => {
+    listarRef.current = listar.mutate;
+  });
+
+  const arquivos = listar.data?.content ?? [];
   const totalElements = listar.data?.totalElements ?? 0;
   const totalPages = Math.max(1, listar.data?.totalPages ?? 1);
-  const currentPage = listar.data?.page ?? page ?? 0;
-  const currentSize = listar.data?.size ?? pageSize ?? 10;
+  const pageAtual = listar.data?.number ?? paginacao.page;
+  const tamanhoAtual = listar.data?.size ?? paginacao.pageSize;
 
-  useEffect(() => {
-    buscar({ page: null, size: null });
+  const buscar = useCallback((
+    filtrosAtivos: FiltrosState,
+    { page, pageSize }: PaginacaoState,
+  ) => {
+    const request: ListarArquivosRaasRequest = {
+      competencia: filtrosAtivos.competencia || undefined,
+      codigoEmpresa: filtrosAtivos.unidade || undefined,
+      situacao: filtrosAtivos.situacao || undefined,
+      page,
+      size: pageSize,
+    };
+
+    listarRef.current(request, {
+      onSuccess: () => setCarregado(true),
+      onError: (err) => toast.error(extractErrorMessage(err)),
+    });
   }, []);
 
-  const buscar = useCallback(
-    (overrides: Partial<{ page: number | null; size: number | null }> = {}) => {
-      const nextPage = overrides.page !== undefined ? overrides.page : page;
-      const nextSize = overrides.size !== undefined ? overrides.size : pageSize;
-
-      const request: ListarArquivosRaasRequest = {
-        competencia: filtros.competencia || undefined,
-        codigoEmpresa: filtros.unidade || undefined,
-        situacao: filtros.situacao || undefined,
-        page: nextPage ?? undefined,
-        size: nextSize ?? undefined,
-      };
-
-      listar.mutate(request, {
-        onSuccess: () => setCarregado(true),
-        onError: (err) => toast.error(extractErrorMessage(err)),
-      });
-    },
-    [filtros, listar, page, pageSize]
-  );
+  useEffect(() => {
+    buscar(
+      { competencia: "", situacao: "", unidade: "" },
+      { page: DEFAULT_PAGE, pageSize: DEFAULT_PAGE_SIZE },
+    );
+  }, [buscar]);
 
   function handleProcurar() {
-    setPage(null);
-    setPageSize(null);
-    buscar({ page: null, size: null });
+    const novaPaginacao = { page: DEFAULT_PAGE, pageSize: DEFAULT_PAGE_SIZE };
+    setPaginacao(novaPaginacao);
+    buscar(filtros, novaPaginacao);
   }
 
   function handlePageChange(newPage: number) {
-    setPage(newPage);
-    buscar({ page: newPage, size: pageSize ?? currentSize });
+    const novaPaginacao = { ...paginacao, page: newPage };
+    setPaginacao(novaPaginacao);
+    buscar(filtros, novaPaginacao);
   }
 
   function handlePageSizeChange(newSize: number) {
-    setPage(0);
-    setPageSize(newSize);
-    buscar({ page: 0, size: newSize });
+    const novaPaginacao = { page: DEFAULT_PAGE, pageSize: newSize };
+    setPaginacao(novaPaginacao);
+    buscar(filtros, novaPaginacao);
   }
 
   return (
@@ -108,9 +124,9 @@ export function RaasArquivos() {
       />
 
       <RaasPaginacao
-        page={currentPage}
+        page={pageAtual}
         totalPages={totalPages}
-        pageSize={currentSize}
+        pageSize={tamanhoAtual}
         totalElements={totalElements}
         loading={listar.isPending}
         onPageChange={handlePageChange}

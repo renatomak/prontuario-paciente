@@ -7,7 +7,6 @@ export { RaasFiltros } from "./components/RaasFiltros";
 export { RaasPaginacao } from "./components/RaasPaginacao";
 export { RaasTabela } from "./components/RaasTabela";
 
-export { RaasMapper } from "./consumer/RaasMapper";
 export { ListarArquivoRaasConsumer } from "./consumer/ListarArquivoRaasConsumer";
 export { ListarUnidadesConsumer } from "./consumer/ListarUnidadesConsumer";
 export { DownloadArquivoRaasConsumer } from "./consumer/DownloadArquivoRaasConsumer";

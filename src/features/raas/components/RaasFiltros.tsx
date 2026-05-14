@@ -11,17 +11,30 @@ import {
 } from "@/components/ui/select";
 import { Loader2, Search } from "lucide-react";
 
+interface Unidade {
+  id: number;
+  nome: string;
+}
+
 export interface RaasFiltrosProps {
   competencia: string;
   situacao: string;
   unidade: string;
-  listarUnidades: Array<{ id: number; nome: string }>;
+  listarUnidades: Unidade[];
   loading: boolean;
   onCompetenciaChange: (v: string) => void;
   onSituacaoChange: (v: string) => void;
   onUnidadeChange: (v: string) => void;
   onProcurar: () => void;
 }
+
+const SITUACOES = [
+  { value: "3", label: "Arquivo Gerado" },
+  { value: "6", label: "Cancelados" },
+] as const;
+
+const TODOS_VALUE = "todos";
+const TODAS_VALUE = "todas";
 
 export function RaasFiltros({
   competencia,
@@ -41,62 +54,109 @@ export function RaasFiltros({
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="grid gap-3 sm:grid-cols-3">
-          <div className="space-y-1">
-            <Label htmlFor="competencia">Competência</Label>
-            <Input
-              id="competencia"
-              placeholder="MM/AAAA"
-              value={competencia}
-              onChange={(e) => onCompetenciaChange(e.target.value)}
-            />
-          </div>
-          <div className="space-y-1">
-            <Label>Situação</Label>
-            <Select
-              value={situacao || "todos"}
-              onValueChange={(v) => onSituacaoChange(v === "todos" ? "" : v)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Todos" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="todos">Todos</SelectItem>
-                <SelectItem value="3">Arquivo Gerado</SelectItem>
-                <SelectItem value="6">Cancelados</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-1">
-            <Label htmlFor="unidade">Unidade</Label>
-            <Select
-              value={unidade || "todas"}
-              onValueChange={(v) => onUnidadeChange(v === "todas" ? "" : v)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Todas" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="todas">Todas</SelectItem>
-                {unidades.map((u) => (
-                  <SelectItem key={u.id} value={String(u.id)}>
-                    {u.nome}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <CompetenciaField value={competencia} onChange={onCompetenciaChange} />
+          <SituacaoField value={situacao} onChange={onSituacaoChange} />
+          <UnidadeField value={unidade} unidades={unidades} onChange={onUnidadeChange} />
         </div>
-        <div>
-          <Button onClick={onProcurar} disabled={loading} className="gap-2">
-            {loading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Search className="h-4 w-4" />
-            )}
-            Procurar
-          </Button>
-        </div>
+        <ProcurarButton loading={loading} onClick={onProcurar} />
       </CardContent>
     </Card>
+  );
+}
+
+function CompetenciaField({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="space-y-1">
+      <Label htmlFor="competencia">Competência</Label>
+      <Input
+        id="competencia"
+        placeholder="MM/AAAA"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </div>
+  );
+}
+
+function SituacaoField({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="space-y-1">
+      <Label>Situação</Label>
+      <Select
+        value={value || TODOS_VALUE}
+        onValueChange={(v) => onChange(v === TODOS_VALUE ? "" : v)}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Todos" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value={TODOS_VALUE}>Todos</SelectItem>
+          {SITUACOES.map(({ value, label }) => (
+            <SelectItem key={value} value={value}>
+              {label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
+function UnidadeField({
+  value,
+  unidades,
+  onChange,
+}: {
+  value: string;
+  unidades: Unidade[];
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="space-y-1">
+      <Label htmlFor="unidade">Unidade</Label>
+      <Select
+        value={value || TODAS_VALUE}
+        onValueChange={(v) => onChange(v === TODAS_VALUE ? "" : v)}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Todas" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value={TODAS_VALUE}>Todas</SelectItem>
+          {unidades.map((u) => (
+            <SelectItem key={u.id} value={String(u.id)}>
+              {u.nome}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
+function ProcurarButton({
+  loading,
+  onClick,
+}: {
+  loading: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <Button onClick={onClick} disabled={loading} className="gap-2">
+      {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+      Procurar
+    </Button>
   );
 }

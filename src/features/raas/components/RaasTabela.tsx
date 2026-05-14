@@ -13,7 +13,9 @@ import { Download, Eye, Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useDownloadArquivoRaas } from "../hooks";
-import type { ArquivoRaas } from "../types";
+import type { ListarArquivosRaasResponse } from "../types";
+
+type ArquivoRaasTabelaItem = ListarArquivosRaasResponse["content"][number];
 
 const MESES = [
   "Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho",
@@ -54,7 +56,7 @@ function downloadTxt(conteudo: string, nomeArquivo: string) {
 }
 
 export interface RaasTabelaProps {
-  arquivos: ArquivoRaas[];
+  arquivos: ListarArquivosRaasResponse["content"];
   loading: boolean;
   carregado: boolean;
 }
@@ -63,7 +65,7 @@ export function RaasTabela({ arquivos, loading, carregado }: RaasTabelaProps) {
   const [baixandoId, setBaixandoId] = useState<number | null>(null);
   const download = useDownloadArquivoRaas();
 
-  async function handleDownload(arquivo: ArquivoRaas) {
+  async function handleDownload(arquivo: ArquivoRaasTabelaItem) {
     try {
       setBaixandoId(arquivo.id);
       const { nome, arquivo: conteudo } = await download.mutateAsync(arquivo.id);

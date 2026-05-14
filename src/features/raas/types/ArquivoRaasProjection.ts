@@ -1,7 +1,3 @@
-/**
- * DTO bruto recebido do backend Java (espelha snake/camel do JSON).
- * Não usar diretamente na UI — converter via RaasMapper.toDomain.
- */
 export interface ArquivoRaasProjection {
   id: number;
   mes: number;
@@ -14,7 +10,6 @@ export interface ArquivoRaasProjection {
   totalFolha: number;
 }
 
-/** Página padrão Spring (Pageable). */
 export interface SpringPageProjection<T> {
   content: T[];
   totalElements: number;
