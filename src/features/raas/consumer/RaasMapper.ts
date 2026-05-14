@@ -5,11 +5,6 @@ import type {
 } from "../types/ArquivoRaasProjection";
 import type { ListarArquivosRaasResponse } from "../types/ListarArquivosRaasResponse";
 
-/**
- * Converte DTOs (Projection) recebidos do backend para o modelo de domínio
- * usado pela UI. Centraliza a normalização — adapters e componentes não
- * devem inspecionar a forma da resposta do backend.
- */
 export class RaasMapper {
   static toDomain(dto: ArquivoRaasProjection): ArquivoRaas {
     const parsed = ArquivoRaasSchema.safeParse({
@@ -24,7 +19,6 @@ export class RaasMapper {
       totalFolha: dto.totalFolha ?? 0,
     });
     if (parsed.success) return parsed.data;
-    // Fallback: registra o problema mas não derruba a listagem.
     console.warn("[RaasMapper] item inválido ignorado pela validação:", parsed.error.issues, dto);
     return {
       id: Number(dto.id),
@@ -39,10 +33,6 @@ export class RaasMapper {
     };
   }
 
-  /**
-   * Normaliza tanto resposta `Page<T>` do Spring quanto `T[]` cru
-   * num formato unificado para a UI.
-   */
   static toListResult(
     raw: SpringPageProjection<ArquivoRaasProjection> | ArquivoRaasProjection[] | unknown,
     fallbackSize: number,

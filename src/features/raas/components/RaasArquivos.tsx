@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { FileArchive } from "lucide-react";
 import { toast } from "sonner";
 import { RaasFiltros } from "./RaasFiltros";
@@ -29,7 +29,6 @@ export function RaasArquivos() {
     unidade: "",
   });
 
-  // null = usar defaults do backend (page=0, size=10)
   const [page, setPage] = useState<number | null>(null);
   const [pageSize, setPageSize] = useState<number | null>(null);
   const [carregado, setCarregado] = useState(false);
@@ -44,26 +43,32 @@ export function RaasArquivos() {
   const currentPage = listar.data?.page ?? page ?? 0;
   const currentSize = listar.data?.size ?? pageSize ?? 10;
 
-  function buscar(overrides: Partial<{ page: number | null; size: number | null }> = {}) {
-    const nextPage = overrides.page !== undefined ? overrides.page : page;
-    const nextSize = overrides.size !== undefined ? overrides.size : pageSize;
+  useEffect(() => {
+    buscar({ page: null, size: null });
+  }, []);
 
-    const request: ListarArquivosRaasRequest = {
-      competencia: filtros.competencia || undefined,
-      codigoEmpresa: filtros.unidade || undefined,
-      situacao: filtros.situacao || undefined,
-      page: nextPage ?? undefined,
-      size: nextSize ?? undefined,
-    };
+  const buscar = useCallback(
+    (overrides: Partial<{ page: number | null; size: number | null }> = {}) => {
+      const nextPage = overrides.page !== undefined ? overrides.page : page;
+      const nextSize = overrides.size !== undefined ? overrides.size : pageSize;
 
-    listar.mutate(request, {
-      onSuccess: () => setCarregado(true),
-      onError: (err) => toast.error(extractErrorMessage(err)),
-    });
-  }
+      const request: ListarArquivosRaasRequest = {
+        competencia: filtros.competencia || undefined,
+        codigoEmpresa: filtros.unidade || undefined,
+        situacao: filtros.situacao || undefined,
+        page: nextPage ?? undefined,
+        size: nextSize ?? undefined,
+      };
+
+      listar.mutate(request, {
+        onSuccess: () => setCarregado(true),
+        onError: (err) => toast.error(extractErrorMessage(err)),
+      });
+    },
+    [filtros, listar, page, pageSize]
+  );
 
   function handleProcurar() {
-    // Primeira busca (ou nova busca): zera paginação e deixa backend aplicar defaults.
     setPage(null);
     setPageSize(null);
     buscar({ page: null, size: null });
