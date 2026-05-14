@@ -1,13 +1,12 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { FileArchive } from "lucide-react";
 import { toast } from "sonner";
 import { RaasFiltros } from "./RaasFiltros";
 import { RaasTabela } from "./RaasTabela";
 import { RaasPaginacao } from "./RaasPaginacao";
 import { useListarArquivosRaas, useListarUnidades } from "../hooks";
+import type { ListarArquivosRaasRequest } from "../types";
 
-const PAGE_SIZE_DEFAULT = 10;
-const FETCH_SIZE = 1000;
 const FALLBACK_ERROR_MESSAGE = "Falha ao carregar arquivos do RAAS.";
 
 function extractErrorMessage(err: unknown): string {
@@ -23,11 +22,6 @@ interface FiltrosState {
   unidade: string;
 }
 
-interface PaginacaoState {
-  page: number;
-  pageSize: number;
-}
-
 export function RaasArquivos() {
   const [filtros, setFiltros] = useState<FiltrosState>({
     competencia: "",
@@ -35,11 +29,9 @@ export function RaasArquivos() {
     unidade: "",
   });
 
-  const [paginacao, setPaginacao] = useState<PaginacaoState>({
-    page: 0,
-    pageSize: PAGE_SIZE_DEFAULT,
-  });
-
+  // null = usar defaults do backend (page=0, size=10)
+  const [page, setPage] = useState<number | null>(null);
+  const [pageSize, setPageSize] = useState<number | null>(null);
   const [carregado, setCarregado] = useState(false);
 
   const listar = useListarArquivosRaas();
@@ -48,30 +40,44 @@ export function RaasArquivos() {
 
   const arquivos = listar.data?.arquivos ?? [];
   const totalElements = listar.data?.totalElements ?? 0;
-  const totalPages = Math.max(1, Math.ceil(arquivos.length / paginacao.pageSize));
+  const totalPages = Math.max(1, listar.data?.totalPages ?? 1);
+  const currentPage = listar.data?.page ?? page ?? 0;
+  const currentSize = listar.data?.size ?? pageSize ?? 10;
 
-  const pageItems = useMemo(() => {
-    const start = paginacao.page * paginacao.pageSize;
-    return arquivos.slice(start, start + paginacao.pageSize);
-  }, [arquivos, paginacao]);
+  function buscar(overrides: Partial<{ page: number | null; size: number | null }> = {}) {
+    const nextPage = overrides.page !== undefined ? overrides.page : page;
+    const nextSize = overrides.size !== undefined ? overrides.size : pageSize;
+
+    const request: ListarArquivosRaasRequest = {
+      competencia: filtros.competencia || undefined,
+      codigoEmpresa: filtros.unidade || undefined,
+      situacao: filtros.situacao || undefined,
+      page: nextPage ?? undefined,
+      size: nextSize ?? undefined,
+    };
+
+    listar.mutate(request, {
+      onSuccess: () => setCarregado(true),
+      onError: (err) => toast.error(extractErrorMessage(err)),
+    });
+  }
 
   function handleProcurar() {
-    listar.mutate(
-      {
-        competencia: filtros.competencia,
-        codigoEmpresa: filtros.unidade || undefined,
-        situacao: filtros.situacao || undefined,
-        page: 0,
-        size: FETCH_SIZE,
-      },
-      {
-        onSuccess: () => {
-          setCarregado(true);
-          setPaginacao((prev) => ({ ...prev, page: 0 }));
-        },
-        onError: (err) => toast.error(extractErrorMessage(err)),
-      },
-    );
+    // Primeira busca (ou nova busca): zera paginação e deixa backend aplicar defaults.
+    setPage(null);
+    setPageSize(null);
+    buscar({ page: null, size: null });
+  }
+
+  function handlePageChange(newPage: number) {
+    setPage(newPage);
+    buscar({ page: newPage, size: pageSize ?? currentSize });
+  }
+
+  function handlePageSizeChange(newSize: number) {
+    setPage(0);
+    setPageSize(newSize);
+    buscar({ page: 0, size: newSize });
   }
 
   return (
@@ -91,19 +97,19 @@ export function RaasArquivos() {
       />
 
       <RaasTabela
-        arquivos={pageItems}
+        arquivos={arquivos}
         loading={listar.isPending}
         carregado={carregado}
       />
 
       <RaasPaginacao
-        page={paginacao.page}
+        page={currentPage}
         totalPages={totalPages}
-        pageSize={paginacao.pageSize}
+        pageSize={currentSize}
         totalElements={totalElements}
         loading={listar.isPending}
-        onPageChange={(p) => setPaginacao((prev) => ({ ...prev, page: p }))}
-        onPageSizeChange={(s) => setPaginacao({ page: 0, pageSize: s })}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
       />
     </div>
   );

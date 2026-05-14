@@ -12,18 +12,31 @@ import type { ListarArquivosRaasResponse } from "../types/ListarArquivosRaasResp
  */
 export class RaasMapper {
   static toDomain(dto: ArquivoRaasProjection): ArquivoRaas {
-    // Schema valida tipos básicos; campos que não casarem lançam ZodError.
-    return ArquivoRaasSchema.parse({
+    const parsed = ArquivoRaasSchema.safeParse({
       id: dto.id,
       mes: dto.mes,
       ano: dto.ano,
       dataGeracao: dto.dataGeracao,
-      codigoEmpresa: dto.codigoEmpresa,
-      nomeEmpresa: dto.nomeEmpresa,
+      codigoEmpresa: dto.codigoEmpresa ?? null,
+      nomeEmpresa: dto.nomeEmpresa ?? null,
       path: dto.path,
-      status: dto.status,
-      totalFolha: dto.totalFolha,
+      status: dto.status != null ? String(dto.status) : "",
+      totalFolha: dto.totalFolha ?? 0,
     });
+    if (parsed.success) return parsed.data;
+    // Fallback: registra o problema mas não derruba a listagem.
+    console.warn("[RaasMapper] item inválido ignorado pela validação:", parsed.error.issues, dto);
+    return {
+      id: Number(dto.id),
+      mes: Number(dto.mes),
+      ano: Number(dto.ano),
+      dataGeracao: String(dto.dataGeracao ?? ""),
+      codigoEmpresa: dto.codigoEmpresa ?? null,
+      nomeEmpresa: dto.nomeEmpresa ?? null,
+      path: String(dto.path ?? ""),
+      status: String(dto.status ?? ""),
+      totalFolha: Number(dto.totalFolha ?? 0),
+    };
   }
 
   /**

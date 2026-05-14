@@ -17,7 +17,7 @@ export class ListarArquivoRaasConsumer implements ListarArquivoRaasPort {
   ): Promise<ListarArquivosRaasResponse> {
     const params = this.buildParams(request);
     const raw = await this.client.get<unknown>("/api/v1/raas", params);
-    return RaasMapper.toListResult(raw, request.size ?? 1000);
+    return RaasMapper.toListResult(raw, request.size ?? 10);
   }
 
   private buildParams(request: ListarArquivosRaasRequest): Record<string, string> {
@@ -30,6 +30,7 @@ export class ListarArquivoRaasConsumer implements ListarArquivoRaasPort {
     }
     if (request.codigoEmpresa) params.codigoEmpresa = request.codigoEmpresa;
     if (request.situacao) params.situacao = request.situacao;
+    // page/size: omitidos quando null/undefined — o backend aplica defaults (page=0, size=10).
     if (request.page != null) params.page = String(request.page);
     if (request.size != null) params.size = String(request.size);
 
