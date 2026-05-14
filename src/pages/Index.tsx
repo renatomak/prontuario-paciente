@@ -20,7 +20,7 @@ const Index = () => {
   const [query, setQuery] = useState("");
 
   const [pacienteId, setPacienteId] = useState<number | null>(null);
-  const [picker, setPicker] = useState<PacienteResumo[] | null>(null);
+  const [picker, setPicker] = useState<PacienteResumoResponse[] | null>(null);
   const [selectedVacina, setSelectedVacina] = useState<number | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
 

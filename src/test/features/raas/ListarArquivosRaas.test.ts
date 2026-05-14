@@ -33,7 +33,7 @@ describe("RaasMapper", () => {
 
   it("deveLancarErroQuandoMesForaDoIntervalo", () => {
     const dto = { ...new ArquivoRaasProjectionBuilder().build(), mes: 13 };
-    expect(() => RaasMapper.toDomain(dto)).not.toThrow();
+    expect(() => RaasMapper.toDomain(dto)).toThrow();
   });
 
   it("deveNormalizarRespostaSpringPageParaResultado", () => {
@@ -68,7 +68,6 @@ describe("ListarArquivosRaas (caso de uso)", () => {
         page: 0,
         size: 10,
       }),
-      downloadArquivo: vi.fn().mockResolvedValue({ nome: "raas.txt", arquivo: "" }),
     };
 
     await repo.listarArquivos({
