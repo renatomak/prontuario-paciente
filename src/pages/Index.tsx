@@ -10,11 +10,11 @@ import { PacienteDados } from "@/features/paciente/components/PacienteDados";
 import { PacienteHeaderCard } from "@/features/paciente/components/PacienteHeaderCard";
 import { PacientesPickerDialog } from "@/features/paciente/components/PacientesPickerDialog";
 import { ProntuarioAtendimentos } from "@/features/prontuario/components/ProntuarioAtendimentos";
-import { RaasArquivos } from "@/features/raas/components/RaasArquivos";
 import { VacinasTable } from "@/features/vacina/components/VacinasTable";
 import { VacinaDetalheSheet } from "@/features/vacina/components/VacinaDetalheSheet";
 import { Search, Loader2, Syringe } from "lucide-react";
 import { toast } from "sonner";
+import { RaasArquivos } from "@/features/raas";
 
 const Index = () => {
   const [query, setQuery] = useState("");
