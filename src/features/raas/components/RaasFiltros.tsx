@@ -27,7 +27,7 @@ export function RaasFiltros({
   competencia,
   situacao,
   unidade,
-  listarUnidades: unidades,
+  listarUnidades: unidades = [],
   loading,
   onCompetenciaChange,
   onSituacaoChange,

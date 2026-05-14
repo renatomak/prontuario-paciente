@@ -16,7 +16,8 @@ export function RaasArquivos() {
   const [pageSize, setPageSize] = useState(10);
 
   const listarArquivosRaasHooks = ListarArquivosRaasHooks();
-  const listarUnidades = ListarUnidadesHooks().data ?? [];
+  const listarUnidadesHook = ListarUnidadesHooks();
+  const listarUnidades = listarUnidadesHook.data ?? [];
   const inicializado = useRef(false);
 
   useEffect(() => {
@@ -47,18 +48,23 @@ export function RaasArquivos() {
           setPage(0);
         },
         onError: (err: unknown) => {
-          const msg =
+          const mensagemErro =
             err && typeof err === "object" && "message" in err
               ? String((err as { message?: string }).message)
               : "Falha ao carregar arquivos do RAAS.";
-          toast.error(msg);
+          toast.error(mensagemErro);
         },
       },
     );
   }
 
-  const data = listarArquivosRaasHooks.data as ListarArquivosRaasResponse | undefined;
-  const arquivos = useMemo(() => data?.arquivos ?? [], [data?.arquivos]);
+  const data = listarArquivosRaasHooks.data as ListarArquivosRaasResponse | any;
+  const arquivos = useMemo(() => {
+    if (!data) return [];
+    if (Array.isArray(data)) return data;
+    if (Array.isArray(data.arquivos)) return data.arquivos;
+    return [];
+  }, [data]);
   const totalElements = data?.totalElements ?? 0;
 
   const totalPages = Math.max(1, Math.ceil(arquivos.length / pageSize));
@@ -79,17 +85,17 @@ export function RaasArquivos() {
         </p>
       </div>
 
-      <RaasFiltros
-        competencia={competencia}
-        situacao={situacao}
-        unidade={unidade}
-        listarUnidades={listarUnidades}
-        loading={listarArquivosRaasHooks.isPending || ListarUnidadesHooks().isLoading}
-        onCompetenciaChange={setCompetencia}
-        onSituacaoChange={setSituacao}
-        onUnidadeChange={setUnidade}
-        onProcurar={procurar}
-      />
+        <RaasFiltros
+          competencia={competencia}
+          situacao={situacao}
+          unidade={unidade}
+          listarUnidades={listarUnidades ?? []}
+          loading={listarArquivosRaasHooks.isPending || listarUnidadesHook.isLoading}
+          onCompetenciaChange={setCompetencia}
+          onSituacaoChange={setSituacao}
+          onUnidadeChange={setUnidade}
+          onProcurar={procurar}
+        />
 
       <RaasTabela
         arquivos={pageItems}
