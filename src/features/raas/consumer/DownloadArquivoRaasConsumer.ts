@@ -1,8 +1,7 @@
 import { JavaApiClient } from "@/shared/http/JavaApiClient";
 import { getRaasApiBaseUrl } from "@/shared/env";
-
-import { DownloadArquivoRaasPort } from "../port/DownloadArquivoRaasPort";
-import { DownloadArquivoRaasResponse } from "../types/raas";
+import { DownloadArquivoRaasResponse } from "../types/RaasTypes";
+import { DownloadArquivoRaasPort } from "../port";
 
 export class DownloadArquivoRaasConsumer implements DownloadArquivoRaasPort {
   private client = new JavaApiClient(getRaasApiBaseUrl());

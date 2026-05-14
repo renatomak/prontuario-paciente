@@ -15,7 +15,7 @@ export interface RaasFiltrosProps {
   competencia: string;
   situacao: string;
   unidade: string;
-  unidades: Array<{ id: number; nome: string }>;
+  listarUnidades: Array<{ id: number; nome: string }>;
   loading: boolean;
   onCompetenciaChange: (v: string) => void;
   onSituacaoChange: (v: string) => void;
@@ -27,7 +27,7 @@ export function RaasFiltros({
   competencia,
   situacao,
   unidade,
-  unidades,
+  listarUnidades: unidades,
   loading,
   onCompetenciaChange,
   onSituacaoChange,

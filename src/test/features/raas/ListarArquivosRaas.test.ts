@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { RaasMapper } from "@/features/raas/api/RaasMapper";
+import { RaasMapper } from "@/features/raas/consumer/RaasMapper";
 import type { ListarArquivoRaasPort } from "@/features/raas/port/ListarArquivoRaasPort";
 import type { ArquivoRaasProjection } from "@/features/raas/types/ArquivoRaasProjection";
 

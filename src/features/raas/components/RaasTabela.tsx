@@ -12,8 +12,8 @@ import {
 import { Download, Eye, Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { raasRepository, downloadArquivoRaasPort } from "@/shared/container";
-import type { ArquivoRaas } from "../types/raas";
+import { downloadArquivoRaasPort } from "@/shared/container";
+import type { ArquivoRaas } from "../types/RaasTypes";
 
 const MESES = [
   "Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho",

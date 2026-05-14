@@ -1,41 +1,28 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FileArchive } from "lucide-react";
 import { toast } from "sonner";
-import { JavaApiClient } from "@/shared/http/JavaApiClient";
-import { getRaasApiBaseUrl } from "@/shared/env";
-import { useListarArquivosRaas } from "../hooks/useListarArquivosRaas";
 import { RaasFiltros } from "./RaasFiltros";
 import { RaasTabela } from "./RaasTabela";
 import { RaasPaginacao } from "./RaasPaginacao";
-import type { ListarArquivosRaasResponse } from "../types/raas";
-
-const apiClient = new JavaApiClient(getRaasApiBaseUrl());
-
-async function fetchUnidades(): Promise<Array<{ id: number; nome: string }>> {
-  return apiClient.get<Array<{ id: number; nome: string }>>("/api/v1/unidades");
-}
+import type { ListarArquivosRaasResponse } from "../types/RaasTypes";
+import { ListarArquivosRaasHooks, ListarUnidadesHooks } from "../hooks";
 
 export function RaasArquivos() {
   const [competencia, setCompetencia] = useState("");
   const [situacao, setSituacao] = useState("");
   const [unidade, setUnidade] = useState("");
-  const [unidades, setUnidades] = useState<Array<{ id: number; nome: string }>>([]);
   const [carregado, setCarregado] = useState(false);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
 
-  const listar = useListarArquivosRaas();
+  const listarArquivosRaasHooks = ListarArquivosRaasHooks();
+  const listarUnidades = ListarUnidadesHooks().data ?? [];
   const inicializado = useRef(false);
 
   useEffect(() => {
     if (inicializado.current) return;
     inicializado.current = true;
-
-    fetchUnidades()
-      .then(setUnidades)
-      .catch(() => setUnidades([]));
-
-    listar.mutate(
+    listarArquivosRaasHooks.mutate(
       { page: 0, size: 1000 },
       {
         onSuccess: () => {
@@ -46,7 +33,7 @@ export function RaasArquivos() {
   }, []);
 
   function procurar() {
-    listar.mutate(
+    listarArquivosRaasHooks.mutate(
       {
         competencia,
         codigoEmpresa: unidade || undefined,
@@ -70,7 +57,7 @@ export function RaasArquivos() {
     );
   }
 
-  const data = listar.data as ListarArquivosRaasResponse | undefined;
+  const data = listarArquivosRaasHooks.data as ListarArquivosRaasResponse | undefined;
   const arquivos = useMemo(() => data?.arquivos ?? [], [data?.arquivos]);
   const totalElements = data?.totalElements ?? 0;
 
@@ -96,8 +83,8 @@ export function RaasArquivos() {
         competencia={competencia}
         situacao={situacao}
         unidade={unidade}
-        unidades={unidades}
-        loading={listar.isPending}
+        listarUnidades={listarUnidades}
+        loading={listarArquivosRaasHooks.isPending || ListarUnidadesHooks().isLoading}
         onCompetenciaChange={setCompetencia}
         onSituacaoChange={setSituacao}
         onUnidadeChange={setUnidade}
@@ -106,7 +93,7 @@ export function RaasArquivos() {
 
       <RaasTabela
         arquivos={pageItems}
-        loading={listar.isPending}
+        loading={listarArquivosRaasHooks.isPending}
         carregado={carregado}
       />
 
@@ -115,7 +102,7 @@ export function RaasArquivos() {
         totalPages={totalPages}
         pageSize={pageSize}
         totalElements={totalElements}
-        loading={listar.isPending}
+        loading={listarArquivosRaasHooks.isPending}
         onPageChange={setPage}
         onPageSizeChange={(n) => {
           setPageSize(n);
