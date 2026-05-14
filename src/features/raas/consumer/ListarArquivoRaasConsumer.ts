@@ -3,8 +3,11 @@ import { getRaasApiBaseUrl } from "@/shared/env";
 import type { ListarArquivoRaasPort } from "../port";
 import type {
   ListarArquivosRaasRequest,
-  ListarArquivosRaasResponse
+  ListarArquivosRaasResponse,
 } from "../types/RaasTypes";
+import { RaasMapper } from "./RaasMapper";
+
+const COMPETENCIA_REGEX = /^(\d{2})\/(\d{4})$/;
 
 export class ListarArquivoRaasConsumer implements ListarArquivoRaasPort {
   private client = new JavaApiClient(getRaasApiBaseUrl());
@@ -12,21 +15,24 @@ export class ListarArquivoRaasConsumer implements ListarArquivoRaasPort {
   async listarArquivos(
     request: ListarArquivosRaasRequest,
   ): Promise<ListarArquivosRaasResponse> {
+    const params = this.buildParams(request);
+    const raw = await this.client.get<unknown>("/api/v1/raas", params);
+    return RaasMapper.toListResult(raw, request.size ?? 1000);
+  }
+
+  private buildParams(request: ListarArquivosRaasRequest): Record<string, string> {
     const params: Record<string, string> = {};
 
-    if (request.competencia && request.competencia.match(/^\d{2}\/\d{4}$/)) {
-      const [mes, ano] = request.competencia.split("/");
-      params.mes = mes;
-      params.ano = ano;
+    const match = request.competencia?.match(COMPETENCIA_REGEX);
+    if (match) {
+      params.mes = match[1];
+      params.ano = match[2];
     }
     if (request.codigoEmpresa) params.codigoEmpresa = request.codigoEmpresa;
     if (request.situacao) params.situacao = request.situacao;
     if (request.page != null) params.page = String(request.page);
     if (request.size != null) params.size = String(request.size);
 
-    return this.client.get<ListarArquivosRaasResponse>(
-      "/api/v1/raas",
-      params,
-    );
+    return params;
   }
 }
