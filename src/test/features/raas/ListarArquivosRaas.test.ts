@@ -68,7 +68,6 @@ describe("ListarArquivosRaas (caso de uso)", () => {
         page: 0,
         size: 10,
       }),
-      downloadArquivo: vi.fn().mockResolvedValue({ nome: "raas.txt", arquivo: "" }),
     };
 
     await repo.listarArquivos({

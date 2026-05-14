@@ -12,8 +12,8 @@ import {
 import { Download, Eye, Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { downloadArquivoRaasPort } from "@/shared/container";
-import type { ArquivoRaas } from "../types/RaasTypes";
+import { useDownloadArquivoRaas } from "../hooks";
+import type { ArquivoRaas } from "../types";
 
 const MESES = [
   "Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho",
@@ -61,14 +61,17 @@ export interface RaasTabelaProps {
 
 export function RaasTabela({ arquivos, loading, carregado }: RaasTabelaProps) {
   const [baixandoId, setBaixandoId] = useState<number | null>(null);
+  const download = useDownloadArquivoRaas();
 
   async function handleDownload(arquivo: ArquivoRaas) {
     try {
       setBaixandoId(arquivo.id);
-      const { nome, arquivo: conteudo } = await downloadArquivoRaasPort.download(arquivo.id);
-      const nomeArquivo = nome.split("/").pop() ?? `raas_${arquivo.id}.txt`;
-      const nomeTxt = nomeArquivo.endsWith(".txt") ? nomeArquivo : nomeArquivo.replace(/\.[^.]+$/, ".txt");
-      downloadTxt(conteudo, nomeTxt);
+      const { nome, arquivo: conteudo } = await download.mutateAsync(arquivo.id);
+      const nomeArquivo = (nome ?? "").split("/").pop() || `raas_${arquivo.id}.txt`;
+      const nomeTxt = nomeArquivo.endsWith(".txt")
+        ? nomeArquivo
+        : nomeArquivo.replace(/\.[^.]+$/, ".txt");
+      downloadTxt(conteudo ?? "", nomeTxt);
     } catch {
       toast.error("Falha ao baixar o arquivo.");
     } finally {

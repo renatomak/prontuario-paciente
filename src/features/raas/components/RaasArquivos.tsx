@@ -1,29 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { FileArchive } from "lucide-react";
 import { toast } from "sonner";
 import { RaasFiltros } from "./RaasFiltros";
 import { RaasTabela } from "./RaasTabela";
 import { RaasPaginacao } from "./RaasPaginacao";
-import type { ListarArquivosRaasResponse } from "../types/RaasTypes";
-import { ListarArquivosRaasHooks, ListarUnidadesHooks } from "../hooks";
+import { useListarArquivosRaas, useListarUnidades } from "../hooks";
 
 const PAGE_SIZE_DEFAULT = 10;
 const FETCH_SIZE = 1000;
 const FALLBACK_ERROR_MESSAGE = "Falha ao carregar arquivos do RAAS.";
-
-function extractArquivos(data: ListarArquivosRaasResponse | unknown): unknown[] {
-  if (!data) return [];
-  if (Array.isArray(data)) return data;
-  if (
-    typeof data === "object" &&
-    data !== null &&
-    "arquivos" in data &&
-    Array.isArray((data as ListarArquivosRaasResponse).arquivos)
-  ) {
-    return (data as ListarArquivosRaasResponse).arquivos;
-  }
-  return [];
-}
 
 function extractErrorMessage(err: unknown): string {
   if (err && typeof err === "object" && "message" in err) {
@@ -57,28 +42,12 @@ export function RaasArquivos() {
 
   const [carregado, setCarregado] = useState(false);
 
-  const listarArquivosRaas = ListarArquivosRaasHooks();
-  const listarUnidades = ListarUnidadesHooks();
-  const unidades = listarUnidades.data ?? [];
+  const listar = useListarArquivosRaas();
+  const unidadesQuery = useListarUnidades();
+  const unidades = unidadesQuery.data ?? [];
 
-  const isLoading = listarArquivosRaas.isPending || listarUnidades.isLoading;
-
-  useEffect(() => {
-    if (listarArquivosRaas.isPending || listarArquivosRaas.isSuccess) return;
-    listarArquivosRaas.mutate(
-      { page: 0, size: FETCH_SIZE },
-      { onSuccess: () => setCarregado(true) },
-    );
-  }, []);
-
-  const arquivos = useMemo(
-    () => extractArquivos(listarArquivosRaas.data),
-    [listarArquivosRaas.data],
-  );
-
-  const totalElements =
-    (listarArquivosRaas.data as ListarArquivosRaasResponse)?.totalElements ?? 0;
-
+  const arquivos = listar.data?.arquivos ?? [];
+  const totalElements = listar.data?.totalElements ?? 0;
   const totalPages = Math.max(1, Math.ceil(arquivos.length / paginacao.pageSize));
 
   const pageItems = useMemo(() => {
@@ -87,7 +56,7 @@ export function RaasArquivos() {
   }, [arquivos, paginacao]);
 
   function handleProcurar() {
-    listarArquivosRaas.mutate(
+    listar.mutate(
       {
         competencia: filtros.competencia,
         codigoEmpresa: filtros.unidade || undefined,
@@ -100,17 +69,9 @@ export function RaasArquivos() {
           setCarregado(true);
           setPaginacao((prev) => ({ ...prev, page: 0 }));
         },
-        onError: (err: unknown) => toast.error(extractErrorMessage(err)),
+        onError: (err) => toast.error(extractErrorMessage(err)),
       },
     );
-  }
-
-  function handlePageSizeChange(newSize: number) {
-    setPaginacao({ page: 0, pageSize: newSize });
-  }
-
-  function handlePageChange(newPage: number) {
-    setPaginacao((prev) => ({ ...prev, page: newPage }));
   }
 
   return (
@@ -122,7 +83,7 @@ export function RaasArquivos() {
         situacao={filtros.situacao}
         unidade={filtros.unidade}
         listarUnidades={unidades}
-        loading={isLoading}
+        loading={listar.isPending || unidadesQuery.isLoading}
         onCompetenciaChange={(v) => setFiltros((prev) => ({ ...prev, competencia: v }))}
         onSituacaoChange={(v) => setFiltros((prev) => ({ ...prev, situacao: v }))}
         onUnidadeChange={(v) => setFiltros((prev) => ({ ...prev, unidade: v }))}
@@ -131,7 +92,7 @@ export function RaasArquivos() {
 
       <RaasTabela
         arquivos={pageItems}
-        loading={listarArquivosRaas.isPending}
+        loading={listar.isPending}
         carregado={carregado}
       />
 
@@ -140,9 +101,9 @@ export function RaasArquivos() {
         totalPages={totalPages}
         pageSize={paginacao.pageSize}
         totalElements={totalElements}
-        loading={listarArquivosRaas.isPending}
-        onPageChange={handlePageChange}
-        onPageSizeChange={handlePageSizeChange}
+        loading={listar.isPending}
+        onPageChange={(p) => setPaginacao((prev) => ({ ...prev, page: p }))}
+        onPageSizeChange={(s) => setPaginacao({ page: 0, pageSize: s })}
       />
     </div>
   );
