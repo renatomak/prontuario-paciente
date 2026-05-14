@@ -2,25 +2,7 @@ import { JavaApiClient } from "@/shared/http/JavaApiClient";
 import type { ListarVacinasPort } from "../port/ListarVacinasPort";
 import type { VacinaResumoResponse } from "../types/ListarVacinasResponse";
 import type { VacinaResumoProjection } from "../types/VacinaProjection";
-
-function pick<T>(...vals: (T | null | undefined)[]): T | null {
-  for (const v of vals) {
-    if (v !== undefined && v !== null && v !== "") return v as T;
-  }
-  return null;
-}
-
-function mapStatusVacina(s: unknown): string {
-  if (s === null || s === undefined || s === "") return "Aplicada";
-  if (typeof s === "number") return s === 1 ? "Aprazada" : "Aplicada";
-  if (typeof s === "string") {
-    const t = s.trim();
-    if (t === "0") return "Aplicada";
-    if (t === "1") return "Aprazada";
-    return t;
-  }
-  return String(s);
-}
+import { pick, mapStatusVacina } from "./vacinaMapperUtils";
 
 function resumoToDomain(r: VacinaResumoProjection): VacinaResumoResponse {
   return {
@@ -38,7 +20,7 @@ function resumoToDomain(r: VacinaResumoProjection): VacinaResumoResponse {
 }
 
 export class ListarVacinasConsumer implements ListarVacinasPort {
-  private client = new JavaApiClient();
+  constructor(private client: JavaApiClient = new JavaApiClient()) {}
 
   async listarPorPaciente(pacienteId: number): Promise<VacinaResumoResponse[]> {
     const raw = await this.client.get<VacinaResumoProjection[]>(

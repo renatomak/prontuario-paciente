@@ -2,21 +2,7 @@ import { JavaApiClient } from "@/shared/http/JavaApiClient";
 import type { ObterVacinaDetalhePort } from "../port/ObterVacinaDetalhePort";
 import type { VacinaDetalheResponse } from "../types/ObterVacinaDetalheResponse";
 import type { VacinaDetalheProjection } from "../types/VacinaProjection";
-
-function pick<T>(...vals: (T | null | undefined)[]): T | null {
-  for (const v of vals) {
-    if (v !== undefined && v !== null && v !== "") return v as T;
-  }
-  return null;
-}
-
-function asBool(v: unknown): boolean {
-  if (typeof v === "boolean") return v;
-  if (typeof v === "string")
-    return v.toLowerCase() === "true" || v === "1" || v.toLowerCase() === "sim";
-  if (typeof v === "number") return v === 1;
-  return false;
-}
+import { pick, asBool } from "./vacinaMapperUtils";
 
 function detalheToDomain(r: VacinaDetalheProjection): VacinaDetalheResponse {
   return {
@@ -57,7 +43,7 @@ function detalheToDomain(r: VacinaDetalheProjection): VacinaDetalheResponse {
 }
 
 export class ObterVacinaDetalheConsumer implements ObterVacinaDetalhePort {
-  private client = new JavaApiClient();
+  constructor(private client: JavaApiClient = new JavaApiClient()) {}
 
   async obterDetalhe(idAplicacao: number): Promise<VacinaDetalheResponse> {
     const raw = await this.client.get<VacinaDetalheProjection>(

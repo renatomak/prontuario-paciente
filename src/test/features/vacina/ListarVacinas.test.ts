@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { ListarVacinasConsumer } from "@/features/vacina/consumer/ListarVacinasConsumer";
+import { mapStatusVacina } from "@/features/vacina/consumer/vacinaMapperUtils";
 import type { ListarVacinasPort } from "@/features/vacina/port/ListarVacinasPort";
 import type { VacinaResumoProjection } from "@/features/vacina/types/VacinaProjection";
 import { JavaApiClient } from "@/shared/http/JavaApiClient";
@@ -17,11 +18,30 @@ class VacinaResumoProjectionBuilder {
   build(): VacinaResumoProjection { return { ...this.dto }; }
 }
 
-describe("ListarVacinasConsumer (mapeamento de status)", () => {
+// ─── Testes unitários de mapStatusVacina (agora diretamente testável) ────────
+
+describe("mapStatusVacina", () => {
+  it.each([
+    [0,          "Aplicada"],
+    [1,          "Aprazada"],
+    ["0",        "Aplicada"],
+    ["1",        "Aprazada"],
+    [null,       "Aplicada"],
+    [undefined,  "Aplicada"],
+    ["",         "Aplicada"],
+    ["Cancelada","Cancelada"],
+  ])("mapStatusVacina(%s) === %s", (entrada, esperado) => {
+    expect(mapStatusVacina(entrada as string | number | null | undefined)).toBe(esperado);
+  });
+});
+
+// ─── Testes de integração do consumer ────────────────────────────────────────
+
+describe("ListarVacinasConsumer", () => {
   it("deveConverterResumoProjectionParaDominio", async () => {
     const dto = new VacinaResumoProjectionBuilder().build();
-    vi.spyOn(JavaApiClient.prototype, "get").mockResolvedValueOnce([dto]);
-    const consumer = new ListarVacinasConsumer();
+    const mockClient = { get: vi.fn().mockResolvedValue([dto]) } as unknown as JavaApiClient;
+    const consumer = new ListarVacinasConsumer(mockClient);
     const resultado = await consumer.listarPorPaciente(1);
 
     expect(resultado[0].idAplicacao).toBe(100);
@@ -29,24 +49,17 @@ describe("ListarVacinasConsumer (mapeamento de status)", () => {
     expect(resultado[0].dataAplicacao).toBe("01/02/2024");
   });
 
-  it("deveTraduzirStatusNumericoParaTextoLegivel", async () => {
-    const casos = [
-      { status: 0, esperado: "Aplicada" },
-      { status: 1, esperado: "Aprazada" },
-      { status: "Cancelada", esperado: "Cancelada" },
-    ];
-
-    for (const { status, esperado } of casos) {
-      const dto = new VacinaResumoProjectionBuilder().comStatus(status).build();
-      vi.spyOn(JavaApiClient.prototype, "get").mockResolvedValueOnce([dto]);
-      const consumer = new ListarVacinasConsumer();
-      const resultado = await consumer.listarPorPaciente(1);
-      expect(resultado[0].status).toBe(esperado);
-    }
+  it("deveTratarRespostaVaziaOuNula", async () => {
+    const mockClient = { get: vi.fn().mockResolvedValue(null) } as unknown as JavaApiClient;
+    const consumer = new ListarVacinasConsumer(mockClient);
+    const resultado = await consumer.listarPorPaciente(1);
+    expect(resultado).toEqual([]);
   });
 });
 
-describe("ListarVacinas (caso de uso)", () => {
+// ─── Teste de contrato do port ────────────────────────────────────────────────
+
+describe("ListarVacinasPort (contrato)", () => {
   it("deveDelegarChamadaAoPortComPacienteId", async () => {
     const port: ListarVacinasPort = {
       listarPorPaciente: vi.fn().mockResolvedValue([]),

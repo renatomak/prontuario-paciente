@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { imprimirCartaoVacinacao } from "@/lib/CartaoVacinaPrint";
 import { getLogoBase64 } from "@/lib/logoGoiania";
 import { toast } from "sonner";
-import { useMemo } from "react";
+import { useMemo, type ElementType } from "react";
 
 interface Props {
   vacinas: VacinaResumoResponse[];
@@ -16,6 +16,7 @@ interface Props {
   selectedId?: number;
   paciente?: PacienteResponse;
 }
+
 
 function getYear(d: string): string {
   if (!d) return "—";
@@ -26,16 +27,18 @@ function getYear(d: string): string {
   return "—";
 }
 
-function isAprazada(status: string): boolean {
-  return /apraz/i.test(status);
-}
+function isAprazada(status: string): boolean { return /apraz/i.test(status); }
+function isReforco(dose: string): boolean    { return /refor/i.test(dose); }
+function isUnica(dose: string): boolean      { return /única|unica/i.test(dose); }
 
-function isReforco(dose: string): boolean {
-  return /refor/i.test(dose);
-}
-
-function isUnica(dose: string): boolean {
-  return /única|unica/i.test(dose);
+function MetaItem({ icon: Icon, value }: { icon: ElementType; value: string | null | undefined }) {
+  const text = value || "--";
+  return (
+    <div className="flex items-center gap-1.5 min-w-0">
+      <Icon className="h-3 w-3 shrink-0" />
+      <span className="truncate" title={text}>{text}</span>
+    </div>
+  );
 }
 
 export function VacinasTable({ vacinas, onSelect, selectedId, paciente }: Props) {
@@ -53,7 +56,6 @@ export function VacinasTable({ vacinas, onSelect, selectedId, paciente }: Props)
     }
   }
 
-  // Agrupa por ano (mantém ordem descendente vinda do backend)
   const grupos = useMemo(() => {
     const map = new Map<string, VacinaResumoResponse[]>();
     vacinas.forEach((v) => {
@@ -152,24 +154,9 @@ export function VacinasTable({ vacinas, onSelect, selectedId, paciente }: Props)
                           </div>
 
                           <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                            <div className="flex items-center gap-1.5 min-w-0">
-                              <FlaskConical className="h-3 w-3 shrink-0" />
-                              <span className="truncate" title={v.laboratorio ?? "--"}>
-                                {v.laboratorio || "--"}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-1.5 min-w-0">
-                              <Building2 className="h-3 w-3 shrink-0" />
-                              <span className="truncate" title={v.estabelecimento ?? "--"}>
-                                {v.estabelecimento || "--"}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-1.5 min-w-0">
-                              <User className="h-3 w-3 shrink-0" />
-                              <span className="truncate" title={v.profissional ?? "--"}>
-                                {v.profissional || "--"}
-                              </span>
-                            </div>
+                            <MetaItem icon={FlaskConical} value={v.laboratorio} />
+                            <MetaItem icon={Building2}   value={v.estabelecimento} />
+                            <MetaItem icon={User}        value={v.profissional} />
                           </div>
 
                           {v.estrategia && (
