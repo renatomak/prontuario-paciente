@@ -4,23 +4,30 @@ import { toast } from "sonner";
 import { RaasFiltros } from "./RaasFiltros";
 import { RaasTabela } from "./RaasTabela";
 import { RaasPaginacao } from "./RaasPaginacao";
-import type { ListarArquivosRaasResponse } from "../types/RaasTypes";
+import type { ArquivoRaas, ListarArquivosRaasResponse } from "../types/RaasTypes";
 import { ListarArquivosRaasHooks, ListarUnidadesHooks } from "../hooks";
 
 const PAGE_SIZE_DEFAULT = 10;
-const FETCH_SIZE = 1000;
 const FALLBACK_ERROR_MESSAGE = "Falha ao carregar arquivos do RAAS.";
 
-function extractArquivos(data: ListarArquivosRaasResponse | unknown): unknown[] {
+function extractArquivos(data: ListarArquivosRaasResponse | unknown): ArquivoRaas[] {
   if (!data) return [];
   if (Array.isArray(data)) return data;
+  if (
+    typeof data === "object" &&
+    data !== null &&
+    "content" in data &&
+    Array.isArray((data as ListarArquivosRaasResponse).content)
+  ) {
+    return (data as ListarArquivosRaasResponse).content;
+  }
   if (
     typeof data === "object" &&
     data !== null &&
     "arquivos" in data &&
     Array.isArray((data as ListarArquivosRaasResponse).arquivos)
   ) {
-    return (data as ListarArquivosRaasResponse).arquivos;
+    return (data as ListarArquivosRaasResponse).arquivos ?? [];
   }
   return [];
 }
@@ -59,58 +66,60 @@ export function RaasArquivos() {
 
   const listarArquivosRaas = ListarArquivosRaasHooks();
   const listarUnidades = ListarUnidadesHooks();
+  const { mutate, isPending, data } = listarArquivosRaas;
   const unidades = listarUnidades.data ?? [];
 
-  const isLoading = listarArquivosRaas.isPending || listarUnidades.isLoading;
+  const isLoading = isPending || listarUnidades.isLoading;
 
-  useEffect(() => {
-    if (listarArquivosRaas.isPending || listarArquivosRaas.isSuccess) return;
-    listarArquivosRaas.mutate(
-      { page: 0, size: FETCH_SIZE },
-      { onSuccess: () => setCarregado(true) },
-    );
-  }, []);
-
-  const arquivos = useMemo(
-    () => extractArquivos(listarArquivosRaas.data),
-    [listarArquivosRaas.data],
-  );
-
-  const totalElements =
-    (listarArquivosRaas.data as ListarArquivosRaasResponse)?.totalElements ?? 0;
-
-  const totalPages = Math.max(1, Math.ceil(arquivos.length / paginacao.pageSize));
-
-  const pageItems = useMemo(() => {
-    const start = paginacao.page * paginacao.pageSize;
-    return arquivos.slice(start, start + paginacao.pageSize);
-  }, [arquivos, paginacao]);
-
-  function handleProcurar() {
-    listarArquivosRaas.mutate(
+  function carregarPagina(page: number, pageSize: number) {
+    mutate(
       {
-        competencia: filtros.competencia,
+        competencia: filtros.competencia || undefined,
         codigoEmpresa: filtros.unidade || undefined,
         situacao: filtros.situacao || undefined,
-        page: 0,
-        size: FETCH_SIZE,
+        page,
+        size: pageSize,
       },
       {
-        onSuccess: () => {
-          setCarregado(true);
-          setPaginacao((prev) => ({ ...prev, page: 0 }));
-        },
+        onSuccess: () => setCarregado(true),
         onError: (err: unknown) => toast.error(extractErrorMessage(err)),
       },
     );
   }
 
+  useEffect(() => {
+    mutate(
+      { page: 0, size: PAGE_SIZE_DEFAULT },
+      {
+        onSuccess: () => setCarregado(true),
+        onError: (err: unknown) => toast.error(extractErrorMessage(err)),
+      },
+    );
+  }, [mutate]);
+
+  const arquivos = useMemo(
+    () => extractArquivos(data),
+    [data],
+  );
+
+  const response = data as ListarArquivosRaasResponse | undefined;
+  const totalElements = response?.totalElements ?? 0;
+  const totalPages = Math.max(1, response?.totalPages ?? 1);
+  const currentPage = response?.number ?? paginacao.page;
+
+  function handleProcurar() {
+    setPaginacao((prev) => ({ ...prev, page: 0 }));
+    carregarPagina(0, paginacao.pageSize);
+  }
+
   function handlePageSizeChange(newSize: number) {
     setPaginacao({ page: 0, pageSize: newSize });
+    carregarPagina(0, newSize);
   }
 
   function handlePageChange(newPage: number) {
     setPaginacao((prev) => ({ ...prev, page: newPage }));
+    carregarPagina(newPage, paginacao.pageSize);
   }
 
   return (
@@ -130,17 +139,17 @@ export function RaasArquivos() {
       />
 
       <RaasTabela
-        arquivos={pageItems}
-        loading={listarArquivosRaas.isPending}
+        arquivos={arquivos}
+        loading={isPending}
         carregado={carregado}
       />
 
       <RaasPaginacao
-        page={paginacao.page}
+        page={currentPage}
         totalPages={totalPages}
         pageSize={paginacao.pageSize}
         totalElements={totalElements}
-        loading={listarArquivosRaas.isPending}
+        loading={isPending}
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
       />
