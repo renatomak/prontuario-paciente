@@ -1,7 +1,7 @@
 import type {
   ProntuarioAtendimento,
   ProntuarioResponse,
-} from "@/features/prontuario/port/schemas";
+} from "@/features/prontuario/types";
 import { escapeHtml, formatEndereco, sanitizeNomeArquivo } from "@/shared/formatters";
 import { renderPrintHeader, renderPrintFooter, renderCampo, openPrintWindow } from "@/shared/printUtils";
 import { blocosConteudo } from "@/shared/prontuarioUtils";
