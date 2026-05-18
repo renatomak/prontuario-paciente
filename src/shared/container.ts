@@ -8,21 +8,26 @@ import type {
   ListarUnidadesPort,
   DownloadArquivoRaasPort,
 } from "@/features/raas";
-import { PacientePersistenceAdapter } from "@/features/paciente/api/PacientePersistenceAdapter";
-import type { PacientePort } from "@/features/paciente/port/PacientePort";
+import { BuscarPacienteConsumer } from "@/features/paciente/consumer/BuscarPacienteConsumer";
+import { CarregarPacienteConsumer } from "@/features/paciente/consumer/CarregarPacienteConsumer";
+import type { BuscarPacientePort } from "@/features/paciente/port/BuscarPacientePort";
+import type { CarregarPacientePort } from "@/features/paciente/port/CarregarPacientePort";
 import {
   ListarVacinasConsumer,
   ObterVacinaDetalheConsumer,
 } from "@/features/vacina";
 import type { ListarVacinasPort, ObterVacinaDetalhePort } from "@/features/vacina";
-import { ProntuarioPersistenceAdapter } from "@/features/prontuario/api/ProntuarioPersistenceAdapter";
-import type { ProntuarioPort } from "@/features/prontuario/port/ProntuarioPort";
+import { ObterProntuarioConsumer } from "@/features/prontuario/consumer/ObterProntuarioConsumer";
+import type { ObterProntuarioPort } from "@/features/prontuario/port/ObterProntuarioPort";
 
 export const downloadArquivoRaasPort: DownloadArquivoRaasPort = new DownloadArquivoRaasConsumer();
 export const listarArquivosRaasPort: ListarArquivoRaasPort = new ListarArquivoRaasConsumer();
 export const listarUnidadesRaasPort: ListarUnidadesPort = new ListarUnidadesConsumer();
-export const pacienteRepository: PacientePort = new PacientePersistenceAdapter();
+
+export const buscarPacientePort: BuscarPacientePort = new BuscarPacienteConsumer();
+export const carregarPacientePort: CarregarPacientePort = new CarregarPacienteConsumer();
+
 export const listarVacinasPort: ListarVacinasPort = new ListarVacinasConsumer();
 export const obterVacinaDetalhePort: ObterVacinaDetalhePort = new ObterVacinaDetalheConsumer();
-export const prontuarioRepository: ProntuarioPort = new ProntuarioPersistenceAdapter();
 
+export const obterProntuarioPort: ObterProntuarioPort = new ObterProntuarioConsumer();

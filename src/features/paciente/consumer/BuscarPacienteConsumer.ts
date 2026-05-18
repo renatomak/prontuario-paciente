@@ -1,17 +1,16 @@
 import { JavaApiClient } from "@/shared/http/JavaApiClient";
 import { ApiErrorImpl } from "@/shared/http";
-import type { PacientePort } from "../port/PacientePort";
-import type { PacienteResponse } from "../port/schemas";
+import type { BuscarPacientePort } from "../port/BuscarPacientePort";
 import type { BuscarPacienteRequest } from "../types/BuscarPacienteRequest";
 import type { BuscarPacienteResponse } from "../types/BuscarPacienteResponse";
 import type {
   PacienteProjection,
   PacienteResumoProjection,
 } from "../types/PacienteProjection";
-import { PacienteMapper } from "./PacienteMapper";
+import { pacienteToDomain, pacienteResumoToDomain } from "./pacienteMapperUtils";
 
-export class PacientePersistenceAdapter implements PacientePort {
-  private client = new JavaApiClient();
+export class BuscarPacienteConsumer implements BuscarPacientePort {
+  constructor(private client: JavaApiClient = new JavaApiClient()) {}
 
   async buscar({ query }: BuscarPacienteRequest): Promise<BuscarPacienteResponse> {
     const cpfFormatado = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(query);
@@ -23,10 +22,8 @@ export class PacientePersistenceAdapter implements PacientePort {
         cpf = `${cpf.slice(0, 3)}.${cpf.slice(3, 6)}.${cpf.slice(6, 9)}-${cpf.slice(9, 11)}`;
       }
       try {
-        const dto = await this.client.get<PacienteProjection>(
-          `/api/pacientes/cpf/${cpf}`
-        );
-        return { tipo: "paciente", paciente: PacienteMapper.toDomain(dto) };
+        const dto = await this.client.get<PacienteProjection>(`/api/pacientes/cpf/${cpf}`);
+        return { tipo: "paciente", paciente: pacienteToDomain(dto) };
       } catch (e) {
         if (e instanceof ApiErrorImpl && e.status === 404) {
           return { tipo: "lista", pacientes: [] };
@@ -39,14 +36,6 @@ export class PacientePersistenceAdapter implements PacientePort {
       "/api/pacientes/search/nome",
       { nome: query },
     );
-    return {
-      tipo: "lista",
-      pacientes: lista.map(PacienteMapper.resumoToDomain),
-    };
-  }
-
-  async carregarPorId(id: number): Promise<PacienteResponse> {
-    const dto = await this.client.get<PacienteProjection>(`/api/pacientes/${id}`);
-    return PacienteMapper.toDomain(dto);
+    return { tipo: "lista", pacientes: (lista || []).map(pacienteResumoToDomain) };
   }
 }

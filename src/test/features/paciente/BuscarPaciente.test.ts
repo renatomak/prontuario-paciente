@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
-import { PacienteMapper } from "@/features/paciente/api/PacienteMapper";
-import type { PacientePort } from "@/features/paciente/port/PacientePort";
+import { pacienteToDomain } from "@/features/paciente/consumer/pacienteMapperUtils";
+import type { BuscarPacientePort } from "@/features/paciente/port/BuscarPacientePort";
 import type { PacienteProjection } from "@/features/paciente/types/PacienteProjection";
 
 class PacienteProjectionBuilder {
@@ -18,10 +18,10 @@ class PacienteProjectionBuilder {
   build(): PacienteProjection { return { ...this.dto }; }
 }
 
-describe("PacienteMapper", () => {
+describe("pacienteToDomain (mapper)", () => {
   it("deveConverterProjectionParaDominioComCamelCase", () => {
     const dto = new PacienteProjectionBuilder().build();
-    const dominio = PacienteMapper.toDomain(dto);
+    const dominio = pacienteToDomain(dto);
 
     expect(dominio.nomeMae).toBe("MARIA DA SILVA");
     expect(dominio.dataNascimento).toBe("1990-05-10");
@@ -30,13 +30,12 @@ describe("PacienteMapper", () => {
 });
 
 describe("BuscarPaciente (caso de uso)", () => {
-  it("deveDelegarChamadaAoRepositoryComQuery", async () => {
-    const repo: PacientePort = {
+  it("deveDelegarChamadaAoPortComQuery", async () => {
+    const port: BuscarPacientePort = {
       buscar: vi.fn().mockResolvedValue({ tipo: "lista", pacientes: [] }),
-      carregarPorId: vi.fn(),
     };
 
-    await repo.buscar({ query: "ALEXANDRE" });
-    expect(repo.buscar).toHaveBeenCalledWith({ query: "ALEXANDRE" });
+    await port.buscar({ query: "ALEXANDRE" });
+    expect(port.buscar).toHaveBeenCalledWith({ query: "ALEXANDRE" });
   });
 });

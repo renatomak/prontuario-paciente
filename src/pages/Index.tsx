@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { PacienteResumoResponse } from "@/features/paciente/port/schemas";
+import type { PacienteResumoResponse } from "@/features/paciente/types";
 import { useBuscarPaciente } from "@/features/paciente/hooks/useBuscarPaciente";
 import { useCarregarPaciente } from "@/features/paciente/hooks/useCarregarPaciente";
 import { useListarVacinas } from "@/features/vacina";

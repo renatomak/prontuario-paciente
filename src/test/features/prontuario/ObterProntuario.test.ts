@@ -2,8 +2,8 @@ import { describe, it, expect, vi } from "vitest";
 import {
   ProntuarioResponseSchema,
   type ProntuarioResponse,
-} from "@/features/prontuario/port/schemas";
-import type { ProntuarioPort } from "@/features/prontuario/port/ProntuarioPort";
+} from "@/features/prontuario/types/ObterProntuarioResponse";
+import type { ObterProntuarioPort } from "@/features/prontuario/port/ObterProntuarioPort";
 
 class ProntuarioResponseBuilder {
   private dto: ProntuarioResponse = {
@@ -28,13 +28,13 @@ describe("ProntuarioResponseSchema (Zod)", () => {
 });
 
 describe("ObterProntuario (caso de uso)", () => {
-  it("deveDelegarChamadaAoRepositoryComPacienteId", async () => {
+  it("deveDelegarChamadaAoPortComPacienteId", async () => {
     const dto = new ProntuarioResponseBuilder().build();
-    const repo: ProntuarioPort = {
+    const port: ObterProntuarioPort = {
       obterPorPacienteId: vi.fn().mockResolvedValue(dto),
     };
-    const result = await repo.obterPorPacienteId(99);
-    expect(repo.obterPorPacienteId).toHaveBeenCalledWith(99);
+    const result = await port.obterPorPacienteId(99);
+    expect(port.obterPorPacienteId).toHaveBeenCalledWith(99);
     expect(result.paciente.nome).toBe("JOAO");
   });
 });

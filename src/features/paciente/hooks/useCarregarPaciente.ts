@@ -1,16 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { pacienteRepository as defaultRepository } from "@/shared/container";
-import type { PacientePort } from "../port/PacientePort";
+import { carregarPacientePort as defaultPort } from "@/shared/container";
+import type { CarregarPacientePort } from "../port/CarregarPacientePort";
 
-/** Caso de uso: Carregar dados completos do paciente por ID. */
 export function useCarregarPaciente(
   id: number,
   enabled = true,
-  repository: PacientePort = defaultRepository,
+  port: CarregarPacientePort = defaultPort,
 ) {
   return useQuery({
     queryKey: ["paciente", id],
-    queryFn: () => repository.carregarPorId(id),
+    queryFn: () => port.carregarPorId(id),
     enabled: !!id && enabled,
   });
 }

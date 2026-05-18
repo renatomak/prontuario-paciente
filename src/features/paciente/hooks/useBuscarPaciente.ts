@@ -1,13 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { pacienteRepository as defaultRepository } from "@/shared/container";
-import type { PacientePort } from "../port/PacientePort";
+import { buscarPacientePort as defaultPort } from "@/shared/container";
+import type { BuscarPacientePort } from "../port/BuscarPacientePort";
 
-/** Caso de uso: Buscar paciente por nome ou CPF. */
-export function useBuscarPaciente(
-  repository: PacientePort = defaultRepository,
-) {
+export function useBuscarPaciente(port: BuscarPacientePort = defaultPort) {
   return useMutation({
     mutationKey: ["paciente", "buscar"],
-    mutationFn: (query: string) => repository.buscar({ query }),
+    mutationFn: (query: string) => port.buscar({ query }),
   });
 }

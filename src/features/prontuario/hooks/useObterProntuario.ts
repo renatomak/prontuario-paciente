@@ -1,16 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { prontuarioRepository as defaultRepository } from "@/shared/container";
-import type { ProntuarioPort } from "../port/ProntuarioPort";
+import { obterProntuarioPort as defaultPort } from "@/shared/container";
+import type { ObterProntuarioPort } from "../port/ObterProntuarioPort";
 
-/** Caso de uso: Obter prontuario (atendimentos) de um paciente. */
 export function useObterProntuario(
   pacienteId: number,
   enabled = true,
-  repository: ProntuarioPort = defaultRepository,
+  port: ObterProntuarioPort = defaultPort,
 ) {
   return useQuery({
     queryKey: ["prontuario", pacienteId],
-    queryFn: () => repository.obterPorPacienteId(pacienteId),
+    queryFn: () => port.obterPorPacienteId(pacienteId),
     enabled: !!pacienteId && enabled,
   });
 }

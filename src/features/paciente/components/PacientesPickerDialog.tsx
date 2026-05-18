@@ -1,4 +1,4 @@
-import type { PacienteResumoResponse } from "@/features/paciente/port/schemas";
+import type { PacienteResumoResponse } from "@/features/paciente/types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface Props {
