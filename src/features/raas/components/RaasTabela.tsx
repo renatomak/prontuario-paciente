@@ -9,10 +9,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Download, Eye, Loader2, Trash2 } from "lucide-react";
+import { Download, Eye, FileText, Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useDownloadArquivoRaas } from "../hooks";
+import { useDownloadArquivoRaas, useGerarArquivoPsicossocial } from "../hooks";
 import type { ListarArquivosRaasResponse } from "../types";
 
 type ArquivoRaasTabelaItem = ListarArquivosRaasResponse["content"][number];
@@ -63,7 +63,9 @@ export interface RaasTabelaProps {
 
 export function RaasTabela({ arquivos, loading, carregado }: RaasTabelaProps) {
   const [baixandoId, setBaixandoId] = useState<number | null>(null);
+  const [gerandoId, setGerandoId] = useState<number | null>(null);
   const download = useDownloadArquivoRaas();
+  const gerarPsicossocial = useGerarArquivoPsicossocial();
 
   async function handleDownload(arquivo: ArquivoRaasTabelaItem) {
     try {
@@ -78,6 +80,22 @@ export function RaasTabela({ arquivos, loading, carregado }: RaasTabelaProps) {
       toast.error("Falha ao baixar o arquivo.");
     } finally {
       setBaixandoId(null);
+    }
+  }
+
+  async function handleGerarPsicossocial(arquivo: ArquivoRaasTabelaItem) {
+    try {
+      setGerandoId(arquivo.id);
+      const conteudo = await gerarPsicossocial.mutateAsync({
+        mes: arquivo.mes,
+        ano: arquivo.ano,
+      });
+      const nomeTxt = `raas_psicossocial_${arquivo.mes}_${arquivo.ano}.txt`;
+      downloadTxt(conteudo ?? "", nomeTxt);
+    } catch {
+      toast.error("Falha ao gerar o arquivo psicossocial.");
+    } finally {
+      setGerandoId(null);
     }
   }
 
@@ -136,6 +154,20 @@ export function RaasTabela({ arquivos, loading, carregado }: RaasTabelaProps) {
                           <Loader2 className="h-4 w-4 animate-spin text-green-600" />
                         ) : (
                           <Download className="h-4 w-4 text-green-600" />
+                        )}
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7"
+                        title="Baixar (psicossocial - novo endpoint)"
+                        disabled={gerandoId === a.id}
+                        onClick={() => handleGerarPsicossocial(a)}
+                      >
+                        {gerandoId === a.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin text-emerald-600" />
+                        ) : (
+                          <FileText className="h-4 w-4 text-emerald-600" />
                         )}
                       </Button>
                       <Button size="icon" variant="ghost" className="h-7 w-7" title="Visualizar">

@@ -2,11 +2,13 @@ import {
   ListarArquivoRaasConsumer,
   ListarUnidadesConsumer,
   DownloadArquivoRaasConsumer,
+  GerarArquivoPsicossocialConsumer,
 } from "@/features/raas";
 import type {
   ListarArquivoRaasPort,
   ListarUnidadesPort,
   DownloadArquivoRaasPort,
+  GerarArquivoPsicossocialPort,
 } from "@/features/raas";
 import { BuscarPacienteConsumer } from "@/features/paciente/consumer/BuscarPacienteConsumer";
 import { CarregarPacienteConsumer } from "@/features/paciente/consumer/CarregarPacienteConsumer";
@@ -23,6 +25,7 @@ import type { ObterProntuarioPort } from "@/features/prontuario/port/ObterProntu
 export const downloadArquivoRaasPort: DownloadArquivoRaasPort = new DownloadArquivoRaasConsumer();
 export const listarArquivosRaasPort: ListarArquivoRaasPort = new ListarArquivoRaasConsumer();
 export const listarUnidadesRaasPort: ListarUnidadesPort = new ListarUnidadesConsumer();
+export const gerarArquivoPsicossocialPort: GerarArquivoPsicossocialPort = new GerarArquivoPsicossocialConsumer();
 
 export const buscarPacientePort: BuscarPacientePort = new BuscarPacienteConsumer();
 export const carregarPacientePort: CarregarPacientePort = new CarregarPacienteConsumer();

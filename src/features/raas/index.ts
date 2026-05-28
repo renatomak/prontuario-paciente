@@ -10,3 +10,4 @@ export { RaasTabela } from "./components/RaasTabela";
 export { ListarArquivoRaasConsumer } from "./consumer/ListarArquivoRaasConsumer";
 export { ListarUnidadesConsumer } from "./consumer/ListarUnidadesConsumer";
 export { DownloadArquivoRaasConsumer } from "./consumer/DownloadArquivoRaasConsumer";
+export { GerarArquivoPsicossocialConsumer } from "./consumer/GerarArquivoPsicossocialConsumer";
