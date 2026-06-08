@@ -75,8 +75,8 @@ export function RaasTabela({ arquivos, loading, carregado }: RaasTabelaProps) {
       const nomeBase = nomeArquivo
         .replace(/\.out$/i, "")
         .replace(/\.txt$/i, "");
-      const nomeTxt = `${nomeBase}.txt`;
-      downloadTxt(conteudo ?? "", nomeTxt);
+      const nomeOut = `${nomeBase}.OUT`;
+      downloadTxt(conteudo ?? "", nomeOut);
     } catch {
       toast.error("Falha ao baixar o arquivo.");
     } finally {
