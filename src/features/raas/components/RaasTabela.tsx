@@ -71,10 +71,11 @@ export function RaasTabela({ arquivos, loading, carregado }: RaasTabelaProps) {
     try {
       setBaixandoId(arquivo.id);
       const { nome, arquivo: conteudo } = await download.mutateAsync(arquivo.id);
-      const nomeArquivo = (nome ?? "").split("/").pop() || `raas_${arquivo.id}.txt`;
-      const nomeTxt = nomeArquivo.endsWith(".txt")
-        ? nomeArquivo
-        : nomeArquivo.replace(/\.[^.]+$/, ".txt");
+      const nomeArquivo = (nome ?? "").split("/").pop() || `raas_${arquivo.id}`;
+      const nomeBase = nomeArquivo
+        .replace(/\.out$/i, "")
+        .replace(/\.txt$/i, "");
+      const nomeTxt = `${nomeBase}.txt`;
       downloadTxt(conteudo ?? "", nomeTxt);
     } catch {
       toast.error("Falha ao baixar o arquivo.");
