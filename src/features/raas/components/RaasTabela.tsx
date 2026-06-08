@@ -75,8 +75,8 @@ export function RaasTabela({ arquivos, loading, carregado }: RaasTabelaProps) {
       const nomeBase = nomeArquivo
         .replace(/\.out$/i, "")
         .replace(/\.txt$/i, "");
-      const nomeTxt = `${nomeBase}.txt`;
-      downloadTxt(conteudo ?? "", nomeTxt);
+      const nomeOut = `${nomeBase}.OUT`;
+      downloadTxt(conteudo ?? "", nomeOut);
     } catch {
       toast.error("Falha ao baixar o arquivo.");
     } finally {
@@ -91,8 +91,8 @@ export function RaasTabela({ arquivos, loading, carregado }: RaasTabelaProps) {
         mes: arquivo.mes,
         ano: arquivo.ano,
       });
-      const nomeTxt = `raas_psicossocial_${arquivo.mes}_${arquivo.ano}.txt`;
-      downloadTxt(conteudo ?? "", nomeTxt);
+      const nomeOut = `raas_psicossocial_${arquivo.mes}_${arquivo.ano}.OUT`;
+      downloadTxt(conteudo ?? "", nomeOut);
     } catch {
       toast.error("Falha ao gerar o arquivo psicossocial.");
     } finally {
